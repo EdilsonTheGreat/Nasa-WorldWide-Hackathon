@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checks · Vision</title>
-<link href="fonte.css?v=20261114d" rel="stylesheet">
-<link href="iris.css?v=20261114d" rel="stylesheet">
+<link href="fonte.css?v=20261114e" rel="stylesheet">
+<link href="iris.css?v=20261114e" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -19,16 +19,16 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261114d"></script>
-<script src="../../motor/regras.js?v=20261114d"></script>
-<script src="../../motor/motor.js?v=20261114d"></script>
-<script src="../../motor/modelo.js?v=20261114d"></script>
-<script src="../armazenamento.js?v=20261114d"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261114d"></script>
-<script src="../camara/distancia.js?v=20261114d"></script>
-<script src="ligacao.js?v=20261114d"></script>
-<script src="voz.js?v=20261114d"></script>
-<script src="runtime.js?v=20261114d"></script>
+<script src="../dados.js?v=20261114e"></script>
+<script src="../../motor/regras.js?v=20261114e"></script>
+<script src="../../motor/motor.js?v=20261114e"></script>
+<script src="../../motor/modelo.js?v=20261114e"></script>
+<script src="../armazenamento.js?v=20261114e"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261114e"></script>
+<script src="../camara/distancia.js?v=20261114e"></script>
+<script src="ligacao.js?v=20261114e"></script>
+<script src="voz.js?v=20261114e"></script>
+<script src="runtime.js?v=20261114e"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -523,7 +523,8 @@ class Component extends DCLogic {
     if (window.Voz) { window.Voz.desligarMicrofone(); window.Voz.calar(); }
   }
   // ---------- Voz ----------
-  falar(t, semInterromper) { if (window.Voz) window.Voz.falar(t, semInterromper); }
+  // clips: nomes dos MP3 gravados (audio/); sem ficheiro, usa a voz do sistema com o texto t
+  falar(t, semInterromper, clips) { if (window.Voz) { if (clips && window.Voz.falarClip) window.Voz.falarClip(clips, t, semInterromper); else window.Voz.falar(t, semInterromper); } }
   aoOuvir(texto) {
     if (!window.Voz) return;
     window.Voz.interpretar(texto, TECLAS).forEach((c) => this.comando(c));
@@ -553,26 +554,28 @@ class Component extends DCLogic {
   }
   lerIntro(n) {
     const p = n === 2 ? PASSOS_AC : PASSOS_AM;
-    this.falar((n === 2 ? 'Near acuity test. ' : 'Amsler grid. ') + p.join(' ') + ' When you are ready, tap start, or say “next”.');
+    this.falar((n === 2 ? 'Near acuity test. ' : 'Amsler grid. ') + p.join(' ') + ' When you are ready, tap start, or say “next”.', false, [n === 2 ? 'intro_acuity' : 'intro_amsler']);
   }
   comecar(n) {
     this.setState((st) => ({ intro: Object.assign({}, st.intro, { [n]: false }) }));
     if (n === 2) this.falarAc();
-    else this.falar('Cover your left eye. Look only at the black dot in the centre. Tap the squares where you see bent lines, spots or gaps. If everything looks straight, say “all straight”.');
+    else this.falar('Cover your left eye. Look only at the black dot in the centre. Tap the squares where you see bent lines, spots or gaps. If everything looks straight, say “all straight”.', false, ['amsler_start']);
   }
   // Diz o que fazer a seguir no teste de acuidade.
   falarAc() {
     const a = this.state.ac;
     const olho = a.eye === 'esq' ? 'left' : 'right', outro = a.eye === 'esq' ? 'right' : 'left';
     if (a.fase === 'ler') {
-      const pre = a.linha === 0 ? (a.pass === 'com' ? 'With the spare glasses. ' : 'Left eye first: cover your right eye. '.replace('Left', olho === 'left' ? 'Left' : 'Right').replace('right eye', outro + ' eye')) : '';
-      this.falar(pre + 'Line ' + (a.linha + 1) + '. ' + (LINHAS_AC[a.linha].length === 1 ? 'Which letter do you see?' : 'Which letters do you see, from left to right?'));
+      const pre = a.linha === 0 ? (a.pass === 'com' ? 'With the spare glasses. ' : (olho === 'left' ? 'Left eye first: cover your right eye. ' : 'Now the right eye: cover your left eye. ')) : '';
+      this.falar(pre + 'Line ' + (a.linha + 1) + '. ' + (LINHAS_AC[a.linha].length === 1 ? 'Which letter do you see?' : 'Which letters do you see, from left to right?'), false,
+        [a.linha > 0 ? 'line' + (a.linha + 1) : (a.pass === 'com' ? 'line1_spare' : 'line1_' + olho)]);
     } else if (a.fase === 'fim') {
       const r = a.res[a.eye][a.pass];
       this.falar((olho === 'left' ? 'Left' : 'Right') + ' eye: ' + (r === 0 ? 'you read no lines' : 'you read up to line ' + r) + '. ' +
-        (this.piorAgora() ? 'Reading is worse than your baseline. Put on the spare glasses and read again.' : (a.eye === 'esq' ? 'Say “next” to go to the right eye.' : 'Say “next” to finish.')));
+        (this.piorAgora() ? 'Reading is worse than your baseline. Put on the spare glasses and read again.' : (a.eye === 'esq' ? 'Say “next” to go to the right eye.' : 'Say “next” to finish.')), false,
+        ['end_' + olho + '_' + (r || 0), this.piorAgora() ? 'then_spare' : (a.eye === 'esq' ? 'then_right_eye' : 'then_finish')]);
     } else if (a.fase === 'feito') {
-      this.falar('Acuity done. Say “next” to go to the Amsler grid.');
+      this.falar('Acuity done. Say “next” to go to the Amsler grid.', false, ['acuity_done']);
     }
   }
   piorAgora() {
@@ -595,7 +598,7 @@ class Component extends DCLogic {
       n = linha.length; certas = resp.filter((x, i) => x === linha[i]).length;
       return Object.assign(a, { resp: resp });
     });
-    if (completa) this.falar(certas + ' correct out of ' + n + '. Say “next” to continue.');
+    if (completa) this.falar(certas + ' correct out of ' + n + '. Say “next” to continue.', false, ['score_' + certas + '_of_' + n]);
   }
   apagar() { this.setAc((a) => (a.fase === 'ler' && a.resp.length ? Object.assign(a, { resp: a.resp.slice(0, -1) }) : a)); }
   somarAcertos(a, certas, total) {
@@ -630,8 +633,8 @@ class Component extends DCLogic {
   proximoOlhoAm(a) { if (!a.feito.dir) return 'dir'; if (!a.feito.esq) return 'esq'; return a.eye; }
   depoisOlhoAm() {
     const am = this.state.am;
-    if (am.feito.dir && am.feito.esq) this.falar('Grid done. Say “next” to see the result.');
-    else this.falar('Now cover your ' + (am.eye === 'dir' ? 'left' : 'right') + ' eye and look at the dot in the centre.');
+    if (am.feito.dir && am.feito.esq) this.falar('Grid done. Say “next” to see the result.', false, ['amsler_done']);
+    else this.falar('Now cover your ' + (am.eye === 'dir' ? 'left' : 'right') + ' eye and look at the dot in the centre.', false, [am.eye === 'dir' ? 'amsler_cover_left' : 'amsler_cover_right']);
   }
   amTudoDireito() {
     this.setAm((a) => { a.marks[a.eye] = {}; a.direito[a.eye] = true; a.feito[a.eye] = true; a.eye = this.proximoOlhoAm(a); return a; });
@@ -646,7 +649,15 @@ class Component extends DCLogic {
     this.setState((st) => ({ passo: n, max: Math.max(st.max, n), ajuda: false }));
     this.ligarCamara(n);
     if ((n === 2 || n === 3) && this.state.intro[n]) this.lerIntro(n);
-    if (n === 4) { this.guardarNoBackend(); if (window.Voz) window.Voz.desligarMicrofone(); }
+    if (n === 4) {
+      this.guardarNoBackend(); if (window.Voz) window.Voz.desligarMicrofone();
+      setTimeout(() => {
+        const nv = this._nivel || 0, R = ['green', 'yellow', 'orange', 'red'];
+        const T = ['Result: green. All within your baseline. Keep the normal schedule.', 'Result: yellow. Conditions may have affected the test. Repeat when you can.',
+          'Result: orange. There is a change since your baseline. The medical team will review it.', 'Result: red. Clinical priority. Tell the flight surgeon now.'];
+        if (this.state.passo === 4) this.falar(T[nv], false, ['result_' + R[nv]]);
+      }, 350);
+    }
   }
   // Câmara: só mede a distância (40 cm na acuidade, 33 cm na grelha de Amsler). Nada é gravado.
   ligarCamara(n) {
@@ -661,9 +672,9 @@ class Component extends DCLogic {
         if (d && d.estado !== r.estado && this.testeAtivo()) {
           const agora = Date.now();
           if (agora - (this._falaDist || 0) > 4000) {
-            if (r.estado === 'perto') { this.falar('Move back a little from the screen.', true); this._falaDist = agora; }
-            else if (r.estado === 'longe') { this.falar('Move a little closer to the screen.', true); this._falaDist = agora; }
-            else if (r.estado === 'ok' && (d.estado === 'perto' || d.estado === 'longe')) { this.falar('Distance OK.', true); this._falaDist = agora; }
+            if (r.estado === 'perto') { this.falar('Move back a little from the screen.', true, ['dist_back']); this._falaDist = agora; }
+            else if (r.estado === 'longe') { this.falar('Move a little closer to the screen.', true, ['dist_closer']); this._falaDist = agora; }
+            else if (r.estado === 'ok' && (d.estado === 'perto' || d.estado === 'longe')) { this.falar('Distance OK.', true, ['dist_ok']); this._falaDist = agora; }
           }
         }
         if (!d || d.estado !== r.estado || d.cm !== cm) this.setState({ dist: { estado: r.estado, cm: cm } });
@@ -885,6 +896,7 @@ class Component extends DCLogic {
       { cor: 'Red', nivel: 'Clinical priority', titulo: 'Priority change', texto: 'A new zone appeared at the centre of the Amsler grid. Tell the flight surgeon now.', c: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
     ];
     const hero = Object.assign({}, HER[nivel]);
+    this._nivel = nivel;
     if (back) {
       if (back.motivos.length) hero.texto = back.motivos.join(' ');
       else if (nivel === 0) hero.texto = back.primeiro ? 'First test saved as your baseline. Later tests are compared with it.' : 'Acuity, Amsler grid and symptoms same as your baseline.';
@@ -1025,7 +1037,7 @@ class Component extends DCLogic {
       mic: Object.assign({ on: micOn, t: s.mic.estado === 'a_ouvir' ? 'Listening… (tap to stop)' : (s.mic.estado === 'a_preparar' ? 'Preparing…' : (s.mic.estado === 'precisa_online' || s.mic.estado === 'sem_pacote' ? 'Allow online voice' : 'Answer by voice')) }, chipOn(micOn || s.mic.estado === 'precisa_online')),
       temMsg: !!s.mic.mensagem && s.mic.estado !== 'desligado',
       msg: s.mic.mensagem,
-      alternarVoz: () => { if (!window.Voz) return; const v = window.Voz.alternar(); this.setState({ voz: v }); if (v) this.falar('Voice on.'); },
+      alternarVoz: () => { if (!window.Voz) return; const v = window.Voz.alternar(); this.setState({ voz: v }); if (v) this.falar('Voice on.', false, ['voice_on']); },
       alternarMic: () => {
         if (!window.Voz) return;
         if (micOn) { window.Voz.desligarMicrofone(); return; }

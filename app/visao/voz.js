@@ -66,7 +66,39 @@
       return true;
     } catch (e) { aFalar = false; return false; }
   }
-  function calar() { try { if (sintese) sintese.cancel(); } catch (e) { } aFalar = false; retomarOuvir(); }
+  function calar() { pararClip(); try { if (sintese) sintese.cancel(); } catch (e) { } aFalar = false; retomarOuvir(); }
+
+  // ------------------------------------------------------------------
+  // Recorded voice (ElevenLabs MP3 in app/visao/audio/, generated once before the mission)
+  // falarClip(["end_left_3", "then_right_eye"], "fallback text"): plays the files in order;
+  // if any file is missing or cannot play, says the fallback text with the system voice.
+  // ------------------------------------------------------------------
+  var PASTA_AUDIO = "audio/";
+  var clipAtual = null, filaId = 0;
+  function pararClip() { filaId++; if (clipAtual) { try { clipAtual.pause(); } catch (e) { } clipAtual = null; } }
+  function falarClip(clips, texto, semInterromper) {
+    if (!ligada()) return false;
+    if (!clips || !clips.length || !g.Audio) return falar(texto, semInterromper);
+    if (semInterromper && (aFalar || (sintese && sintese.speaking))) return false;
+    pararClip();
+    try { if (sintese) sintese.cancel(); } catch (e) { }
+    var id = filaId, i = 0;
+    aFalar = true; pausarOuvir();
+    function fim() { if (id !== filaId) return; clipAtual = null; aFalar = false; retomarOuvir(); }
+    function falhou() { if (id !== filaId) return; clipAtual = null; aFalar = false; falar(texto); }
+    function seguinte() {
+      if (id !== filaId) return;
+      if (i >= clips.length) { fim(); return; }
+      var a = new g.Audio(PASTA_AUDIO + clips[i++] + ".mp3");
+      clipAtual = a;
+      a.onended = seguinte;
+      a.onerror = falhou;
+      var p = a.play();
+      if (p && p.catch) p.catch(falhou);
+    }
+    seguinte();
+    return true;
+  }
 
   // ------------------------------------------------------------------
   // Speech recognition
@@ -214,7 +246,7 @@
   }
 
   g.Voz = {
-    falar: falar, calar: calar, ligada: ligada, podeFalar: podeFalar,
+    falar: falar, falarClip: falarClip, calar: calar, ligada: ligada, podeFalar: podeFalar,
     alternar: function () { var n = !ligada(); escrever(CHAVE, n ? "1" : "0"); if (!n) calar(); return n; },
     temVozInglesa: function () { return !!voz; },
     ligarMicrofone: ligarMicrofone, desligarMicrofone: desligarMicrofone, prepararMicrofone: prepararMicrofone,

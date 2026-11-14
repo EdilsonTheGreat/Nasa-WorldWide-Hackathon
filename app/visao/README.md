@@ -100,3 +100,9 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Sem internet: a fonte Manrope está em `assets/fonte/` (licença OFL). Nada de `<link>` para fora.
 - Rosto: só com o acordo da própria pessoa; guarda-se apenas o descritor numérico (`dt_rostos`), nunca fotografias; a entrada à mão existe sempre.
 - "Repor a demonstração" (em `index.html`) apaga só as chaves `visao-*`. Os testes reais e os rostos ficam.
+
+## Voz gravada (14 Nov)
+- As frases faladas no teste tocam os MP3 de `audio/` (lista em `audio/frases.md`), via `Voz.falarClip(clips, texto)`.
+- Se um ficheiro faltar ou não tocar, a mesma frase é dita pela voz do sistema (speechSynthesis). Tudo offline.
+- No passo do resultado é lido o nível (result_green/yellow/orange/red).
+- Voice generated with ElevenLabs (elevenlabs.io). Uso não comercial (plano gratuito).
