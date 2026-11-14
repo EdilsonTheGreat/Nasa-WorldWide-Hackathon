@@ -1,5 +1,7 @@
 # Especificação do motor de regras (`motor/`). Para o Edilson e o Claude dele
 
+> **Estado: IMPLEMENTADO e testado (9/9 ✅).** `motor/regras.js`, `motor/motor.js`, `motor/testes.js` e `motor/teste.html` já existem e seguem esta especificação. A tarefa do Edilson passa a ser **rever, perceber e manter** o motor (ver secção 7).
+>
 > **Lê primeiro o `CLAUDE.md` na raiz do repositório.** Tem as regras que valem para todo o projecto (sem internet, sem fetch, sem frameworks).
 
 ## 1. Contexto em 1 minuto
@@ -17,7 +19,8 @@ Cada sinal (OCT, Amsler, acuidade) recebe uma cor; **a cor final é a pior das t
 |---|---|
 | `motor.js` | As funções abaixo, num objecto global `window.Motor`. JavaScript puro, sem dependências |
 | `regras.js` | `window.REGRAS = {...}`: limites e textos. A equipa de saúde edita só este ficheiro |
-| `teste.html` | Página que carrega `../app/dados.js`, `regras.js`, `motor.js` e corre os testes da secção 6, mostrando ✅/❌ |
+| `testes.js` | Os 9 testes da secção 6 numa função `correrTestes(Motor, FAIXAS, REGRAS, ASTRONAUTAS)` |
+| `teste.html` | Página que carrega `../app/dados.js`, `regras.js`, `motor.js`, `testes.js` e mostra ✅/❌ |
 
 Porquê `.js` e não `.json`: a app abre do disco (`file://`) e aí o browser bloqueia `fetch()` de ficheiros. Um `<script src="...">` funciona sempre.
 
@@ -137,7 +140,12 @@ Valores tirados dos dados gerados (seed fixa). Tolerância: ±0.1 em `delta_pct`
 Referência em Python do OCT (mesma lógica, já testada): função `cor_oct()` em `simulador/simulador.py`.
 
 ## 7. Prompt para colar no teu Claude
-> Lê `CLAUDE.md` e `docs/EDILSON.md` neste repositório. Implementa `motor/regras.js`, `motor/motor.js` e `motor/teste.html` exactamente como especificado em `docs/EDILSON.md`: assinaturas, algoritmo, regras.js inicial e os 9 testes da secção 6. JavaScript puro, sem dependências, sem fetch, a funcionar ao abrir `motor/teste.html` com duplo clique (file://). Os dados estão em `app/dados.js` (não editar; é gerado pelo simulador). No fim, abre o teste, confirma que os 9 dão ✅ e diz-me o que mudaste.
+> Lê `CLAUDE.md` e `docs/EDILSON.md` neste repositório. O motor de regras já está implementado em `motor/` (`regras.js`, `motor.js`, `testes.js`, `teste.html`). Explica-me, função a função, como `motor/motor.js` funciona e confirma que segue a especificação de `docs/EDILSON.md`. Depois ajuda-me a abrir `motor/teste.html` e confirmar que os 9 testes dão ✅. Regras: JavaScript puro, sem dependências, sem fetch, tem de funcionar ao abrir com duplo clique (file://). Não mudes assinaturas de funções sem avisar o Marllon (a app chama-as). Se mudares lógica, acrescenta um teste em `motor/testes.js`.
+
+### Como testar também na linha de comandos (opcional, precisa de Node)
+```bash
+node -e "global.window=globalThis;require('./app/dados.js');require('./motor/regras.js');const M=require('./motor/motor.js');require('./motor/testes.js')(M,FAIXAS,REGRAS,ASTRONAUTAS).forEach(t=>console.log((t.ok?'OK ':'FALHA ')+t.nome+' | '+t.detalhe))"
+```
 
 ## 8. Dúvidas
 Lógica dos dados/simulador → Lukanga. Limites e textos clínicos → Sheinaze e Neyde. Como a app chama o motor → Marllon.

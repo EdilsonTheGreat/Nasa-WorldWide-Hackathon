@@ -18,7 +18,7 @@ Ciclo: **teste → comparação → semáforo → acção**.
 |---|---|---|
 | `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Gera `dados/*` e `app/dados.js` |
 | `dados/` | gerado | **Não editar à mão.** Correr `python3 simulador/simulador.py` |
-| `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `teste.html` (testes) |
+| `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `testes.js` + `teste.html` (9 testes) |
 | `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador |
 | `docs/` | todos | Especificações. Ler `docs/EDILSON.md` para o motor |
 
