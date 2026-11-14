@@ -403,18 +403,25 @@
   // Remove um perfil que não é da equipa: testes, rosto e preferências (os da equipa ficam sempre).
   function removerPerfil(id) {
     if (!temBackend()) return false;
-    id = g.Armazem.normalizarId(id);
-    if (!id || g.Armazem.EQUIPA.indexOf(id) !== -1) return false;
+    if (!id || g.Armazem.EQUIPA.indexOf(g.Armazem.normalizarId(id)) !== -1) return false;
     g.Armazem.apagarPerfil(id);
+    // também por id exacto, caso o registo tenha um id fora do formato normal
+    try {
+      var ps = JSON.parse(ler("dt_perfis")) || [];
+      escrever("dt_perfis", JSON.stringify(ps.filter(function (x) { return x !== id; })));
+      var rs = JSON.parse(ler("dt_registos")) || [];
+      escrever("dt_registos", JSON.stringify(rs.filter(function (r) { return r.astronauta_id !== id; })));
+    } catch (e) { }
     try { var r = JSON.parse(ler("dt_rostos")) || {}; delete r[id]; g.localStorage.setItem("dt_rostos", JSON.stringify(r)); } catch (e) { }
     escrever("visao-iris-" + id, null); escrever("visao-dia-" + id, null);
     if (ler("visao-real") === id) escrever("visao-real", null);
     return true;
   }
-  // Limpeza única: o perfil "AUTRO1" foi criado por engano num teste.
-  if (temBackend() && !ler("visao-limpo-autro1")) {
-    try { if (g.Armazem.perfis().some(function (p) { return p.id === "AUTRO1"; })) removerPerfil("AUTRO1"); } catch (e) { }
-    escrever("visao-limpo-autro1", "1");
+  // Limpeza: o perfil "Autro1" foi criado por engano num teste. A comparação ignora espaços,
+  // zero/letra O e um/letra l/I (o nome pode ter sido escrito como "AUTR01", "AUTRO l", ...).
+  function eAutro1(id) { return String(id).toUpperCase().replace(/\s+/g, "").replace(/0/g, "O").replace(/[LI|]/g, "1") === "AUTRO1"; }
+  if (temBackend()) {
+    try { g.Armazem.perfis().forEach(function (p) { if (eAutro1(p.id)) removerPerfil(p.id); }); } catch (e) { }
   }
 
   g.Visao = {
