@@ -28,7 +28,7 @@
                 "pre_exame", "prontidao", "ressalvas", "alerta_clinico",
                 // campos da interface Visão (app/visao): acuidade em 5 linhas por olho e grelha de Amsler 12x12
                 "escala_acuidade", "acuidade_oe", "acuidade_od", "acuidade_oe_oculos", "acuidade_od_oculos",
-                "melhora_oe", "melhora_od", "celulas_od", "celulas_oe", "evento_nave", "fora_distancia_pct",
+                "melhora_oe", "melhora_od", "celulas_od", "celulas_oe", "evento_nave", "fora_distancia_pct", "luz_media", "luz_nivel",
                 "acertos_oe", "acertos_od"];
 
   function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; } }

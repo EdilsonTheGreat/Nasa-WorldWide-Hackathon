@@ -46,3 +46,13 @@ Ciclo: **teste → comparação → semáforo → acção**.
 - O motor (`motor/`, do Edilson) continua a escrever os motivos em português; `app/visao/ligacao.js` traduz esses textos na função `en()`. Se mudares um texto do motor, acrescenta a tradução em `EN` (ligacao.js).
 - Olhos: LE = left eye (OE), RE = right eye (OD).
 - Abrir a app: `abrir_app.command` / `abrir_app.bat` usam `servidor.py` (sem cache, para o browser não mostrar versões antigas).
+
+## Nome da app (14 Nov)
+- A app chama-se **IRIS** (Integrated Remote Intelligence for Spaceflight). Não usar "Vision" nem "Visão" como nome.
+- As pastas e chaves internas (`app/visao/`, `visao-*` no localStorage) ficam como estão.
+
+## Relatório final (14 Nov)
+- No passo do resultado, o botão "Final report" abre o relatório: conclusão ("IRIS concluded <cor> based on …"),
+  testes (acuidade, Amsler, sintomas, OCT) e dados da missão (microgravidade, luz, movimento da nave, distância), e o porquê.
+- A cor vem só dos testes rápidos (motor). Os dados da missão confirmam se a medição é fiável e dão contexto.
+- A luz é medida pela câmara (brilho médio de uma imagem 32x24, 1 vez por segundo). Nada é gravado além dos números.

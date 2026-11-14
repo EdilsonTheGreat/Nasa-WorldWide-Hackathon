@@ -185,6 +185,8 @@
     if (t.resp === "sim") ressalvas.push("Spacecraft motion felt before or during the test.");
     if (t.resp === "naosei") ressalvas.push("Spacecraft motion unconfirmed.");
     if (cam.n > 0 && cam.foraPct >= 40) ressalvas.push("Distance out of range in " + cam.foraPct + "% of readings.");
+    var luz = cam.luz || { n: 0 };
+    if (luz.n > 0 && luz.nivel !== "boa") ressalvas.push((luz.nivel === "fraca" ? "Lighting too dark" : "Too much light or glare") + " in " + luz.foraPct + "% of camera readings.");
     var reg = g.Armazem.guardar({
       astronauta_id: id, dia: d,
       amsler_zonas: uniao, amsler_od: zo.od, amsler_oe: zo.oe, amsler_centro: uniao.indexOf(g.REGRAS.amsler.zona_centro) !== -1 ? 1 : 0,
@@ -198,6 +200,7 @@
       perg_focar: PERG[t.q[0]], perg_contraste: PERG[t.q[1]], perg_dor_cabeca: PERG[t.q[2]], perg_visao_dupla: PERG[t.q[3]],
       distancia_cm: cam.n > 0 ? cam.media : null, sem_camara: cam.n > 0 ? 0 : 1, fora_distancia_pct: cam.n > 0 ? cam.foraPct : null,
       evento_nave: t.resp || null,
+      luz_media: luz.n > 0 ? luz.media : null, luz_nivel: luz.n > 0 ? luz.nivel : null,
       acertos_oe: t.acertos ? t.acertos.esq.sem[0] + "/" + t.acertos.esq.sem[1] : null,
       acertos_od: t.acertos ? t.acertos.dir.sem[0] + "/" + t.acertos.dir.sem[1] : null,
       prontidao: ressalvas.length ? "amarelo" : "verde", ressalvas: ressalvas,
@@ -365,6 +368,24 @@
   // ---------- Câmara: mede a distância durante o teste (nada é gravado) ----------
   var camara = (function () {
     var video = null, ligada = false, amostras = [], ultimoAviso = 0, ouvinte = null, ultimo = { estado: "desligada", cm: null };
+    // Luz: 1 vez por segundo, a imagem da câmara é reduzida a 32x24 e mede-se o brilho médio
+    // (0–100 %) e a parte de pixels saturados (reflexo/encandeamento). Nada é guardado além destes números.
+    var luzAmostras = [], luzTimer = null, tela = null;
+    function medirLuz() {
+      if (!video || !ligada || video.readyState < 2 || !video.videoWidth) return;
+      try {
+        if (!tela) { tela = g.document.createElement("canvas"); tela.width = 32; tela.height = 24; }
+        var cx = tela.getContext("2d", { willReadFrequently: true });
+        cx.drawImage(video, 0, 0, 32, 24);
+        var px = cx.getImageData(0, 0, 32, 24).data, soma = 0, sat = 0, n = px.length / 4;
+        for (var i = 0; i < px.length; i += 4) {
+          var y = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+          soma += y; if (y > 245) sat++;
+        }
+        var media = soma / n / 255 * 100, satPct = sat / n * 100;
+        luzAmostras.push({ b: media, nivel: media < 22 ? "fraca" : (satPct > 12 || media > 85 ? "forte" : "boa") });
+      } catch (e) { }
+    }
     function aoMudar(r) {
       ultimo = r;
       if (r.estado === "ok" || r.estado === "perto" || r.estado === "longe") amostras.push({ cm: r.cm, ok: r.estado === "ok" });
@@ -386,19 +407,48 @@
           if (g.DC_encaixarFixos) g.DC_encaixarFixos();
         }
         ligada = true;
+        if (!luzTimer) luzTimer = g.setInterval(medirLuz, 1000);
         g.Distancia.iniciar(video, { minCm: minCm, maxCm: maxCm, aoMudar: aoMudar, pastaModelo: "../camara/vendor/mediapipe/" });
       },
-      parar: function () { if (ligada) { g.Distancia.parar(); ligada = false; } ouvinte = null; },
-      limpar: function () { amostras = []; },
+      parar: function () { if (ligada) { g.Distancia.parar(); ligada = false; } if (luzTimer) { g.clearInterval(luzTimer); luzTimer = null; } ouvinte = null; },
+      limpar: function () { amostras = []; luzAmostras = []; },
+      luz: function () {
+        if (!luzAmostras.length) return { n: 0, media: null, nivel: null, foraPct: null };
+        var m = luzAmostras.reduce(function (s, a) { return s + a.b; }, 0) / luzAmostras.length;
+        var fracas = luzAmostras.filter(function (a) { return a.nivel === "fraca"; }).length;
+        var fortes = luzAmostras.filter(function (a) { return a.nivel === "forte"; }).length;
+        var fora = fracas + fortes;
+        return { n: luzAmostras.length, media: Math.round(m), foraPct: Math.round(fora / luzAmostras.length * 100),
+                 nivel: fora / luzAmostras.length < 0.4 ? "boa" : (fracas >= fortes ? "fraca" : "forte") };
+      },
       ultimo: function () { return ultimo; },
       resumo: function () {
-        if (!amostras.length) return { n: 0, media: null, foraPct: null };
+        if (!amostras.length) return { n: 0, media: null, foraPct: null, luz: this.luz() };
         var m = amostras.reduce(function (s, a) { return s + a.cm; }, 0) / amostras.length;
         var fora = amostras.filter(function (a) { return !a.ok; }).length;
-        return { n: amostras.length, media: Math.round(m), foraPct: Math.round(fora / amostras.length * 100) };
+        return { n: amostras.length, media: Math.round(m), foraPct: Math.round(fora / amostras.length * 100), luz: this.luz() };
       }
     };
   })();
+
+  // Relatório final: dados da missão que dão contexto ao resultado.
+  //   microgravidade: dia da missão e o espessamento da retina esperado nesse dia na população de referência
+  //   (faixas P50/P90 de dados/faixas.json, calibradas com Macias et al. 2020);
+  //   oct: último OCT (só nos perfis de demonstração; a bordo não há OCT nos perfis reais).
+  function missao(dia, letraDemo) {
+    var F = g.FAIXAS, d = Math.max(0, Number(dia) || 0), r = { microgravidade: { dia: d }, oct: null };
+    if (F && F.p50) {
+      var i = Math.max(0, Math.min(F.p50.length - 1, Math.round(d)));
+      r.microgravidade.p50 = Math.round(F.p50[i] * 10) / 10;
+      r.microgravidade.p90 = Math.round(F.p90[i] * 10) / 10;
+      r.microgravidade.fonte = "Macias et al. 2020";
+    }
+    if (!real() && letraDemo) {
+      var t = tendencia(letraDemo);
+      if (t) r.oct = { dia: t.dia, delta: t.vals[t.vals.length - 1], p90: Math.round(t.p90(t.dia) * 10) / 10, level: t.level, motivo: t.motivo };
+    }
+    return r;
+  }
 
   // Remove um perfil que não é da equipa: testes, rosto e preferências (os da equipa ficam sempre).
   function removerPerfil(id) {
@@ -428,7 +478,7 @@
     temBackend: temBackend, real: real, removerPerfil: removerPerfil, irisDe: irisDe, guardarIris: guardarIris, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
     selo: function () { return real() ? "Real data · this device only" : "Simulated data"; },
     anterior: anterior, guardarTeste: guardarTeste, resumoHoje: resumoHoje, linhaTempo: linhaTempo, alertas: alertas,
-    fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara, en: en,
+    fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara, missao: missao, en: en,
     _zonasDe: zonasDe, _avaliarRegisto: avaliarRegisto
   };
 })(typeof window !== "undefined" ? window : globalThis);

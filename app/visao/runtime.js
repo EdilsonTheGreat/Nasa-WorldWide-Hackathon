@@ -215,7 +215,7 @@
     Array.prototype.slice.call(ecra.children).forEach(function (b) {
       var s = b.style;
       // barra de navegação: fixa em baixo, ao centro
-      if (b.tagName === 'NAV' && b.getAttribute('aria-label') === 'Secções da app') {
+      if (b.tagName === 'NAV' && /^(Secções da app|App sections)$/.test(b.getAttribute('aria-label') || '')) {
         s.position = 'fixed'; s.left = '50%'; s.bottom = '12px'; s.top = 'auto'; s.transform = 'translateX(-50%)'; s.zIndex = '6';
         s.maxWidth = 'calc(100vw - 20px)'; s.boxSizing = 'border-box';
         return;
@@ -279,12 +279,12 @@
       Array.prototype.forEach.call(b.querySelectorAll('a, button, span'), function (el) { if (el.textContent.trim().length <= 26) el.style.whiteSpace = 'nowrap'; });
     });
     // grelhas de duas colunas (ex.: perfis): uma coluna quando não há espaço
-    Array.prototype.forEach.call(ecra.querySelectorAll('.fluido *'), function (el) {
+    Array.prototype.forEach.call(ecra.querySelectorAll('.fluido, .fluido *'), function (el) {
       if (el.style.display !== 'grid' || el.clientWidth >= 440) return;
       var gtc = el.style.gridTemplateColumns || '', m = gtc.match(/repeat\((\d+)/);
       var cols = m ? Number(m[1]) : gtc.trim().split(/\s+(?![^(]*\))/).filter(Boolean).length;
       // 2 ou 3 colunas de cartões: passam a uma coluna (grelhas de muitos quadrados, como a de Amsler, ficam)
-      if (cols >= 2 && cols <= 3 && el.children.length <= 8) el.style.gridTemplateColumns = '1fr';
+      if (cols >= 2 && cols <= 3 && el.children.length <= 8) { el.style.gridTemplateColumns = '1fr'; el.style.gridTemplateRows = 'none'; }
     });
     // linhas de botões que não cabem passam para a linha seguinte
     Array.prototype.forEach.call(ecra.querySelectorAll('.fluido, .fluido *'), function (el) {

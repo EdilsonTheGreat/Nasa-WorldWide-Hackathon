@@ -1,4 +1,6 @@
-# Deep Thinkers · Monitor de visão para astronautas (SANS)
+# IRIS · Integrated Remote Intelligence for Spaceflight
+
+Monitor de visão para astronautas (SANS), da equipa Deep Thinkers.
 
 NASA Space Apps Challenge 2026, Maputo. Desafio: *Create Health Monitoring Software for Astronauts on Space Missions*.
 

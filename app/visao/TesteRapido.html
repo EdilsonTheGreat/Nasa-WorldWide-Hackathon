@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Checks · Vision</title>
-<link href="fonte.css?v=20261114f" rel="stylesheet">
-<link href="iris.css?v=20261114f" rel="stylesheet">
+<title>Checks · IRIS</title>
+<link href="fonte.css?v=20261114g" rel="stylesheet">
+<link href="iris.css?v=20261114g" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -20,16 +20,16 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261114f"></script>
-<script src="../../motor/regras.js?v=20261114f"></script>
-<script src="../../motor/motor.js?v=20261114f"></script>
-<script src="../../motor/modelo.js?v=20261114f"></script>
-<script src="../armazenamento.js?v=20261114f"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261114f"></script>
-<script src="../camara/distancia.js?v=20261114f"></script>
-<script src="ligacao.js?v=20261114f"></script>
-<script src="voz.js?v=20261114f"></script>
-<script src="runtime.js?v=20261114f"></script>
+<script src="../dados.js?v=20261114g"></script>
+<script src="../../motor/regras.js?v=20261114g"></script>
+<script src="../../motor/motor.js?v=20261114g"></script>
+<script src="../../motor/modelo.js?v=20261114g"></script>
+<script src="../armazenamento.js?v=20261114g"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261114g"></script>
+<script src="../camara/distancia.js?v=20261114g"></script>
+<script src="ligacao.js?v=20261114g"></script>
+<script src="voz.js?v=20261114g"></script>
+<script src="runtime.js?v=20261114g"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -39,7 +39,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
 <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Vision</span>
+<span title="Integrated Remote Intelligence for Spaceflight" style="font-size: 22px; font-weight: 600; letter-spacing: 1.5px; color: var(--tx)">IRIS</span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -385,7 +385,10 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <button type="button" onClick="{{ seguinte }}" disabled="{{ seguinteOff }}" style="display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 26px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; opacity: {{ opSeguinte }}; box-shadow: 0 8px 30px var(--cta-glow)">{{ seguinteLabel }}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 5l7 7-7 7"></path></svg></button>
 </sc-if>
 <sc-if value="{{ p4 }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 10px">
+<button type="button" onClick="{{ abrirRelatorio }}" style="display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 22px; border: 1px solid var(--line); border-radius: 25px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round"><path d="M7 3h7l5 5v13H7z"></path><path d="M14 3v5h5M10 13h6M10 17h6"></path></svg>Final report</button>
 <a href="Tendencia.html" style="display: flex; align-items: center; gap: 8px; height: 50px; box-sizing: border-box; padding: 0 26px; border-radius: 25px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)">Save and see history</a>
+</div>
 </sc-if>
 </div>
 
@@ -453,6 +456,57 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </section>
 </sc-if>
 
+<sc-if value="{{ relatorio }}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: -1500px; top: -1500px; right: -1500px; bottom: -1500px; background: var(--overlay); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px)"></div>
+<section role="dialog" aria-modal="true" aria-labelledby="rel-titulo" style="position: absolute; left: 117px; top: 40px; width: 960px; max-height: 754px; box-sizing: border-box; overflow-y: auto; padding: 24px 28px; border-radius: 30px; background: var(--sheet); border: 1px solid var(--sheet-line); box-shadow: 0 30px 80px rgba(0,0,0,0.35); display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: flex-start; gap: 14px">
+<span aria-hidden="true" style="height: 44px; flex: none; padding: 0 14px; border-radius: 22px; background: var(--acc); color: var(--acc-tx); font-size: 15px; font-weight: 800; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px var(--acc-glow)">IRIS</span>
+<div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+<h2 id="rel-titulo" style="margin: 0; font-size: 24px; font-weight: 400; letter-spacing: -0.3px; color: var(--tx)">Final report</h2>
+<span style="font-size: 13px; color: var(--tx3)">{{ relMeta }}</span>
+</div>
+<button type="button" onClick="{{ fecharRelatorio }}" aria-label="Close report" style="width: 40px; height: 40px; flex: none; border: 1px solid var(--line); border-radius: 20px; background: transparent; color: var(--tx); cursor: pointer; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; border-radius: 22px; background: radial-gradient(60% 160% at 0% 0%, {{ hero.glow }}, rgba(0,0,0,0) 70%), var(--card); border: 1px solid {{ hero.linha }}">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">CONCLUSION</span>
+<span style="display: flex; align-items: center; gap: 10px; font-size: 26px; font-weight: 300; letter-spacing: -0.5px; color: {{ hero.c }}"><span aria-hidden="true" style="width: 12px; height: 12px; flex: none; border-radius: 6px; background: {{ hero.dot }}; box-shadow: 0 0 16px {{ hero.dot }}"></span>{{ hero.cor }} · {{ hero.nivel }}</span>
+<p style="margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--tx)">{{ relFrase }}</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 14px 18px; border-radius: 22px; background: var(--card2); border: 1px solid var(--line2)">
+<h3 style="margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">TESTS · DECIDE THE COLOUR</h3>
+<sc-for list="{{ relTestes }}" as="r" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line2)"><span aria-hidden="true" style="width: 7px; height: 7px; flex: none; margin-top: 7px; border-radius: 4px; background: {{ r.dot }}"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1"><span style="display: flex; justify-content: space-between; gap: 10px"><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ r.k }}</span><span style="font-size: 14px; font-weight: 700; color: var(--tx); text-align: right">{{ r.v }}</span></span><span style="font-size: 12.5px; line-height: 1.4; color: var(--tx2)">{{ r.sub }}</span></span></div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 14px 18px; border-radius: 22px; background: var(--card2); border: 1px solid var(--line2)">
+<h3 style="margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">MISSION DATA · CONTEXT AND RELIABILITY</h3>
+<sc-for list="{{ relMissao }}" as="r" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line2)"><span aria-hidden="true" style="width: 7px; height: 7px; flex: none; margin-top: 7px; border-radius: 4px; background: {{ r.dot }}"></span><span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1"><span style="display: flex; justify-content: space-between; gap: 10px"><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ r.k }}</span><span style="font-size: 14px; font-weight: 700; color: var(--tx); text-align: right">{{ r.v }}</span></span><span style="font-size: 12.5px; line-height: 1.4; color: var(--tx2)">{{ r.sub }}</span></span></div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">WHY THIS CONCLUSION</h3>
+<sc-for list="{{ relPorque }}" as="p" hint-placeholder-count="4">
+<div style="display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px; align-items: baseline"><span style="width: 104px; flex: none; font-size: 13px; font-weight: 700; color: var(--acc-text)">{{ p.k }}</span><span style="flex: 1 1 260px; min-width: 0; font-size: 14.5px; line-height: 1.5; color: var(--tx-soft)">{{ p.t }}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">NEXT STEPS</h3>
+<sc-for list="{{ relAccoes }}" as="a" hint-placeholder-count="3">
+<div style="display: flex; align-items: flex-start; gap: 12px"><span aria-hidden="true" style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: var(--acc-soft); color: var(--acc-text); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ a.n }}</span><span style="font-size: 14.5px; line-height: 1.5; color: var(--tx-soft)">{{ a.t }}</span></div>
+</sc-for>
+</div>
+
+<p style="margin: 0; padding-top: 12px; border-top: 1px solid var(--line2); font-size: 12.5px; line-height: 1.5; color: var(--tx3)">How IRIS decides: the colour comes from the quick tests compared with your baseline, and the most serious sign wins. Mission data check that the measurement is reliable (light, motion, distance) and give context (time in microgravity, OCT). Not a diagnosis. Limits are provisional until the medical team validates them.</p>
+</section>
+</sc-if>
+
 </div>
 </template>
 <script>
@@ -482,7 +536,7 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.state = {
-      tema: 'escuro', perfil: 'B', resp: null, passo: 1, max: 1, ajuda: false, real: null, back: null, dist: null,
+      tema: 'escuro', perfil: 'B', resp: null, passo: 1, max: 1, ajuda: false, relatorio: false, real: null, back: null, dist: null,
       intro: { 2: true, 3: true }, voz: window.Voz ? window.Voz.ligada() : false, mic: { estado: 'desligado', mensagem: '' },
       q: [null, null, null, null],
       ac: this.acInicial(),
@@ -647,7 +701,7 @@ class Component extends DCLogic {
     this.depoisOlhoAm();
   }
   irPara(n) {
-    this.setState((st) => ({ passo: n, max: Math.max(st.max, n), ajuda: false }));
+    this.setState((st) => ({ passo: n, max: Math.max(st.max, n), ajuda: false, relatorio: false }));
     this.ligarCamara(n);
     if ((n === 2 || n === 3) && this.state.intro[n]) this.lerIntro(n);
     if (n === 4) {
@@ -801,7 +855,7 @@ class Component extends DCLogic {
       { t: 'Set the cabin light as for reading. Avoid glare on the screen.', icone: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z' }
     ];
     const QS = ['Do you have trouble focusing?', 'Do you see contrast worse, for example grey letters on a light background?', 'Do you have headaches?', 'Do you see double?'];
-    const QCURTO = ['focar', 'contraste', 'headaches', 'double vision'];
+    const QCURTO = ['focusing', 'contrast', 'headaches', 'double vision'];
     const OPS = ['No', 'Mild', 'Marked'];
     const TONS = [
       { fundo: 'var(--ok-soft)', borda: 'var(--ok-line)', cor: 'var(--ok-tx)' },
@@ -956,7 +1010,7 @@ class Component extends DCLogic {
       { teste: 'Near acuity', valor: 'LE ' + curto(ac.res.esq.sem) + ' · RE ' + curto(ac.res.dir.sem),
         sub: 'Score: LE ' + ac.acertos.esq.sem[0] + '/' + ac.acertos.esq.sem[1] + ' · RE ' + ac.acertos.dir.sem[0] + '/' + ac.acertos.dir.sem[1] + ' · ' + (reservaTxt ? reservaTxt + ' · ' : '') + (primeiroTeste ? 'First test: becomes your baseline' : (antReal ? 'Baseline (day ' + antReal.dia + ')' : 'Last test') + ': LE ' + curto(ant.ac.esq) + ' · RE ' + curto(ant.ac.dir)),
         dot: ac.res.esq.sem === null && ac.res.dir.sem === null ? 'var(--tx3)' : cores[nAc] },
-      { teste: 'Symptoms in the last few days', valor: listaSint.length === 0 ? 'None' : (marcados > 0 ? marcados + ' marcado' + (marcados > 1 ? 's' : '') : ligeiros + ' ligeiro' + (ligeiros > 1 ? 's' : '')),
+      { teste: 'Symptoms in the last few days', valor: listaSint.length === 0 ? 'None' : (marcados > 0 ? marcados + ' marked' : ligeiros + ' mild'),
         sub: listaSint.length === 0 ? 'You answered No to all four questions' : listaSint.join(', '), dot: cores[nSint] }
     ];
     const dR = back ? back.distancia : (window.Visao ? window.Visao.camara.resumo() : { n: 0 });
@@ -966,7 +1020,7 @@ class Component extends DCLogic {
       { k: euReal ? 'Spacecraft motion' : 'Spacecraft event', v: s.resp ? (euReal ? '' : '10:42–10:43 UTC · ') + respTxt[s.resp] : 'Not answered', dot: s.resp ? (euReal && s.resp !== 'nao' ? 'var(--ylw)' : 'var(--ok)') : 'var(--ylw)' },
       { k: 'Glasses', v: usouReserva ? 'Reading glasses; spare ones in the 2nd acuity test' : 'Everyday reading glasses', dot: 'var(--ok)' },
       { k: 'Distance', v: distTxt, dot: distDot },
-      { k: 'During the tests', v: euReal ? (s.resp === 'sim' ? 'Motion felt' : 'No motion reported') : 'No spacecraft events', dot: euReal && s.resp === 'sim' ? 'var(--ylw)' : 'var(--ok)' },
+      { k: 'Lighting', v: dR.luz && dR.luz.n > 0 ? ({ boa: 'Good', fraca: 'Too dark', forte: 'Too bright or glare' })[dR.luz.nivel] + ' · camera' : 'Not measured', dot: dR.luz && dR.luz.n > 0 ? (dR.luz.nivel === 'boa' ? 'var(--ok)' : 'var(--ylw)') : 'var(--tx3)' },
       { k: 'Camera', v: dR.n > 0 ? 'Only measured distance · nothing recorded' : (window.Visao ? (window.Visao.camara.ultimo().estado === 'sem_cara' ? 'On, but it did not see your face' : 'Not used in this test') : 'Only measured distance · nothing recorded'), dot: 'var(--acc-text)' }
     ];
     const ACC = [
@@ -979,6 +1033,57 @@ class Component extends DCLogic {
     if (back && nivel !== 1) accTxt[1] = nivel === 0 ? 'Next quick test in ' + back.proximo_dias + ' days.' : (nivel === 3 ? accTxt[1] : 'Repeat the tests in ' + back.proximo_dias + ' days, or when the doctor says.');
     if (back) accTxt[2] = nivel === 3 ? accTxt[2] : 'Saved on this device (test no. ' + back.testes + ').';
     const accoes = accTxt.map((t, i) => ({ n: i + 1, t: t }));
+
+    // ---------- Relatório final: a conclusão e em que dados se baseou ----------
+    if (s.passo === 4 && !this._hora) this._hora = new Date();
+    if (s.passo !== 4) this._hora = null;
+    const MI = window.Visao && window.Visao.missao ? window.Visao.missao(eu.dia, euReal ? null : s.perfil) : { microgravidade: { dia: eu.dia }, oct: null };
+    const mg = MI.microgravidade, oct = MI.oct;
+    const luz = (dR && dR.luz) || { n: 0 };
+    const temLuz = luz.n > 0, luzMa = temLuz && luz.nivel !== 'boa';
+    const LUZ = { boa: 'Good', fraca: 'Too dark', forte: 'Too bright or glare' };
+    const novasTxt = (e) => { const nv = comp[e].novas; return nv.length ? nv.length + ' new' + (nv.some(central) ? ', at the centre' : '') + ' · ' + sigla[e] : null; };
+    const amNovas = ['esq', 'dir'].map(novasTxt).filter((x) => x);
+    const acMuda = ['esq', 'dir'].filter((e) => !primeiroTeste && piorOlho(e)).map((e) => sigla[e] + ' lost ' + (ant.ac[e] - ac.res[e].sem) + ' line' + (ant.ac[e] - ac.res[e].sem > 1 ? 's' : ''));
+    const relTestes = [
+      { k: 'Near acuity', v: aconteceu[0].valor, sub: primeiroTeste ? 'First test: becomes your baseline' : (acMuda.length ? acMuda.join(' · ') + ' vs baseline' : 'Same as your baseline'), dot: aconteceu[0].dot },
+      { k: 'Amsler grid', v: amNovas.length ? amNovas.join(' · ') : 'No new zones', sub: primeiroTeste ? 'First map: becomes your baseline' : 'Compared with your baseline map', dot: cores[nAms] },
+      { k: 'Symptoms', v: aconteceu[1].valor, sub: aconteceu[1].sub, dot: aconteceu[1].dot },
+      { k: 'OCT (retina)', v: oct ? (oct.delta >= 0 ? '+' : '') + oct.delta + '% · day ' + oct.dia : 'Not on board',
+        sub: oct ? 'vs first OCT · expected up to +' + oct.p90 + '% (P90)' : 'The colour comes from the quick tests', dot: oct ? ['var(--ok)', 'var(--ylw)', 'var(--bad)'][oct.level] || 'var(--ok)' : 'var(--tx3)' }
+    ];
+    const movTxt = { sim: 'Felt', nao: 'None', naosei: 'Not sure' };
+    const relMissao = [
+      { k: 'Microgravity', v: 'Day ' + mg.dia + ' in orbit', sub: mg.p50 !== undefined ? 'Expected retina change by now: +' + mg.p50 + '% (P50), up to +' + mg.p90 + '% (P90) · ' + mg.fonte : 'Time in microgravity', dot: 'var(--acc-text)' },
+      { k: 'Light exposure', v: temLuz ? LUZ[luz.nivel] : 'Not measured', sub: temLuz ? 'Brightness ' + luz.media + '% · ' + (100 - luz.foraPct) + '% of readings good · camera' : 'Needs the camera during the tests', dot: temLuz ? (luzMa ? 'var(--ylw)' : 'var(--ok)') : 'var(--tx3)' },
+      { k: 'Spacecraft motion', v: s.resp ? movTxt[s.resp] : 'Not answered', sub: 'Your answer before the tests', dot: s.resp === 'nao' ? 'var(--ok)' : 'var(--ylw)' },
+      { k: 'Viewing distance', v: dR.n > 0 ? 'Average ' + dR.media + ' cm' : 'Not measured', sub: dR.n > 0 ? (100 - dR.foraPct) + '% of the time in range · camera' : 'Hold the screen at 40 cm (acuity), 33 cm (grid)', dot: distDot }
+    ];
+    const CORN = ['Green', 'Yellow', 'Orange', 'Red'];
+    const usados = ['near acuity', 'Amsler grid', 'symptoms'].concat(oct ? ['OCT'] : []);
+    const dadosM = ['microgravity (day ' + mg.dia + ')'].concat(temLuz ? ['light exposure'] : [], s.resp ? ['spacecraft motion'] : [], dR.n > 0 ? ['viewing distance'] : []);
+    const lista = (a) => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+    const relFrase = 'IRIS concluded ' + CORN[nivel] + ' (' + hero.nivel.toLowerCase() + ') based on ' + usados.length + ' tests (' + lista(usados) + ') and mission data on ' + lista(dadosM) + '.';
+    // Porquê: testes, condições e contexto da microgravidade
+    const problemas = [];
+    if (s.resp === 'sim') problemas.push('you felt the spacecraft move');
+    if (s.resp === 'naosei') problemas.push('spacecraft motion is unconfirmed');
+    if (dR.n > 0 && dR.foraPct >= 40) problemas.push('the distance was out of range ' + dR.foraPct + '% of the time');
+    if (luzMa && luz.foraPct >= 40) problemas.push(luz.nivel === 'fraca' ? 'the lighting was too dark' : 'there was too much light or glare');
+    const bons = [];
+    if (temLuz && !luzMa) bons.push('good lighting');
+    if (s.resp === 'nao') bons.push('no spacecraft motion');
+    if (dR.n > 0 && dR.foraPct < 40) bons.push('distance in range');
+    const porque = [];
+    if (back && back.motivos.length) porque.push({ k: 'Tests', t: 'What changed: ' + back.motivos.join(' ') });
+    else if (!back && (amNovas.length || acMuda.length)) porque.push({ k: 'Tests', t: 'What changed: ' + acMuda.concat(amNovas.map((x) => 'Amsler ' + x)).join('; ') + '.' });
+    else porque.push({ k: 'Tests', t: primeiroTeste ? 'This is your first test, so it becomes your baseline. Later tests are compared with it.' : 'Acuity and the Amsler grid are the same as your baseline.' });
+    if (nSint) porque.push({ k: 'Symptoms', t: 'You reported symptoms (' + listaSint.join(', ') + '). Symptoms alone raise the result to orange.' });
+    if (problemas.length) porque.push({ k: 'Conditions', t: 'The measurement may have been affected: ' + lista(problemas) + '. ' + (nivel === 1 ? 'That is why the result is yellow: repeat the tests in better conditions.' : 'Repeat the tests to confirm the change.') });
+    else porque.push({ k: 'Conditions', t: bons.length ? 'The test conditions were good (' + lista(bons) + '), so the result is reliable.' : 'The conditions were not measured by the camera, so they could not be checked.' });
+    if (mg.p50 !== undefined) porque.push({ k: 'Microgravity', t: 'Day ' + mg.dia + ' in microgravity: in the reference population the retina around the optic nerve has thickened about +' + mg.p50 + '% by now (9 in 10 stay below +' + mg.p90 + '%). ' + (nivel >= 2 ? 'A change in the quick tests at this stage should be checked with OCT when available.' : 'The quick tests found no visual change today.') });
+    if (oct) porque.push({ k: 'OCT', t: 'Latest OCT (day ' + oct.dia + '): ' + (oct.delta >= 0 ? '+' : '') + oct.delta + '% vs the first OCT, ' + (oct.level === 0 ? 'within the expected range.' : 'above the expected range: ' + oct.motivo) });
+    const relMeta = eu.nome + ' · Day ' + eu.dia + ' · ' + (this._hora || new Date()).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' · ' + (euReal ? 'Real data' : 'Simulated example');
     const REV = [
       { t: 'No review needed', cor: 'var(--ok-tx)', soft: 'var(--ok-soft)' },
       { t: 'Repeat the test', cor: 'var(--ylw-tx)', soft: 'var(--ylw-soft)' },
@@ -1171,6 +1276,8 @@ class Component extends DCLogic {
       concluirOp: nMarcas(am.eye) === 0 ? 0.45 : 1,
       // 4
       hero: hero,
+      relatorio: s.relatorio && s.passo === 4, relFrase: relFrase, relTestes: relTestes, relMissao: relMissao, relPorque: porque, relMeta: relMeta, relAccoes: accoes,
+      abrirRelatorio: () => this.setState({ relatorio: true }), fecharRelatorio: () => this.setState({ relatorio: false }),
       aconteceu: aconteceu,
       mapas: mapas,
       condRes: condRes,

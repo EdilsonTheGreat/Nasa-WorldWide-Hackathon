@@ -106,3 +106,11 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Se um ficheiro faltar ou não tocar, a mesma frase é dita pela voz do sistema (speechSynthesis). Tudo offline.
 - No passo do resultado é lido o nível (result_green/yellow/orange/red).
 - Voice generated with ElevenLabs (elevenlabs.io). Uso não comercial (plano gratuito).
+
+## IRIS e relatório final (14 Nov)
+- Nome da app: IRIS (Integrated Remote Intelligence for Spaceflight), no cabeçalho, nos títulos e no ecrã de entrada.
+- Resultado → "Final report": conclusão, testes, dados da missão (microgravidade com a faixa P50/P90 de `dados/faixas.json`,
+  luz medida pela câmara, movimento da nave, distância) e o porquê. Funções novas: `Visao.missao(dia, letraDemo)`, `Visao.camara.luz()`.
+- Luz fraca ou forte em 40% ou mais das leituras entra nas ressalvas (resultado amarelo se os testes estiverem iguais).
+- Registos novos: `luz_media` (0–100) e `luz_nivel` (boa | fraca | forte).
+- Modo coluna: a barra de navegação voltou a ficar fixa em baixo (o runtime procurava o rótulo em português).
