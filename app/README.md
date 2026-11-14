@@ -1,5 +1,7 @@
 # app/ (Marllon e Chandy)
 
+> **A interface final está em `visao/`** (ecrãs do Marllon ligados ao backend, ver `visao/README.md`). `camara/teste_visao.html` é o ecrã de teste do backend.
+
 Web app offline para qualquer dispositivo com browser (telemóvel, tablet, PC). 5 ecrãs: painel com o corpo, teste rápido (Amsler, acuidade, 4 perguntas), OCT guiado, gráfico com semáforo, acções e pacote para o médico de voo.
 
 Carregar por esta ordem no `index.html` (sem fetch, sem CDN):
@@ -25,3 +27,5 @@ A câmara **não faz** o teste de Amsler (o teste mede o que a pessoa vê). Serv
 - Testado de ponta a ponta (Chrome automático, sem internet): linha de base dá verde; centro torto + perda de 2 linhas sem melhoria com óculos dá vermelho; zona lateral torta dá amarelo.
 - **Abrir com `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows)**, não com duplo clique no HTML. Com `file://` a câmara fica `indisponivel` e a app mostra "Segura o ecrã a cerca de 40 cm".
 - Testado em Chrome automático, com câmara simulada e internet bloqueada: carrega offline, rejeita objectos que não são caras e falha de forma limpa em `file://`.
+
+- **Sem registo de OCT para astronautas reais** (decisão da equipa, 14 Nov): o teste rápido usa só Amsler, leitura de perto e 4 perguntas. O OCT fica nos astronautas simulados da demo.

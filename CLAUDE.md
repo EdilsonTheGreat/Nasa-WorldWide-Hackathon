@@ -20,8 +20,8 @@ Ciclo: **teste → comparação → semáforo → acção**.
 | `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Gera `dados/*` e `app/dados.js` |
 | `dados/` | gerado | **Não editar à mão.** Correr `python3 simulador/simulador.py` |
 | `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `testes.js` + `teste.html` (9 testes) |
-| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = medição da distância ao ecrã (MediaPipe offline em `vendor/`, não editar) |
-| `docs/` | todos | Especificações. Ler `docs/EDILSON.md` para o motor |
+| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`), entrada pela cara (`rosto.js`) e teste completo; bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
+| `docs/` | todos | Especificações. `docs/EDILSON.md` = motor; `docs/MARLLON.md` = como a UI chama o backend (`Armazem`, `Motor`, `Modelo`, `Distancia`) |
 
 ## Contrato de dados (mudar só depois de avisar a equipa toda)
 - `window.ASTRONAUTAS`: array de registos `{astronauta_id, perfil, dia, oct_um, amsler_zonas, amsler_centro, acuidade_linha, melhora_com_oculos, perg_focar, perg_contraste, perg_dor_cabeca, perg_visao_dupla}`. Campos sem medição nesse dia = `null`. `amsler_zonas` = array de inteiros 0–8 (grelha 3×3, centro = 4).
@@ -29,9 +29,13 @@ Ciclo: **teste → comparação → semáforo → acção**.
 - `perfil`: `populacao` | `demo_verde` (DEMO_A) | `demo_amarelo` (DEMO_B) | `demo_vermelho` (DEMO_C).
 - Cores: sempre as strings `"verde"`, `"amarelo"`, `"vermelho"` (e `"a_calibrar"` quando não há linha de base).
 
+## Privacidade (reconhecimento facial)
+- Só a própria pessoa regista a sua cara, com consentimento. Guarda-se apenas o descritor numérico, no aparelho (`localStorage`). Nunca guardar nem enviar fotografias. A escolha manual do perfil tem de existir sempre.
+
 ## Comandos
 - Regenerar dados: `python3 simulador/simulador.py` (seed fixa → resultados iguais)
-- Testar o motor: abrir `motor/teste.html` no browser e ver a consola / a página
+- Testar o motor e o modelo: abrir `motor/teste.html` no browser (22 testes)
+- Teste completo com perfis, câmara e OCT: `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows)
 
 ## Git
 - Fazer `git pull` antes de começar. Commits pequenos, mensagens em português a dizer **o quê e porquê**.

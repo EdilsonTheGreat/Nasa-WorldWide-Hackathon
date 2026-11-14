@@ -118,6 +118,56 @@
       return { ok: abaixo === "verde" && acima === "amarelo", detalhe: "P90=" + p + "%: " + abaixo + " / " + acima };
     });
 
+    // ---- Modelo de aprendizagem online (motor/modelo.js), se estiver carregado ----
+    var Mo = (typeof Modelo !== "undefined") ? Modelo : null;
+    if (Mo) {
+      teste("17. Modelo: aprender com exames reduz o erro da previsão ao dia 150", function () {
+        var ids = {}, eAprende = 0, ePrior = 0, n = 0;
+        ASTRONAUTAS.forEach(function (r) { if (r.perfil === "populacao") ids[r.astronauta_id] = true; });
+        Object.keys(ids).forEach(function (id) {
+          var reg = Motor.registosDe(id, ASTRONAUTAS), o = reg.filter(function (r) { return r.oct_um !== null; });
+          var real = (o[o.length - 1].oct_um - o[0].oct_um) / o[0].oct_um * 100;
+          eAprende += Math.abs(Mo.prever(Mo.treinar(reg, FAIXAS, 60).estado, 150).delta_pct - real);
+          ePrior += Math.abs(Mo.prever(Mo.novo(), 150).delta_pct - real); n++;
+        });
+        return { ok: eAprende / n < 2.5 && eAprende < ePrior * 0.6,
+                 detalhe: "erro médio com exames até ao dia 60: " + (eAprende / n).toFixed(2) + " pp; sem aprender: " + (ePrior / n).toFixed(2) + " pp" };
+      });
+      teste("18. Modelo: DEMO_C ao dia 30 já é sinalizado; DEMO_A não", function () {
+        var c = Mo.treinar(Motor.registosDe("DEMO_C", ASTRONAUTAS), FAIXAS, 30).texto;
+        var a = Mo.treinar(Motor.registosDe("DEMO_A", ASTRONAUTAS), FAIXAS, 30).texto;
+        return { ok: c.indexOf("vermelho") !== -1 && a.indexOf("Não se prevê") !== -1, detalhe: "C: " + c };
+      });
+      teste("19. Modelo: avisa quando a pessoa foge do seu habitual; perfil novo sem avisos", function () {
+        function b(d, acu, dor) { return { astronauta_id: "X", dia: d, oct_um: null, amsler_zonas: [], acuidade_linha: acu, melhora_com_oculos: 1, perg_focar: 0, perg_contraste: 0, perg_dor_cabeca: dor, perg_visao_dupla: 0 }; }
+        var normal = [b(0, 10, 0), b(7, 10, 0), b(14, 10, 0), b(21, 10, 0)];
+        var a0 = Mo.treinar(normal, FAIXAS).avisos.length;
+        var a1 = Mo.treinar(normal.concat([b(28, 7, 3)]), FAIXAS).avisos.length;
+        var a2 = Mo.treinar([b(0, 6, 3)], FAIXAS).avisos.length;
+        return { ok: a0 === 0 && a1 === 2 && a2 === 0, detalhe: "normal " + a0 + ", piorou " + a1 + ", perfil novo " + a2 };
+      });
+    }
+
+    teste("20. Primeiro teste de um perfil novo com o centro torto = vermelho (regra de segurança)", function () {
+      var r = Motor.avaliar([{ astronauta_id: "N", dia: 0, oct_um: null, amsler_zonas: [4], acuidade_linha: 10, melhora_com_oculos: 1 }], 0, FAIXAS, REGRAS);
+      var v = Motor.avaliar([{ astronauta_id: "N", dia: 0, oct_um: null, amsler_zonas: [], acuidade_linha: 6, melhora_com_oculos: 1 }], 0, FAIXAS, REGRAS);
+      return { ok: r.cor_final === "vermelho" && v.cor_final === "verde", detalhe: "centro torto: " + r.cor_final + "; só leitura fraca (fica como base): " + v.cor_final };
+    });
+
+    teste("21. Prontidão: tudo bem = verde; olho seco = amarelo com ressalva; vibração forte = vermelho", function () {
+      var a = Motor.prontidao({ nave: 0, luz: 0, estado: 0, sono: 0, superficie: 0, exercicio: 0, medicacao: 0, correcao: 2 }, REGRAS);
+      var b = Motor.prontidao({ nave: 0, luz: 0, estado: 0, sono: 0, superficie: 1, exercicio: 0, medicacao: 0, correcao: 0 }, REGRAS);
+      var c = Motor.prontidao({ nave: 2, luz: 0, estado: 1 }, REGRAS);
+      return { ok: a.estado === "verde" && !a.ressalvas.length && b.estado === "amarelo" && b.ressalvas.length === 1 && c.estado === "vermelho",
+               detalhe: a.estado + ", " + b.estado + " (" + b.ressalvas.join(" ") + "), " + c.estado };
+    });
+    teste("22. Prontidão: perda súbita de visão gera alerta clínico mesmo com prontidão verde", function () {
+      var a = Motor.prontidao({ nave: 0, luz: 0, estado: 0, alteracao_visual: [4] }, REGRAS);
+      var b = Motor.prontidao({ nave: 0, alteracao_visual: [1, 2] }, REGRAS);
+      return { ok: a.estado === "verde" && a.alerta_clinico === true && b.alerta_clinico === false && b.sintomas.length === 2,
+               detalhe: "perda súbita: alerta " + a.alerta_clinico + "; visão turva + linhas: alerta " + b.alerta_clinico };
+    });
+
     return res;
   }
 

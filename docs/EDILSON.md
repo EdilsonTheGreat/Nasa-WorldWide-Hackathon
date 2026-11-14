@@ -93,7 +93,7 @@ Ordem: `a_calibrar` < `verde` < `amarelo` < `vermelho`. Devolve a pior.
 - `registos`: todos os registos de **um** astronauta (formato de `ASTRONAUTAS`).
 - Usa só registos com `dia <= dia`.
   - OCT: todos os `oct_um != null` → `corOCT`.
-  - Teste rápido: **base** = primeiro registo com `acuidade_linha != null`; **hoje** = o último até `dia`. Se só existir um (o próprio), Amsler e acuidade dão `verde` (é a linha de base).
+  - Teste rápido: **base** = primeiro registo com `acuidade_linha != null`; **hoje** = o último até `dia`. Se só existir um (o próprio), a acuidade dá `verde` (é a linha de base) e o Amsler é comparado com uma grelha sem distorções (`corAmsler([], zonas)`): distorções no 1.º teste dão amarelo ou vermelho.
 - Devolve:
 ```js
 { cor_final, sinais: { oct: {...}, amsler: {...}, acuidade: {...} },
@@ -102,6 +102,9 @@ Ordem: `a_calibrar` < `verde` < `amarelo` < `vermelho`. Devolve a pior.
   motivos: [ /* motivos dos sinais que não são verdes */ ] }
 ```
 - Se `cor_final` for `a_calibrar`, usar `regras.textos.a_calibrar`.
+
+### 4.7 `Motor.prontidao(respostas, regras)`
+Estado do questionário pré-exame (VISION GUARD), separado da cor clínica. Regras em `REGRAS.prontidao` (pergunta → opção → `e`: verde/amarelo/vermelho, `m`: ressalva; a pergunta `alteracao_visual` é de escolha múltipla e só gera `alerta_clinico`). Estado final = o pior. Testes 21 e 22.
 
 ### 4.6 `Motor.registosDe(astronautaId, astronautas)`
 Filtra e ordena por dia. Atalho para a app.

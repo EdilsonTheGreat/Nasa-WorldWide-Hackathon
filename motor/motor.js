@@ -180,7 +180,10 @@
       amsler = { cor: "a_calibrar", zonas_novas: [], motivo: "Ainda não há teste rápido." };
       acuidade = { cor: "a_calibrar", perda: 0, motivo: "Ainda não há teste rápido." };
     } else if (rapidos.length === 1) {
-      amsler = { cor: "verde", zonas_novas: [], motivo: "Primeiro teste guardado como linha de base." };
+      // Primeiro teste: a leitura fica como linha de base, mas a grelha de Amsler é comparada
+      // com uma grelha sem distorções (regra de segurança: distorções no 1.º teste não passam em claro).
+      amsler = corAmsler([], rapidos[0].amsler_zonas, regras);
+      if (amsler.cor === "verde") amsler.motivo = "Primeiro teste guardado como linha de base.";
       acuidade = { cor: "verde", perda: 0, motivo: "Primeiro teste guardado como linha de base." };
     } else {
       var base = rapidos[0];
@@ -205,6 +208,34 @@
     };
   }
 
+  // -------------------------------------------------------------------
+  // prontidao: estado do questionário pré-exame (VISION GUARD).
+  // É SEPARADO da cor clínica: diz se a medição é fiável, não se a visão piorou.
+  //   respostas: { nave: 0, luz: 1, estado: 0, alteracao_visual: [2], sono: 0, ... }
+  //   devolve: { estado: "verde"|"amarelo"|"vermelho", ressalvas: [...],
+  //              alerta_clinico: true|false, sintomas: [...], texto }
+  // -------------------------------------------------------------------
+  function prontidao(respostas, regras) {
+    var cfg = regras.prontidao, r = respostas || {};
+    var estado = "verde", ressalvas = [], sintomas = [], alerta = false;
+    cfg.perguntas.forEach(function (p) {
+      var v = r[p.id];
+      if (p.multipla) {
+        (Array.isArray(v) ? v : []).forEach(function (x) {
+          var o = p.opcoes.filter(function (q) { return q.v === x; })[0];
+          if (o) { sintomas.push(o.t); if (o.alerta) alerta = true; }
+        });
+        return;
+      }
+      var op = p.opcoes.filter(function (q) { return q.v === v; })[0];
+      if (!op) return;
+      if (op.m) ressalvas.push(op.m);
+      if (ORDEM[op.e] > ORDEM[estado]) estado = op.e;
+    });
+    return { estado: estado, ressalvas: ressalvas, alerta_clinico: alerta, sintomas: sintomas,
+             texto: cfg.textos[estado], texto_alerta: alerta ? cfg.textos.alerta : "" };
+  }
+
   var Motor = {
     ORDEM: ORDEM,
     piorCor: piorCor,
@@ -212,7 +243,8 @@
     corAmsler: corAmsler,
     corAcuidade: corAcuidade,
     registosDe: registosDe,
-    avaliar: avaliar
+    avaliar: avaliar,
+    prontidao: prontidao
   };
 
   global.Motor = Motor;

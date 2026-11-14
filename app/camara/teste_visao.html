@@ -14,7 +14,7 @@
     .passo { display: none; background: #fff; border: 1px solid #e3e3e3; border-radius: 12px; padding: 1rem 1.2rem; }
     .passo.activo { display: block; }
     label { display: block; margin: .6rem 0 .2rem; font-weight: 600; }
-    input[type=text], input[type=number] { font-size: 1rem; padding: .5rem; width: 100%; max-width: 320px; border: 1px solid #bbb; border-radius: 8px; }
+    select, input[type=text], input[type=number] { font-size: 1rem; padding: .5rem; width: 100%; max-width: 320px; border: 1px solid #bbb; border-radius: 8px; }
     button { font-size: 1rem; padding: .65rem 1.1rem; border-radius: 10px; border: 1px solid #888; background: #fff; cursor: pointer; margin: .4rem .4rem 0 0; }
     button.principal { background: #1d3c6e; color: #fff; border-color: #1d3c6e; }
     button:disabled { opacity: .45; cursor: not-allowed; }
@@ -44,6 +44,11 @@
     .escala label { font-weight: 400; margin: 0; border: 1px solid #bbb; border-radius: 8px; padding: .35rem .6rem; cursor: pointer; }
     .escala input { margin-right: .3rem; }
 
+    .previsao { background: #eef3fb; border: 1px solid #b9cbe8; border-radius: 10px; padding: .6rem .8rem; margin: .6rem 0; }
+    .pre-p { margin: .9rem 0; } .pre-p label { font-weight: 400; margin: .25rem 0; display: block; } .pre-p .q { font-weight: 600; }
+    .estado-pre { border-radius: 10px; padding: .6rem .8rem; margin: .6rem 0; border: 2px solid; }
+    .estado-pre.verde { border-color: var(--verde); background: #e8f5e9; } .estado-pre.amarelo { border-color: var(--amarelo); background: #fff8e1; } .estado-pre.vermelho { border-color: var(--vermelho); background: #fdecea; }
+    .alerta-clinico { border: 2px solid var(--vermelho); background: #fdecea; border-radius: 10px; padding: .6rem .8rem; margin: .6rem 0; font-weight: 600; }
     /* Resultado */
     .semaforo { border-radius: 12px; padding: 1rem 1.2rem; color: #fff; font-size: 1.15rem; font-weight: 700; margin: .5rem 0 1rem; }
     .semaforo.verde { background: var(--verde); } .semaforo.amarelo { background: var(--amarelo); }
@@ -60,13 +65,35 @@
   <!-- 0. Quem é e que dia é -->
   <section class="passo activo" id="p-inicio">
     <h2>1. Identificação</h2>
-    <label for="nome">Nome ou código do astronauta</label>
-    <input type="text" id="nome" value="JURI" autocomplete="off">
+    <button class="principal" id="b-rosto-entrar">Entrar com a cara</button>
+    <span class="nota" id="rosto-info"></span>
+    <p class="aviso" id="rosto-msg" hidden></p>
+    <label for="perfil">Astronauta</label>
+    <select id="perfil"></select>
+    <div id="novo-perfil">
+      <label for="nome">Nome ou código do novo astronauta</label>
+      <input type="text" id="nome" autocomplete="off" placeholder="ex.: MARLLON">
+    </div>
     <label for="dia">Dia de missão</label>
     <input type="number" id="dia" min="0" max="999" value="0">
     <p class="nota" id="historico-info"></p>
-    <button class="principal" id="b-iniciar">Começar</button>
+    <button class="principal" id="b-iniciar">Teste rápido (5 min)</button>
+    <button id="b-ver">Ver último resultado</button>
+    <button id="b-rosto-registar">Registar a minha cara neste perfil</button>
+    <button id="b-rosto-apagar">Apagar a cara registada</button>
     <button id="b-apagar">Apagar os testes deste astronauta</button>
+    <p class="nota">Reconhecimento facial: só com o consentimento da própria pessoa. Guarda-se apenas um código numérico da cara, neste aparelho; nenhuma fotografia é guardada nem enviada. Podes sempre escolher o perfil na lista.</p>
+  </section>
+
+  <!-- Questionário pré-exame (VISION GUARD) -->
+  <section class="passo" id="p-pre">
+    <h2>2. Antes do teste</h2>
+    <p class="nota">Responde com base em como te sentes neste momento.</p>
+    <div id="pre-perguntas"></div>
+    <div id="pre-estado"></div>
+    <button class="principal" id="b-pre-avaliar">Verificar prontidão</button>
+    <button class="principal" id="b-pre-continuar" hidden>Continuar para o teste</button>
+    <button id="b-pre-cancelar">Cancelar</button>
   </section>
 
   <!-- 1. Distância -->
@@ -135,8 +162,12 @@
 <script src="../dados.js"></script>
 <script src="../../motor/regras.js"></script>
 <script src="../../motor/motor.js"></script>
+<script src="../../motor/modelo.js"></script>
+<script src="../armazenamento.js"></script>
 <script src="vendor/mediapipe/face_detection.js"></script>
 <script src="distancia.js"></script>
+<script src="vendor/faceapi/face-api.js"></script>
+<script src="rosto.js"></script>
 <script src="teste_visao.js"></script>
 </body>
 </html>

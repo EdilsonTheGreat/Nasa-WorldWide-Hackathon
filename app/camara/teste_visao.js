@@ -1,7 +1,10 @@
 // =====================================================================
 // teste_visao.js: fluxo do teste rápido com verificação da distância
 //
-// Passos: identificação → distância (câmara) → Amsler olho direito →
+// (Sem OCT: o astronauta não regista exames de OCT nesta app. O OCT só existe
+//  nos astronautas simulados da demo.)
+// Passos: identificação (lista ou cara) → questionário pré-exame (prontidão) →
+//         distância (câmara) → Amsler olho direito →
 //         Amsler olho esquerdo → leitura de perto → (óculos de reserva) →
 //         4 perguntas → resultado do motor (semáforo)
 //
@@ -32,14 +35,12 @@
   var t = {};          // teste em curso
   var dist = { estado: null, desde: 0, leituras: [] };
 
-  // ---------- armazenamento ----------
-  function lerTodos() {
-    try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; }
+  // ---------- armazenamento (app/armazenamento.js) ----------
+  function registosDe(id) { return Armazem.registosDe(id); }
+  function idActual() {
+    var sel = $("perfil").value;
+    return Armazem.normalizarId(sel === "__novo__" ? $("nome").value : sel);
   }
-  function guardarTodos(lista) {
-    try { localStorage.setItem(CHAVE, JSON.stringify(lista)); } catch (e) { alert("Não foi possível guardar neste aparelho."); }
-  }
-  function registosDe(id) { return Motor.registosDe(id, lerTodos()); }
 
   // ---------- navegação ----------
   function mostrar(passo) {
@@ -49,32 +50,134 @@
     window.__passo = passo;   // usado pelos testes automáticos
   }
 
+  function preencherPerfis(seleccionar) {
+    var ps = Armazem.perfis();
+    $("perfil").innerHTML = ps.map(function (p) {
+      return '<option value="' + p.id + '">' + p.id + " (" + p.testes + " registo(s), último: dia " + p.ultimo_dia + ")</option>";
+    }).join("") + '<option value="__novo__">+ Novo astronauta</option>';
+    $("perfil").value = seleccionar && ps.some(function (p) { return p.id === seleccionar; }) ? seleccionar : (ps.length ? ps[0].id : "__novo__");
+    actualizarHistorico();
+  }
+
   function actualizarHistorico() {
-    var id = $("nome").value.trim() || "JURI";
-    var r = registosDe(id);
+    var novo = $("perfil").value === "__novo__";
+    $("novo-perfil").style.display = novo ? "block" : "none";
+    $("b-ver").disabled = novo || !registosDe(idActual()).length; $("b-apagar").disabled = novo;
+    actualizarRosto();
+    var r = novo ? [] : registosDe(idActual());
     if (r.length === 0) {
-      $("historico-info").textContent = "Primeiro teste deste astronauta: vai ficar como linha de base (o normal dele).";
+      $("historico-info").textContent = "Primeiro registo deste astronauta: vai ficar como linha de base (o normal dele).";
+      $("dia").value = 0;
     } else {
       var ult = r[r.length - 1];
-      $("historico-info").textContent = r.length + " teste(s) guardado(s). Último: dia " + ult.dia + ".";
-      if (+$("dia").value <= ult.dia) $("dia").value = ult.dia + 7;
+      $("historico-info").textContent = r.length + " registo(s) guardado(s). Último: dia " + ult.dia + ".";
+      $("dia").value = ult.dia + 7;
     }
   }
 
   // ---------- 0. início ----------
-  $("nome").addEventListener("change", actualizarHistorico);
+  function lerInicio() {
+    var id = idActual(), dia = parseInt($("dia").value, 10);
+    if (!id) { alert("Escreve o nome ou código do astronauta."); return null; }
+    if (!(dia >= 0)) { alert("Indica o dia de missão (0 ou mais)."); return null; }
+    return { id: id, dia: dia };
+  }
+  $("perfil").addEventListener("change", actualizarHistorico);
   $("b-apagar").onclick = function () {
-    var id = $("nome").value.trim() || "JURI";
-    if (!confirm("Apagar todos os testes de " + id + "?")) return;
-    guardarTodos(lerTodos().filter(function (r) { return r.astronauta_id !== id; }));
-    $("dia").value = 0;
-    actualizarHistorico();
+    var id = idActual();
+    if (!confirm("Apagar todos os registos de " + id + "?")) return;
+    Armazem.apagarPerfil(id);
+    preencherPerfis();
+  };
+  $("b-ver").onclick = function () {
+    var r = registosDe(idActual());
+    if (r.length) mostrarResultado(idActual(), r[r.length - 1].dia);
   };
   $("b-iniciar").onclick = function () {
-    var dia = parseInt($("dia").value, 10);
-    if (!(dia >= 0)) { alert("Indica o dia de missão (0 ou mais)."); return; }
-    t = { id: $("nome").value.trim() || "JURI", dia: dia, zonasOD: [], zonasOE: [],
-          linha: null, linhaOculos: null, melhora: 1, distanciasAcu: [] };
+    var i = lerInicio(); if (!i) return;
+    t = { id: i.id, dia: i.dia, zonasOD: [], zonasOE: [],
+          linha: null, linhaOculos: null, melhora: 1, distanciasAcu: [], pre: null, prontidao: null };
+    Armazem.criarPerfil(i.id);
+    iniciarPre();
+  };
+
+  // ---------- Entrar com a cara (camara/rosto.js) ----------
+  function msgRosto(texto) { $("rosto-msg").textContent = texto; $("rosto-msg").hidden = !texto; }
+  function actualizarRosto() {
+    var n = window.Rosto ? Rosto.registados() : [];
+    $("rosto-info").textContent = n.length ? "Caras registadas: " + n.join(", ") : "Ainda sem caras registadas.";
+    var novo = $("perfil").value === "__novo__";
+    $("b-rosto-registar").disabled = novo;
+    $("b-rosto-apagar").disabled = novo || n.indexOf(idActual()) === -1;
+  }
+  function comRosto(fn) {
+    if (!window.Rosto) { msgRosto("Reconhecimento facial indisponível. Escolhe o perfil na lista."); return; }
+    if (dist.iniciada) { Distancia.parar(); dist.iniciada = false; }
+    Rosto.definirPasta("vendor/faceapi/");
+    $("camara").hidden = false; $("cam-estado").textContent = "a olhar…"; $("cam-cm").textContent = "";
+    msgRosto("Olha de frente para a câmara…");
+    fn().then(function (r) {
+      $("camara").hidden = true;
+      msgRosto(r.mensagem);
+      window.__rosto = r;   // usado pelos testes automáticos
+      actualizarRosto();
+      return r;
+    });
+  }
+  $("b-rosto-entrar").onclick = function () {
+    comRosto(function () {
+      return Rosto.identificar($("video")).then(function (r) {
+        if (r.ok) { Armazem.criarPerfil(r.id); preencherPerfis(r.id); }
+        return r;
+      });
+    });
+  };
+  $("b-rosto-registar").onclick = function () {
+    var id = idActual();
+    if (!id) return;
+    if (!confirm("Registar a cara de " + id + " neste aparelho? Só a própria pessoa deve fazer isto.")) return;
+    comRosto(function () { return Rosto.registar($("video"), id); });
+  };
+  $("b-rosto-apagar").onclick = function () { Rosto.apagar(idActual()); msgRosto("Cara apagada."); actualizarRosto(); };
+
+  // ---------- Questionário pré-exame (regras em motor/regras.js) ----------
+  function iniciarPre() {
+    $("pre-perguntas").innerHTML = REGRAS.prontidao.perguntas.map(function (p, n) {
+      var ops = p.opcoes.map(function (o, k) {
+        return p.multipla
+          ? '<label><input type="checkbox" name="pre_' + p.id + '" value="' + o.v + '"> ' + o.t + "</label>"
+          : '<label><input type="radio" name="pre_' + p.id + '" value="' + o.v + '"' + (k === 0 ? " checked" : "") + "> " + o.t + "</label>";
+      }).join("");
+      return '<div class="pre-p"><div class="q">' + (n + 1) + ". " + p.texto + "</div>" + ops + "</div>";
+    }).join("");
+    $("pre-estado").innerHTML = ""; $("b-pre-continuar").hidden = true; $("b-pre-avaliar").hidden = false;
+    mostrar("p-pre");
+  }
+  $("b-pre-cancelar").onclick = function () { mostrar("p-inicio"); };
+  $("b-pre-avaliar").onclick = function () {
+    var resp = {};
+    REGRAS.prontidao.perguntas.forEach(function (p) {
+      if (p.multipla) {
+        resp[p.id] = Array.prototype.map.call(document.querySelectorAll('input[name="pre_' + p.id + '"]:checked'), function (c) { return +c.value; });
+      } else {
+        var sel = document.querySelector('input[name="pre_' + p.id + '"]:checked');
+        resp[p.id] = sel ? +sel.value : null;
+      }
+    });
+    var pr = Motor.prontidao(resp, REGRAS);
+    t.pre = resp; t.prontidao = pr;
+    var nomes = { verde: "Verde: pronto", amarelo: "Amarelo: pronto com ressalvas", vermelho: "Vermelho: medição não fiável agora" };
+    var html = "";
+    if (pr.alerta_clinico) html += '<div class="alerta-clinico" id="pre-alerta">' + pr.texto_alerta + "</div>";
+    html += '<div class="estado-pre ' + pr.estado + '" id="pre-cor" data-estado="' + pr.estado + '"><strong>' + nomes[pr.estado] + "</strong><br>" + pr.texto;
+    if (pr.ressalvas.length) html += "<ul class='motivos'>" + pr.ressalvas.map(function (m) { return "<li>" + m + "</li>"; }).join("") + "</ul>";
+    html += "</div>";
+    $("pre-estado").innerHTML = html;
+    $("b-pre-continuar").hidden = pr.estado === "vermelho";
+    window.__prontidao = pr;   // usado pelos testes automáticos
+    $("pre-estado").scrollIntoView();
+  };
+  $("b-pre-continuar").onclick = function () {
     $("camara").hidden = false;
     mostrar("p-distancia");
     if (!dist.iniciada) {
@@ -206,49 +309,62 @@
   }
   $("b-perguntas-ok").onclick = function () {
     var reg = {
-      astronauta_id: t.id, perfil: "real", dia: t.dia, oct_um: null,
+      astronauta_id: t.id, dia: t.dia,
       amsler_zonas: uniao(t.zonasOD, t.zonasOE),
       amsler_od: t.zonasOD, amsler_oe: t.zonasOE,
       acuidade_linha: t.linha, acuidade_com_oculos: t.linhaOculos, melhora_com_oculos: t.melhora,
       distancia_cm: t.distanciasAcu.length ? Math.round(media(t.distanciasAcu)) : null,
-      sem_camara: !!t.semCamara
+      sem_camara: !!t.semCamara,
+      pre_exame: t.pre, prontidao: t.prontidao ? t.prontidao.estado : null,
+      ressalvas: t.prontidao ? t.prontidao.ressalvas : [], alerta_clinico: t.prontidao ? t.prontidao.alerta_clinico : false
     };
     reg.amsler_centro = reg.amsler_zonas.indexOf(REGRAS.amsler.zona_centro) !== -1 ? 1 : 0;
     PERGUNTAS.forEach(function (p) {
       var sel = document.querySelector('input[name="' + p[0] + '"]:checked');
       reg[p[0]] = sel ? +sel.value : 0;
     });
-    // substitui um teste do mesmo dia, se existir
-    var todos = lerTodos().filter(function (r) { return !(r.astronauta_id === reg.astronauta_id && r.dia === reg.dia); });
-    todos.push(reg);
-    guardarTodos(todos);
-    mostrarResultado(reg);
+    Armazem.guardar(reg);     // junta com o OCT do mesmo dia, se existir
+    mostrarResultado(reg.astronauta_id, reg.dia);
   };
 
   // ---------- 5. Resultado ----------
-  function mostrarResultado(reg) {
-    var regs = registosDe(reg.astronauta_id);
-    var r = Motor.avaliar(regs, reg.dia, FAIXAS, REGRAS);
-    var primeiro = regs.length === 1;
+  function mostrarResultado(id, dia) {
+    var regs = registosDe(id);
+    var av = Armazem.avaliar(id, dia), r = av.semaforo, mo = av.modelo;
+    var reg = regs.filter(function (x) { return x.dia === dia; })[0] || {};
     var nome = { verde: "Verde", amarelo: "Amarelo", vermelho: "Vermelho", a_calibrar: "A calibrar" }[r.cor_final];
-    var html = '<div class="semaforo ' + r.cor_final + '" id="cor-final" data-cor="' + r.cor_final + '">' + nome +
-               "<small>" + (primeiro ? "Primeiro teste guardado como o teu normal (linha de base). " : "") + r.texto + "</small></div>";
+    var html = "<p><strong>" + id + "</strong> · dia " + dia + "</p>" +
+               '<div class="semaforo ' + r.cor_final + '" id="cor-final" data-cor="' + r.cor_final + '">' + nome +
+               "<small>" + (regs.length === 1 ? "Primeiro registo guardado como o teu normal (linha de base). " : "") + r.texto + "</small></div>";
+    if (reg.alerta_clinico) html += '<div class="alerta-clinico">' + REGRAS.prontidao.textos.alerta + "</div>";
     if (r.motivos.length) html += "<p><strong>Porquê:</strong></p><ul class='motivos'>" + r.motivos.map(function (m) { return "<li>" + m + "</li>"; }).join("") + "</ul>";
-    html += "<p class='nota'>Dia " + reg.dia + " · Amsler: olho direito [" + reg.amsler_od.join(", ") + "], olho esquerdo [" + reg.amsler_oe.join(", ") +
-            "] · leitura: linha " + reg.acuidade_linha + "/10" + (reg.acuidade_com_oculos !== null ? " (com óculos: " + reg.acuidade_com_oculos + ")" : "") +
-            " · distância média: " + (reg.distancia_cm ? reg.distancia_cm + " cm" : "não medida") + "</p>";
-    if (r.sinais.oct.cor === "a_calibrar") html += "<p class='nota'>O OCT não entra neste teste rápido: é registado no exame guiado.</p>";
+    // Tendência do modelo: só aparece se houver avisos pessoais ou exames de OCT (perfis simulados).
+    if (mo && (mo.avisos.length || mo.previsao)) {
+      html += '<div class="previsao" id="previsao"><strong>O teu padrão (modelo que aprende contigo):</strong> ' + (mo.previsao ? mo.texto : "");
+      if (mo.avisos.length) html += "<ul class='motivos'>" + mo.avisos.map(function (m) { return "<li>" + m + "</li>"; }).join("") + "</ul>";
+      html += "<span class='nota'>Informativo: não muda a cor do semáforo.</span></div>";
+    }
+    var linhas = [];
+    if (r.sinais.oct.cor !== "a_calibrar") linhas.push("OCT: retina " + (r.sinais.oct.delta_pct >= 0 ? "+" : "") + r.sinais.oct.delta_pct + "% face à linha de base (" + r.sinais.oct.cor + ")");
+    if (reg.acuidade_linha !== null && reg.acuidade_linha !== undefined) {
+      linhas.push("Amsler: olho direito [" + (reg.amsler_od || []).join(", ") + "], olho esquerdo [" + (reg.amsler_oe || []).join(", ") + "]");
+      linhas.push("Leitura: linha " + reg.acuidade_linha + "/10" + (reg.acuidade_com_oculos !== null && reg.acuidade_com_oculos !== undefined ? " (com óculos: " + reg.acuidade_com_oculos + ")" : ""));
+      linhas.push("Distância média: " + (reg.distancia_cm ? reg.distancia_cm + " cm" : "não medida"));
+    }
+    if (reg.prontidao && reg.prontidao !== "verde" && (reg.ressalvas || []).length)
+      html += "<p class='aviso' id='ressalvas'><strong>Teste feito com ressalvas:</strong> " + reg.ressalvas.join(" ") + " Se o resultado for inesperado, repete em melhores condições.</p>";
+    html += "<p class='nota'>" + linhas.join(" · ") + "</p>";
     if (REGRAS.provisorio) html += "<p class='nota'>Limites provisórios, ainda não validados pela equipa de saúde.</p>";
     $("resultado").innerHTML = html;
-    window.__resultado = r;   // usado pelos testes automáticos
+    window.__resultado = r; window.__modelo = mo;   // usados pelos testes automáticos
     mostrar("p-resultado");
   }
-  $("b-novo").onclick = function () { actualizarHistorico(); mostrar("p-inicio"); };
+  $("b-novo").onclick = function () { preencherPerfis(t.id); mostrar("p-inicio"); };
 
   // ---------- utilitários ----------
   function uniao(a, b) { return a.concat(b.filter(function (x) { return a.indexOf(x) === -1; })).sort(); }
   function media(xs) { return xs.reduce(function (s, x) { return s + x; }, 0) / xs.length; }
 
-  actualizarHistorico();
+  preencherPerfis();
   window.__passo = "p-inicio";
 })();

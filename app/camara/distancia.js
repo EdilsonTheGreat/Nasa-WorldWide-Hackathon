@@ -20,6 +20,7 @@
 //   Distancia.iniciar(videoElement, { minCm: 30, maxCm: 45, aoMudar: function (r) { ... } });
 //   // r = { estado: "ok" | "perto" | "longe" | "sem_cara" | "indisponivel", cm, mensagem }
 //   Distancia.calibrar(40);   // o utilizador está agora a 40 cm
+//   Distancia.definirIntervalo(28, 38);   // muda o intervalo sem reiniciar a câmara
 //   Distancia.parar();
 //
 // IMPORTANTE: abrir a app por http://localhost (ver abrir_app.command / abrir_app.bat),
@@ -167,6 +168,8 @@
   global.Distancia = {
     iniciar: iniciar, parar: parar, calibrar: calibrar, apagarCalibracao: apagarCalibracao,
     ultimo: function () { return estado.ultimo; },
+    // muda o intervalo aceite sem reiniciar a câmara (ex.: 40 cm na acuidade, 33 cm na grelha de Amsler)
+    definirIntervalo: function (minCm, maxCm) { if (estado.opcoes) { estado.opcoes.minCm = minCm; estado.opcoes.maxCm = maxCm; estado.historico = []; } },
     // exposto para testes: cálculo puro da distância
     _calcularCm: function (ipdPx, larguraPx, k) { return (k || kPorDefeito(larguraPx)) / ipdPx; }
   };
