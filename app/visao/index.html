@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visão · Deep Thinkers · ecrãs do protótipo</title>
+<link href="fonte.css" rel="stylesheet">
+<style>
+:root{--bg:#0D0C0A;--card:rgba(255,255,255,0.06);--line:rgba(255,255,255,0.10);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--acc:#CFE3F3;--acc-tx:#0D0C0A}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:'Manrope',system-ui,sans-serif;color:var(--tx);-webkit-font-smoothing:antialiased;background:radial-gradient(45% 40% at 85% 0%,rgba(207,227,243,0.12),rgba(0,0,0,0) 70%),radial-gradient(40% 40% at 0% 100%,rgba(95,157,184,0.14),rgba(0,0,0,0) 70%),var(--bg)}
+main{max-width:1240px;margin:0 auto;padding:48px 32px 64px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:28px}
+h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
+.sub{font-size:15px;color:var(--tx2)}
+.acoes{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;height:46px;padding:0 22px;border-radius:23px;font:inherit;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}
+.btn-acc{background:var(--acc);color:var(--acc-tx);border:0;box-shadow:0 6px 24px rgba(207,227,243,0.3)}
+.btn-sec{background:transparent;color:var(--tx);border:1px solid var(--line)}
+.btn-sec:hover{border-color:rgba(255,255,255,0.3)}
+.grelha{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.cartao{display:flex;flex-direction:column;gap:10px;padding:12px 12px 16px;border-radius:22px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--tx);transition:transform .15s ease,border-color .15s ease}
+.cartao:hover{transform:translateY(-2px);border-color:rgba(207,227,243,0.45)}
+.cartao img{width:100%;aspect-ratio:1194/834;object-fit:cover;border-radius:14px;display:block;background:#000}
+.cartao b{font-size:16px;font-weight:600;padding:0 4px}
+.cartao span{font-size:13px;line-height:1.45;color:var(--tx2);padding:0 4px}
+.nota{margin-top:28px;padding:18px 20px;border-radius:18px;background:var(--card);border:1px solid var(--line);font-size:14px;line-height:1.6;color:var(--tx2)}
+.nota b{color:var(--tx)}
+#estado{font-size:13px;color:var(--tx3);min-height:18px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div>
+<span class="sub">Deep Thinkers · NASA Space Apps 2026 · protótipo da app de visão</span>
+<h1>Visão · todos os ecrãs</h1>
+</div>
+<div class="acoes">
+<button class="btn btn-sec" type="button" id="repor">Repor a demonstração</button>
+<a class="btn btn-acc" href="Main.html">Começar pelo início</a>
+</div>
+</header>
+<div id="estado" role="status"></div>
+<div class="grelha">
+<a class="cartao" href="Main.html"><img src="assets/miniaturas/Main.jpg" alt=""><b>1 · Entrar</b><span>Escolher o perfil e confirmar com Face ID ou palavra-passe.</span></a>
+<a class="cartao" href="Hoje.html"><img src="assets/miniaturas/Hoje.jpg" alt=""><b>2 · Hoje</b><span>Recomendação do dia e notificação de movimento da nave.</span></a>
+<a class="cartao" href="Perfil.html"><img src="assets/miniaturas/Perfil.jpg" alt=""><b>3 · Perfil</b><span>Dados oficiais, personalização e eventos da nave com gráfico.</span></a>
+<a class="cartao" href="TesteRapido.html"><img src="assets/miniaturas/TesteRapido.jpg" alt=""><b>4 · Testes rápidos</b><span>Antes de começar, acuidade de perto, grelha de Amsler e resultado.</span></a>
+<a class="cartao" href="OCT.html"><img src="assets/miniaturas/OCT.jpg" alt=""><b>5 · OCT (opcional)</b><span>Registar os valores do aparelho e comparar com o histórico.</span></a>
+<a class="cartao" href="Tendencia.html"><img src="assets/miniaturas/Tendencia.jpg" alt=""><b>6 · Histórico</b><span>Tendência da retina face à base pré-voo.</span></a>
+<a class="cartao" href="SANS.html"><img src="assets/miniaturas/SANS.jpg" alt=""><b>7 · Monitorização SANS</b><span>Linha temporal dos exames e eventos da missão.</span></a>
+<a class="cartao" href="Alerta.html"><img src="assets/miniaturas/Alerta.jpg" alt=""><b>8 · Alertas médicos</b><span>Alertas em quatro níveis, com detalhe e envio ao médico de voo.</span></a>
+</div>
+<div class="nota">
+<b>Como usar.</b> Abre esta pasta e faz duplo clique em <b>index.html</b>, ou começa em <b>Main.html</b>. Funciona sem internet. Para a câmara (distância e entrada pelo rosto), abre a app com o ficheiro <b>abrir_app</b> da pasta do projecto (http://localhost:8000); com duplo clique tudo funciona menos a câmara. O perfil, o tema e as respostas ficam guardados no navegador: usa <b>Repor a demonstração</b> para voltar a ver a notificação de movimento e começar de novo.<br>
+Marta = rotina · Daniel = revisão recomendada · Sofia = prioridade clínica. Tudo é simulado, sem ligação a sistemas da NASA, e a app não faz diagnóstico de SANS.
+</div>
+</main>
+<script>
+document.getElementById('repor').addEventListener('click', function () {
+  var n = 0;
+  try {
+    Object.keys(window.localStorage).forEach(function (k) {
+      if (k.indexOf('visao-') === 0) { window.localStorage.removeItem(k); n++; }   // os testes reais (dt_registos) e os rostos (dt_rostos) não são apagados aqui
+    });
+    document.getElementById('estado').textContent = 'Demonstração reposta.';
+  } catch (e) {
+    document.getElementById('estado').textContent = 'Este navegador não deixa guardar dados locais: cada página começa sempre do zero.';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alertas médicos · Visão</title>
+<link href="fonte.css" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7FB7CF}a:hover{color:#A9D3E4}
+.tema-escuro{--bg:#0D0C0A;--glow1:rgba(207,227,243,0.12);--card:rgba(255,255,255,0.06);--card2:rgba(255,255,255,0.025);--card3:rgba(255,255,255,0.03);--card-shadow:none;--line:rgba(255,255,255,0.12);--line2:rgba(255,255,255,0.08);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--tx-soft:#E1E5EA;--chip:rgba(255,255,255,0.06);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#CFE3F3;--acc-glow:rgba(207,227,243,0.35);--acc-soft:rgba(207,227,243,0.14);--acc-line:rgba(207,227,243,0.5);--cta:#F2F4F7;--cta-tx:#0D0C0A;--nav:rgba(22,24,28,0.82);--nav-shadow:0 16px 40px rgba(0,0,0,0.45);--ok:#7FD1A6;--ok-tx:#7FD1A6;--ok-soft:rgba(127,209,166,0.14);--ok-line:rgba(127,209,166,0.40);--ok-glow:rgba(127,209,166,0.16);--ylw:#EBD35B;--ylw-tx:#EBD35B;--ylw-soft:rgba(235,211,91,0.13);--ylw-line:rgba(235,211,91,0.42);--ylw-glow:rgba(235,211,91,0.16);--warn:#F0A940;--warn-tx:#F0A940;--warn-soft:rgba(240,169,64,0.15);--warn-line:rgba(240,169,64,0.45);--warn-glow:rgba(240,169,64,0.18);--bad:#F0766B;--bad-tx:#F0766B;--bad-soft:rgba(240,118,107,0.15);--bad-line:rgba(240,118,107,0.45);--bad-glow:rgba(240,118,107,0.22);--teal:#A9D3E4;--teal-soft:rgba(127,183,207,0.10);--teal-line:rgba(127,183,207,0.28);--bad-btn:linear-gradient(180deg,#F5918A,#E0645A);--bad-btn-tx:#1A0D0B;--bad-btn-glow:rgba(240,118,107,0.42)}
+.tema-claro{--bg:#FAFBFC;--glow1:rgba(207,227,243,0.8);--card:rgba(255,255,255,0.96);--card2:rgba(244,248,252,0.94);--card3:rgba(255,255,255,0.9);--card-shadow:0 10px 30px rgba(13,12,10,0.06);--line:rgba(13,12,10,0.13);--line2:rgba(13,12,10,0.07);--tx:#0D0C0A;--tx2:#45484D;--tx3:#5F636A;--tx-soft:#1F2124;--chip:rgba(13,12,10,0.04);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#2F5E80;--acc-glow:rgba(120,170,210,0.35);--acc-soft:rgba(207,227,243,0.7);--acc-line:#9DC2DE;--cta:#0D0C0A;--cta-tx:#FFFFFF;--nav:rgba(255,255,255,0.9);--nav-shadow:0 14px 34px rgba(13,12,10,0.12);--ok:#3FAE6A;--ok-tx:#1E7B34;--ok-soft:rgba(63,174,106,0.13);--ok-line:rgba(30,123,52,0.30);--ok-glow:rgba(63,174,106,0.14);--ylw:#E2C232;--ylw-tx:#7A6500;--ylw-soft:rgba(226,194,50,0.18);--ylw-line:rgba(122,101,0,0.32);--ylw-glow:rgba(226,194,50,0.20);--warn:#F0A940;--warn-tx:#A05A00;--warn-soft:rgba(240,169,64,0.18);--warn-line:rgba(160,90,0,0.32);--warn-glow:rgba(240,169,64,0.18);--bad:#E0645A;--bad-tx:#C4141B;--bad-soft:rgba(224,100,90,0.13);--bad-line:rgba(196,20,27,0.30);--bad-glow:rgba(240,118,107,0.16);--teal:#2F6A85;--teal-soft:rgba(127,183,207,0.16);--teal-line:rgba(62,127,156,0.30);--bad-btn:linear-gradient(180deg,#D83A30,#B3241B);--bad-btn-tx:#FFFFFF;--bad-btn-glow:rgba(196,20,27,0.3)}
+</style>
+<style>
+html,body{margin:0;height:100%;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center;background:#050506}
+#palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
+</style>
+<!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
+<script src="../dados.js"></script>
+<script src="../../motor/regras.js"></script>
+<script src="../../motor/motor.js"></script>
+<script src="../../motor/modelo.js"></script>
+<script src="../armazenamento.js"></script>
+<script src="ligacao.js"></script>
+<script src="runtime.js"></script>
+</head>
+<body>
+<div id="palco"><div id="raiz"></div></div>
+<template id="dc-modelo">
+<div class="{{ temaClasse }}" style="position: relative; width: 1194px; height: 834px; overflow: hidden; font-family: 'Manrope', system-ui, sans-serif; color: var(--tx); -webkit-font-smoothing: antialiased; background: radial-gradient(50% 45% at 62% 30%, {{ d.glow }}, rgba(0,0,0,0) 70%), radial-gradient(40% 50% at 0% 100%, var(--glow1), rgba(0,0,0,0) 70%), var(--bg)">
+
+<div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
+<div style="display: flex; align-items: center; gap: 10px">
+<svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
+<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Visão</span>
+<span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px">
+<button type="button" onClick="{{ toggleTema }}" aria-pressed="{{ claro }}" style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--line); background: var(--chip); color: var(--tx); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">
+<sc-if value="{{ escuro }}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+<sc-if value="{{ claro }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
+{{ temaLabel }}</button>
+<a href="Perfil.html" style="display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 14px 0 4px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2); font-size: 13px; font-weight: 600; color: var(--tx); text-decoration: none">
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ eu.ini }}</span>{{ eu.nome }}<span style="font-weight: 500; color: var(--tx3)">· Dia {{ eu.dia }}</span></a>
+</div>
+</div>
+
+<header style="position: absolute; left: 40px; right: 40px; top: 84px; display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 14px; color: var(--tx2)">O que aconteceu, quando e o que fazer. Nunca é um diagnóstico.</span>
+<h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">Alertas médicos</h1>
+</div>
+<div role="group" aria-label="Filtrar por nível" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
+<sc-for list="{{ filtros }}" as="f" hint-placeholder-count="5">
+<button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="display: flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border: 0; border-radius: 18px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; color: {{ f.fg }}; background: {{ f.bg }}; opacity: {{ f.op }}"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 4px; background: {{ f.dot }}; display: {{ f.dotShow }}"></span>{{ f.t }} <span style="font-weight: 500">{{ f.n }}</span></button>
+</sc-for>
+</div>
+</header>
+
+<div aria-label="Lista de alertas" style="position: absolute; left: 40px; top: 156px; width: 420px; height: 572px; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ lista }}" as="a" hint-placeholder-count="5">
+<button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.on }}" style="display: flex; gap: 12px; align-items: flex-start; padding: 13px 16px; border-radius: 20px; border: 1px solid {{ a.borda }}; background: {{ a.fundo }}; box-shadow: var(--card-shadow); font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
+<span aria-hidden="true" style="width: 10px; height: 10px; flex: none; margin-top: 4px; border-radius: 5px; background: {{ a.dot }}; box-shadow: 0 0 10px {{ a.dot }}"></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1">
+<span style="font-size: 12px; font-weight: 700; color: {{ a.cor }}">{{ a.nivelCurto }} · {{ a.quandoCurto }}</span>
+<span style="font-size: 15px; font-weight: 600; line-height: 1.3; color: var(--tx)">{{ a.titulo }}</span>
+<span style="font-size: 12px; color: var(--tx3)">{{ a.revisao }}{{ a.vistoTxt }}</span>
+</span>
+</button>
+</sc-for>
+<div style="flex-grow: 1"></div>
+<span style="font-size: 12px; line-height: 1.4; color: var(--tx3)">Os alertas não classificam nada como SANS. A interpretação é da equipa médica. Limites provisórios, a validar pela equipa de saúde.</span>
+</div>
+
+<section aria-live="polite" aria-labelledby="det-titulo" style="position: absolute; left: 476px; top: 156px; width: 678px; height: 572px; box-sizing: border-box; padding: 22px 26px; border-radius: 28px; background: radial-gradient(70% 45% at 0% 0%, {{ d.glow }}, rgba(0,0,0,0) 65%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid {{ d.linha }}; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: {{ d.cor }}; background: {{ d.soft }}; border-radius: 999px; padding: 5px 12px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 4px; background: {{ d.dot }}"></span>{{ d.nivelNome }}</span>
+<div style="flex-grow: 1"></div>
+<button type="button" onClick="{{ d.toggleVisto }}" aria-pressed="{{ d.visto }}" style="height: 32px; padding: 0 14px; border: 1px solid var(--line); border-radius: 16px; background: transparent; color: var(--tx2); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer">{{ d.vistoBtn }}</button>
+</div>
+<h2 id="det-titulo" style="margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -0.4px; line-height: 1.2; color: var(--tx)">{{ d.titulo }}</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ d.campos }}" as="c" hint-placeholder-count="6">
+<div style="box-sizing: border-box; min-height: 82px; padding: 10px 14px; border-radius: 16px; background: var(--chip); border: 1px solid var(--line2); display: flex; flex-direction: column; gap: 3px">
+<span style="font-size: 11px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">{{ c.k }}</span>
+<span style="font-size: 14px; line-height: 1.4; color: var(--tx)">{{ c.v }}</span>
+</div>
+</sc-for>
+</div>
+<div style="flex-grow: 1"></div>
+<sc-if value="{{ d.comPacote }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 12px; color: var(--tx3)">Pacote pronto: tendência, OCT dos dias 10–84, imagem do OCT, mapa de Amsler e respostas</span>
+<sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{ send }}" style="height: 50px; border: 0; border-radius: 25px; background: var(--bad-btn); color: var(--bad-btn-tx); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 28px var(--bad-btn-glow)">Enviar ao médico de voo</button>
+</sc-if>
+<sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 12px; border-radius: 20px; padding: 6px 6px 6px 16px; background: var(--teal-soft); border: 1px solid var(--teal-line)">
+<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: var(--teal); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1"><span style="font-size: 15px; font-weight: 700; color: var(--tx)">Na fila de envio</span><span style="font-size: 13px; color: var(--tx2)">Segue assim que houver contacto com a Terra.</span></span>
+<button type="button" onClick="{{ undo }}" style="height: 42px; padding: 0 16px; border: 0; border-radius: 21px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Desfazer</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ d.links }}" as="l" hint-placeholder-count="2">
+<a href="{{ l.href }}" onClick="{{ l.go }}" style="display: flex; align-items: center; height: 40px; box-sizing: border-box; padding: 0 18px; border-radius: 20px; border: 1px solid var(--line); color: var(--tx); font-size: 14px; font-weight: 600; text-decoration: none">{{ l.t }}</a>
+</sc-for>
+</div>
+</section>
+
+<nav aria-label="Secções da app" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
+<a href="Hoje.html" aria-label="Hoje" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a href="TesteRapido.html" aria-label="Avaliações" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg></a>
+<a href="SANS.html" aria-label="Monitorização SANS" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+<a href="Alerta.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>Alertas</a>
+</nav>
+
+</div>
+</template>
+<script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tema: 'escuro', perfil: 'C', resp: null, filtro: 'todos', sel: null, sent: false, vistos: {} };
+  }
+  componentDidMount() {
+    const upd = {};
+    try {
+      const t = window.localStorage.getItem('visao-tema');
+      const p = window.localStorage.getItem('visao-perfil');
+      if (t === 'claro' || t === 'escuro') upd.tema = t;
+      if (p === 'A' || p === 'B' || p === 'C') upd.perfil = p;
+      const r = window.localStorage.getItem('visao-evento-' + (upd.perfil || this.state.perfil));
+      if (r === 'sim' || r === 'nao' || r === 'naosei') upd.resp = r;
+    } catch (e) {}
+    this.setState(upd);
+    this.ouvir = (ev) => {
+      if (ev && ev.key === 'visao-tema' && (ev.newValue === 'claro' || ev.newValue === 'escuro')) this.setState({ tema: ev.newValue });
+    };
+    try { window.addEventListener('storage', this.ouvir); } catch (e) {}
+  }
+  componentWillUnmount() {
+    try { window.removeEventListener('storage', this.ouvir); } catch (e) {}
+  }
+  renderVals() {
+    const s = this.state;
+    const eus = { A: { nome: 'Marta Silveira', ini: 'MS', dia: 60 }, B: { nome: 'Daniel Cossa', ini: 'DC', dia: 90 }, C: { nome: 'Sofia Lindqvist', ini: 'SL', dia: 84 } };
+    const euReal = window.Visao ? window.Visao.eu() : null;
+    const eu = euReal || eus[s.perfil] || eus.B;
+    const NIV = [
+      { nome: 'Verde · rotina', curto: 'Verde', cor: 'var(--ok-tx)', dot: 'var(--ok)', soft: 'var(--ok-soft)', glow: 'var(--ok-glow)', linha: 'var(--ok-line)' },
+      { nome: 'Amarelo · interferência potencial', curto: 'Amarelo', cor: 'var(--ylw-tx)', dot: 'var(--ylw)', soft: 'var(--ylw-soft)', glow: 'var(--ylw-glow)', linha: 'var(--ylw-line)' },
+      { nome: 'Laranja · revisão clínica recomendada', curto: 'Laranja', cor: 'var(--warn-tx)', dot: 'var(--warn)', soft: 'var(--warn-soft)', glow: 'var(--warn-glow)', linha: 'var(--warn-line)' },
+      { nome: 'Vermelho · prioridade clínica', curto: 'Vermelho', cor: 'var(--bad-tx)', dot: 'var(--bad)', soft: 'var(--bad-soft)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
+    ];
+    const L = {
+      sans: { t: 'Ver na monitorização SANS', href: 'SANS.html' },
+      teste: { t: 'Repetir o teste', href: 'TesteRapido.html' },
+      evento: { t: 'Ver evento no perfil', href: 'Perfil.html', evento: true },
+      oct: { t: 'Ver histórico do OCT', href: 'OCT.html', oct: true },
+      hist: { t: 'Ver histórico', href: 'Tendencia.html' }
+    };
+    // [id, nivel, titulo, quandoCurto, o que, quando, fontes, fiabilidade, acção, revisão, links, pacote]
+    const D = {
+      A: [
+        ['a1', 0, 'Testes de rotina dentro da tua base', 'Dia 60', 'Acuidade 5/5 nos dois olhos e grelha de Amsler sem alterações. OCT do dia 60 +6,9% face à base, dentro da referência simulada.', 'Dia 60 · 08:05 UTC', 'Teste rápido no tablet · OCT externo de bordo · base pré-voo', 'Boas condições (fiabilidade 92/100). Imagem OCT de boa qualidade.', 'Segue o calendário normal. Próximo OCT no dia 90.', 'Não necessária', ['sans', 'hist'], false],
+        ['a2', 1, 'Grelha de Amsler com condições limitadas', 'Dia 58', 'A grelha de Amsler foi feita com pouca luz e ficou marcada como «condições limitadas».', 'Dia 58 · 21:40 UTC', 'Verificação automática das condições do teste', 'Resultado com fiabilidade reduzida.', 'Repetida no dia 60 com boa luz: sem alterações.', 'Resolvido no dia 60', ['teste'], false]
+      ],
+      B: [
+        ['b1', 2, 'Retina acima da tua base pré-voo', 'Dia 90', 'OCT do olho esquerdo: espessura da retina peripapilar +17,0% face à base (362 → 424 µm). Sinais de edema ligeiro a confirmar.', 'Dia 90 · 09:15 UTC', 'OCT externo de bordo (simulado) · base pré-voo', 'Imagem de boa qualidade. Sem interferências registadas.', 'Revisão pela equipa médica. Antecipar o próximo OCT para o dia 100, se o médico concordar.', 'Pendente', ['oct', 'sans'], false],
+        ['b2', 2, 'Variação da acuidade entre avaliações seguidas', 'Dia 90', 'Olho esquerdo desceu de 5/5 (dia 87) para 4/5 (dia 90). Olho direito sem alteração.', 'Dia 90 · 10:42 UTC', 'Teste rápido no tablet · respostas do astronauta', 'Condições limitadas: movimento durante o teste (10:42–10:43 UTC). O movimento não descarta a alteração.', 'Repetir em condições estáveis. A alteração segue para revisão médica.', 'Pendente', ['teste', 'sans'], false],
+        ['b3', 2, 'Zonas novas na grelha de Amsler (OE)', 'Dia 87', 'Duas zonas ligeiras marcadas no olho esquerdo, fora do centro. No teste anterior não havia zonas.', 'Dia 87 · 08:10 UTC', 'Teste rápido no tablet', 'Boas condições (fiabilidade 91/100).', 'Revisão pela equipa médica. Repetir a grelha no próximo teste.', 'Pendente', ['sans'], false],
+        ['b4', 1, 'Movimento da nave durante a acuidade', 'Dia 90', 'A estação registou movimento invulgar durante o teu teste de acuidade.', 'Dia 90 · 10:42–10:43 UTC (52 s)', 'Registo automático da app e da estação', 'O teste de acuidade ficou marcado como «condições limitadas».', 'Responde à notificação do evento no teu perfil e repete o teste de acuidade.', 'EVENTO', ['evento', 'teste'], false],
+        ['b5', 0, 'Grelha de Amsler do OD sem alterações', 'Dia 87', 'Sem zonas marcadas no olho direito.', 'Dia 87 · 08:10 UTC', 'Teste rápido no tablet', 'Boas condições (fiabilidade 91/100).', 'Segue o calendário normal para este olho.', 'Não necessária', ['hist'], false]
+      ],
+      C: [
+        ['c1', 3, 'Zona nova no centro da grelha de Amsler (OE)', 'Dia 84', 'Zona nova no centro da grelha, olho esquerdo. OCT do mesmo dia: retina +52,9% face à base.', 'Dia 84 · 07:50 UTC', 'Teste rápido · OCT externo de bordo (simulado) · respostas', 'Boas condições (90/100). Imagem OCT de boa qualidade.', 'Avisar já o médico de voo e seguir o plano de espera aprovado.', 'Prioritária', [], true],
+        ['c2', 2, 'Possível achatamento do globo ocular (OE)', 'Dia 84', 'Ecografia ocular com possível achatamento posterior no olho esquerdo. No dia 60 não havia.', 'Dia 84 · 08:30 UTC', 'Ecografia de bordo (simulada)', 'Qualidade aceitável. Recomenda-se confirmar com novo exame.', 'Revisão pela equipa médica.', 'Pendente', ['sans'], false],
+        ['c3', 2, 'Acuidade do OE desceu 2 linhas', 'Dia 84', 'Olho esquerdo de 5/5 para 3/5 em três semanas. Olho direito de 5/5 para 4/5.', 'Dia 63 a dia 84', 'Testes rápidos no tablet', 'Boas condições nos últimos três testes.', 'Revisão pela equipa médica. Usar os óculos de reserva para perto, se precisares.', 'Pendente', ['teste', 'hist'], false]
+      ]
+    };
+    const respTxt = { sim: 'Respondido: sentiste o movimento', nao: 'Respondido: não sentiste', naosei: 'Respondido: não tens a certeza' };
+    const revEvento = s.resp ? respTxt[s.resp] : 'Falta a tua resposta';
+    const todos = ((euReal && window.Visao.alertas()) || D[s.perfil] || D.B).map((r) => ({ id: r[0], nivel: r[1], titulo: r[2], quandoCurto: r[3], que: r[4], quando: r[5], fontes: r[6], fiab: r[7], accao: s.resp && r[9] === 'EVENTO' ? 'Repete o teste de acuidade em condições estáveis.' : r[8], revisao: r[9] === 'EVENTO' ? revEvento : r[9], links: r[10], pacote: r[11] }));
+    const filtroNivel = { todos: -1, vermelho: 3, laranja: 2, amarelo: 1, verde: 0 };
+    const fn = filtroNivel[s.filtro];
+    const vis = todos.filter((a) => fn === -1 || a.nivel === fn);
+    let selA = vis.find((a) => a.id === s.sel) || vis[0] || todos[0];
+    const lista = vis.map((a) => {
+      const on = a.id === selA.id;
+      const nv = NIV[a.nivel];
+      return {
+        titulo: a.titulo, quandoCurto: a.quandoCurto, nivelCurto: nv.curto, cor: nv.cor, dot: nv.dot,
+        revisao: 'Revisão: ' + a.revisao, vistoTxt: s.vistos[a.id] ? ' · visto' : '',
+        on: on,
+        fundo: on ? 'linear-gradient(180deg, var(--card), var(--card2))' : 'var(--card3)',
+        borda: on ? nv.linha : 'var(--line2)',
+        pick: () => this.setState({ sel: a.id })
+      };
+    });
+    const filtros = [['todos', 'Todos', -1], ['vermelho', 'Vermelho', 3], ['laranja', 'Laranja', 2], ['amarelo', 'Amarelo', 1], ['verde', 'Verde', 0]].map((f) => {
+      const n = f[2] === -1 ? todos.length : todos.filter((a) => a.nivel === f[2]).length;
+      const on = s.filtro === f[0];
+      return {
+        t: f[1], n: n, on: on,
+        bg: on ? 'var(--acc)' : 'transparent', fg: on ? 'var(--acc-tx)' : 'var(--tx2)',
+        op: n === 0 && !on ? 0.45 : 1,
+        dot: f[2] === -1 ? 'transparent' : NIV[f[2]].dot, dotShow: f[2] === -1 ? 'none' : 'inline-block',
+        pick: () => this.setState({ filtro: f[0], sel: null })
+      };
+    });
+    const nv = NIV[selA.nivel];
+    const visto = !!s.vistos[selA.id];
+    const d = {
+      titulo: selA.titulo, nivelNome: nv.nome, cor: nv.cor, dot: nv.dot, soft: nv.soft, glow: nv.glow, linha: nv.linha,
+      campos: [
+        { k: 'O QUE ACONTECEU', v: selA.que },
+        { k: 'QUANDO', v: selA.quando },
+        { k: 'FONTES DOS DADOS', v: selA.fontes },
+        { k: 'FIABILIDADE TÉCNICA', v: selA.fiab },
+        { k: 'ACÇÃO RECOMENDADA', v: selA.accao },
+        { k: 'ESTADO DA REVISÃO', v: selA.revisao }
+      ],
+      links: selA.links.map((k) => Object.assign({ go: () => { try { if (L[k].evento) window.localStorage.setItem('visao-abrir', 'eventos'); if (L[k].oct) window.localStorage.setItem('visao-oct-modo', 'comparar'); } catch (e) {} } }, L[k])),
+      comPacote: selA.pacote,
+      visto: visto,
+      vistoBtn: visto ? 'Visto ✓' : 'Marcar como visto',
+      toggleVisto: () => this.setState((st) => { const v = Object.assign({}, st.vistos); v[selA.id] = !v[selA.id]; return { vistos: v }; })
+    };
+    const claro = s.tema === 'claro';
+    return {
+      temaClasse: claro ? 'tema-claro' : 'tema-escuro',
+      selo: window.Visao ? window.Visao.selo() : 'Dados simulados',
+      claro: claro, escuro: !claro,
+      temaLabel: claro ? 'Modo escuro' : 'Modo claro',
+      toggleTema: () => {
+        const n = this.state.tema === 'escuro' ? 'claro' : 'escuro';
+        this.setState({ tema: n });
+        try { window.localStorage.setItem('visao-tema', n); } catch (e) {}
+      },
+      eu: eu,
+      filtros: filtros,
+      lista: lista,
+      d: d,
+      sent: s.sent, notSent: !s.sent,
+      send: () => this.setState({ sent: true }),
+      undo: () => this.setState({ sent: false })
+    };
+  }
+}
+window.Component = Component;
+</script>
+</body>
+</html>
