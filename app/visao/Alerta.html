@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alertas médicos · Visão</title>
 <link href="fonte.css" rel="stylesheet">
+<link href="iris.css" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -111,6 +112,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </div>
 </section>
 
+<div aria-hidden="true" style="position: absolute; left: -1500px; right: -1500px; top: 712px; bottom: -1500px; pointer-events: none; background: linear-gradient(180deg, transparent 0, var(--bg) 90px)"></div>
 <nav aria-label="Secções da app" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
 <a href="Hoje.html" aria-label="Hoje" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
 <a href="TesteRapido.html" aria-label="Avaliações" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg></a>
@@ -166,20 +168,20 @@ class Component extends DCLogic {
     // [id, nivel, titulo, quandoCurto, o que, quando, fontes, fiabilidade, acção, revisão, links, pacote]
     const D = {
       A: [
-        ['a1', 0, 'Testes de rotina dentro da tua base', 'Dia 60', 'Acuidade 5/5 nos dois olhos e grelha de Amsler sem alterações. OCT do dia 60 +6,9% face à base, dentro da referência simulada.', 'Dia 60 · 08:05 UTC', 'Teste rápido no tablet · OCT externo de bordo · base pré-voo', 'Boas condições (fiabilidade 92/100). Imagem OCT de boa qualidade.', 'Segue o calendário normal. Próximo OCT no dia 90.', 'Não necessária', ['sans', 'hist'], false],
+        ['a1', 0, 'Testes de rotina dentro da tua base', 'Dia 60', 'Acuidade 5/5 nos dois olhos e grelha de Amsler sem alterações. OCT do dia 60 +6,9% face à base, dentro da referência simulada.', 'Dia 60 · 08:05 UTC', 'Teste rápido na tela · OCT externo de bordo · base pré-voo', 'Boas condições (fiabilidade 92/100). Imagem OCT de boa qualidade.', 'Segue o calendário normal. Próximo OCT no dia 90.', 'Não necessária', ['sans', 'hist'], false],
         ['a2', 1, 'Grelha de Amsler com condições limitadas', 'Dia 58', 'A grelha de Amsler foi feita com pouca luz e ficou marcada como «condições limitadas».', 'Dia 58 · 21:40 UTC', 'Verificação automática das condições do teste', 'Resultado com fiabilidade reduzida.', 'Repetida no dia 60 com boa luz: sem alterações.', 'Resolvido no dia 60', ['teste'], false]
       ],
       B: [
         ['b1', 2, 'Retina acima da tua base pré-voo', 'Dia 90', 'OCT do olho esquerdo: espessura da retina peripapilar +17,0% face à base (362 → 424 µm). Sinais de edema ligeiro a confirmar.', 'Dia 90 · 09:15 UTC', 'OCT externo de bordo (simulado) · base pré-voo', 'Imagem de boa qualidade. Sem interferências registadas.', 'Revisão pela equipa médica. Antecipar o próximo OCT para o dia 100, se o médico concordar.', 'Pendente', ['oct', 'sans'], false],
-        ['b2', 2, 'Variação da acuidade entre avaliações seguidas', 'Dia 90', 'Olho esquerdo desceu de 5/5 (dia 87) para 4/5 (dia 90). Olho direito sem alteração.', 'Dia 90 · 10:42 UTC', 'Teste rápido no tablet · respostas do astronauta', 'Condições limitadas: movimento durante o teste (10:42–10:43 UTC). O movimento não descarta a alteração.', 'Repetir em condições estáveis. A alteração segue para revisão médica.', 'Pendente', ['teste', 'sans'], false],
-        ['b3', 2, 'Zonas novas na grelha de Amsler (OE)', 'Dia 87', 'Duas zonas ligeiras marcadas no olho esquerdo, fora do centro. No teste anterior não havia zonas.', 'Dia 87 · 08:10 UTC', 'Teste rápido no tablet', 'Boas condições (fiabilidade 91/100).', 'Revisão pela equipa médica. Repetir a grelha no próximo teste.', 'Pendente', ['sans'], false],
+        ['b2', 2, 'Variação da acuidade entre avaliações seguidas', 'Dia 90', 'Olho esquerdo desceu de 5/5 (dia 87) para 4/5 (dia 90). Olho direito sem alteração.', 'Dia 90 · 10:42 UTC', 'Teste rápido na tela · respostas do astronauta', 'Condições limitadas: movimento durante o teste (10:42–10:43 UTC). O movimento não descarta a alteração.', 'Repetir em condições estáveis. A alteração segue para revisão médica.', 'Pendente', ['teste', 'sans'], false],
+        ['b3', 2, 'Zonas novas na grelha de Amsler (OE)', 'Dia 87', 'Duas zonas ligeiras marcadas no olho esquerdo, fora do centro. No teste anterior não havia zonas.', 'Dia 87 · 08:10 UTC', 'Teste rápido na tela', 'Boas condições (fiabilidade 91/100).', 'Revisão pela equipa médica. Repetir a grelha no próximo teste.', 'Pendente', ['sans'], false],
         ['b4', 1, 'Movimento da nave durante a acuidade', 'Dia 90', 'A estação registou movimento invulgar durante o teu teste de acuidade.', 'Dia 90 · 10:42–10:43 UTC (52 s)', 'Registo automático da app e da estação', 'O teste de acuidade ficou marcado como «condições limitadas».', 'Responde à notificação do evento no teu perfil e repete o teste de acuidade.', 'EVENTO', ['evento', 'teste'], false],
-        ['b5', 0, 'Grelha de Amsler do OD sem alterações', 'Dia 87', 'Sem zonas marcadas no olho direito.', 'Dia 87 · 08:10 UTC', 'Teste rápido no tablet', 'Boas condições (fiabilidade 91/100).', 'Segue o calendário normal para este olho.', 'Não necessária', ['hist'], false]
+        ['b5', 0, 'Grelha de Amsler do OD sem alterações', 'Dia 87', 'Sem zonas marcadas no olho direito.', 'Dia 87 · 08:10 UTC', 'Teste rápido na tela', 'Boas condições (fiabilidade 91/100).', 'Segue o calendário normal para este olho.', 'Não necessária', ['hist'], false]
       ],
       C: [
         ['c1', 3, 'Zona nova no centro da grelha de Amsler (OE)', 'Dia 84', 'Zona nova no centro da grelha, olho esquerdo. OCT do mesmo dia: retina +52,9% face à base.', 'Dia 84 · 07:50 UTC', 'Teste rápido · OCT externo de bordo (simulado) · respostas', 'Boas condições (90/100). Imagem OCT de boa qualidade.', 'Avisar já o médico de voo e seguir o plano de espera aprovado.', 'Prioritária', [], true],
         ['c2', 2, 'Possível achatamento do globo ocular (OE)', 'Dia 84', 'Ecografia ocular com possível achatamento posterior no olho esquerdo. No dia 60 não havia.', 'Dia 84 · 08:30 UTC', 'Ecografia de bordo (simulada)', 'Qualidade aceitável. Recomenda-se confirmar com novo exame.', 'Revisão pela equipa médica.', 'Pendente', ['sans'], false],
-        ['c3', 2, 'Acuidade do OE desceu 2 linhas', 'Dia 84', 'Olho esquerdo de 5/5 para 3/5 em três semanas. Olho direito de 5/5 para 4/5.', 'Dia 63 a dia 84', 'Testes rápidos no tablet', 'Boas condições nos últimos três testes.', 'Revisão pela equipa médica. Usar os óculos de reserva para perto, se precisares.', 'Pendente', ['teste', 'hist'], false]
+        ['c3', 2, 'Acuidade do OE desceu 2 linhas', 'Dia 84', 'Olho esquerdo de 5/5 para 3/5 em três semanas. Olho direito de 5/5 para 4/5.', 'Dia 63 a dia 84', 'Testes rápidos na tela', 'Boas condições nos últimos três testes.', 'Revisão pela equipa médica. Usar os óculos de reserva para perto, se precisares.', 'Pendente', ['teste', 'hist'], false]
       ]
     };
     const respTxt = { sim: 'Respondido: sentiste o movimento', nao: 'Respondido: não sentiste', naosei: 'Respondido: não tens a certeza' };

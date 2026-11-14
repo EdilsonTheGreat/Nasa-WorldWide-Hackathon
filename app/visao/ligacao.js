@@ -43,10 +43,16 @@
     var d = parseInt(ler("visao-dia-" + id), 10);
     return d >= 0 ? d : diaSugerido(id);
   }
+  // Íris escolhida por cada perfil (Perfil > Íris). Muda a imagem do olho e a cor do fundo.
+  var IRIS_DEMO = { A: "azul", B: "original", C: "cinzento" };
+  function irisDe(id) { return ler("visao-iris-" + id) || IRIS_DEMO[id] || "original"; }
+  function guardarIris(id, iris) { if (id) escrever("visao-iris-" + id, iris); escrever("visao-iris", iris); }
+
   function entrar(id, dia) {
     id = g.Armazem.criarPerfil(id);
     if (!id) return null;
     escrever("visao-real", id);
+    escrever("visao-iris", irisDe(id));
     escrever("visao-dia-" + id, dia >= 0 ? dia : diaSugerido(id));
     return id;
   }
@@ -153,6 +159,8 @@
       perg_focar: PERG[t.q[0]], perg_contraste: PERG[t.q[1]], perg_dor_cabeca: PERG[t.q[2]], perg_visao_dupla: PERG[t.q[3]],
       distancia_cm: cam.n > 0 ? cam.media : null, sem_camara: cam.n > 0 ? 0 : 1, fora_distancia_pct: cam.n > 0 ? cam.foraPct : null,
       evento_nave: t.resp || null,
+      acertos_oe: t.acertos ? t.acertos.esq.sem[0] + "/" + t.acertos.esq.sem[1] : null,
+      acertos_od: t.acertos ? t.acertos.dir.sem[0] + "/" + t.acertos.dir.sem[1] : null,
       prontidao: ressalvas.length ? "amarelo" : "verde", ressalvas: ressalvas,
       alerta_clinico: t.q[3] === 2
     });
@@ -245,7 +253,7 @@
       var av = avaliarRegisto(regs[0], r);
       var fiab = r.sem_camara ? "Distância não medida pela câmara." : "Distância média " + r.distancia_cm + " cm" + (r.fora_distancia_pct ? " · fora do intervalo em " + r.fora_distancia_pct + "% das medições." : ".");
       if ((r.ressalvas || []).length) fiab += " " + r.ressalvas.join(" ");
-      var fontes = "Teste rápido no tablet · motor de regras (limites provisórios) · base do dia " + regs[0].dia;
+      var fontes = "Teste rápido na tela · motor de regras (limites provisórios) · base do dia " + regs[0].dia;
       if (av.nivel >= 2) {
         (av.motivos.length ? av.motivos : ["Sintomas indicados no questionário."]).forEach(function (m, i) {
           var verm = av.nivel === 3 && /centro|não melhora/.test(m);
@@ -261,7 +269,7 @@
       var u = regs[regs.length - 1];
       L.push(["ok", 0, u ? "Testes de rotina dentro da tua base" : "Ainda sem testes", u ? "Dia " + u.dia : "Dia " + me.dia,
         u ? "Acuidade OE " + acTxt(u, "oe") + " · OD " + acTxt(u, "od") + ". Grelha de Amsler: " + amTxt(u).toLowerCase() + "." : "Faz o primeiro teste rápido: fica guardado como a tua base.",
-        u ? "Dia " + u.dia : "–", "Teste rápido no tablet · motor de regras", u ? (u.sem_camara ? "Distância não medida pela câmara." : "Distância média " + u.distancia_cm + " cm.") : "–",
+        u ? "Dia " + u.dia : "–", "Teste rápido na tela · motor de regras", u ? (u.sem_camara ? "Distância não medida pela câmara." : "Distância média " + u.distancia_cm + " cm.") : "–",
         "Segue o calendário normal.", "Não necessária", ["teste"], false]);
     }
     return L;
@@ -324,8 +332,10 @@
         if (!video) {
           video = g.document.createElement("video");
           video.setAttribute("playsinline", ""); video.muted = true;
-          video.style.cssText = "position:fixed;width:2px;height:2px;opacity:0;pointer-events:none;left:0;top:0";
+          video.className = "fixo";
           g.document.body.appendChild(video);
+          g.DC_FIXOS = g.DC_FIXOS || {}; g.DC_FIXOS.camara = video;     // aparece onde o ecrã tiver data-fixo="camara"
+          if (g.DC_encaixarFixos) g.DC_encaixarFixos();
         }
         ligada = true;
         g.Distancia.iniciar(video, { minCm: minCm, maxCm: maxCm, aoMudar: aoMudar, pastaModelo: "../camara/vendor/mediapipe/" });
@@ -343,7 +353,7 @@
   })();
 
   g.Visao = {
-    temBackend: temBackend, real: real, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
+    temBackend: temBackend, real: real, irisDe: irisDe, guardarIris: guardarIris, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
     selo: function () { return real() ? "Dados reais · só neste aparelho" : "Dados simulados"; },
     anterior: anterior, guardarTeste: guardarTeste, resumoHoje: resumoHoje, linhaTempo: linhaTempo, alertas: alertas,
     fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara,

@@ -18,6 +18,7 @@
 //   <script src="camara/rosto.js"></script>
 //   Rosto.registar(video, "MARLLON")  -> Promise {ok, amostras, mensagem}
 //   Rosto.identificar(video)          -> Promise {ok, id, distancia, mensagem}
+//   Rosto.preparar()                  -> carrega e aquece os modelos (sem ligar a câmara); torna a entrada rápida
 //   Rosto.registados()                -> ["MARLLON", ...]
 //   Rosto.apagar("MARLLON")
 // =====================================================================
@@ -28,9 +29,12 @@
   var LIMIAR = 0.5;          // distância máxima para aceitar (menor = mais exigente)
   var MARGEM = 0.05;         // o 1.º candidato tem de ser claramente melhor do que o 2.º
   var AMOSTRAS = 5;          // imagens usadas no registo
-  var TENTATIVAS = 25;       // imagens analisadas antes de desistir
+  var TENTATIVAS = 25;       // imagens analisadas antes de desistir (registo)
+  var TENTATIVAS_ENTRAR = 14; // imagens analisadas antes de desistir (entrada)
+  var CERTO = 0.46;          // distância a que uma só imagem chega para entrar (sem esperar por mais)
+  var PAUSA = 30;            // ms entre imagens
   var pasta = "camara/vendor/faceapi/";
-  var carregado = null;
+  var carregado = null, aquecido = null;
 
   function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } }
   function escrever(o) { try { localStorage.setItem(CHAVE, JSON.stringify(o)); return true; } catch (e) { return false; } }
@@ -47,6 +51,26 @@
     return carregado;
   }
 
+  // Carrega os modelos e faz uma análise a uma imagem vazia, para o navegador preparar os cálculos.
+  // Chamar ao abrir o ecrã de entrada: assim, quando a pessoa toca em "Entrar com o rosto", já está tudo pronto.
+  // Não liga a câmara.
+  function preparar() {
+    if (!aquecido) {
+      aquecido = carregar().then(function () {
+        var c = global.document.createElement("canvas"); c.width = 160; c.height = 120;
+        c.getContext("2d").fillRect(0, 0, 160, 120);
+        var op = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.6 });
+        return faceapi.detectAllFaces(c, op).withFaceLandmarks(true).withFaceDescriptors();
+      }).then(function () {
+        // aquece também a rede de reconhecimento (a parte mais pesada)
+        var c = global.document.createElement("canvas"); c.width = 150; c.height = 150;
+        c.getContext("2d").fillRect(0, 0, 150, 150);
+        return faceapi.nets.faceRecognitionNet.computeFaceDescriptor(c);
+      }).then(function () { return true; }, function () { aquecido = null; return false; });
+    }
+    return aquecido;
+  }
+
   function abrirCamara(video) {
     if (video.srcObject && video.srcObject.active) return Promise.resolve(false);   // já aberta por outro módulo
     return navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } }, audio: false })
@@ -60,19 +84,20 @@
 
   // Um descritor (Float32Array de 128) da única cara visível, ou null.
   function descritor(video) {
-    var op = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.6 });
+    var op = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.6 });
     return faceapi.detectAllFaces(video, op).withFaceLandmarks(true).withFaceDescriptors().then(function (r) {
       if (r.length !== 1) return null;            // nenhuma cara, ou mais do que uma: não decide
       return r[0].descriptor;
     });
   }
 
-  function recolher(video, quantas) {
+  // chega(lista) = true pára logo (ex.: a 1.ª imagem já identifica a pessoa com folga).
+  function recolher(video, quantas, maxTentativas, chega) {
     var lista = [], i = 0;
     function passo() {
-      if (lista.length >= quantas || i >= TENTATIVAS) return Promise.resolve(lista);
+      if (lista.length >= quantas || i >= (maxTentativas || TENTATIVAS) || (chega && lista.length && chega(lista))) return Promise.resolve(lista);
       i++;
-      return descritor(video).then(function (d) { if (d) lista.push(Array.from(d)); return esperar(150); }).then(passo);
+      return descritor(video).then(function (d) { if (d) lista.push(Array.from(d)); return esperar(PAUSA); }).then(passo);
     }
     return passo();
   }
@@ -101,11 +126,13 @@
 
   function comCamara(video, fn) {
     var aberta = false;
-    return carregar().then(function () { return abrirCamara(video); })
-      .then(function (a) { aberta = a; return esperar(400); })
+    // Modelos e câmara arrancam ao mesmo tempo (antes era um depois do outro).
+    var cam = abrirCamara(video).then(function (a) { aberta = a; return a; });
+    return Promise.all([carregar(), cam])
+      .then(function () { return esperar(80); })
       .then(fn)
       .then(function (r) { fecharCamara(video, aberta); return r; },
-            function (e) { fecharCamara(video, aberta); return { ok: false, id: null, erro: String(e && e.message || e), mensagem: "Câmara ou modelo indisponível. Escolhe o perfil na lista." }; });
+            function (e) { cam.then(function () { fecharCamara(video, aberta); }, function () {}); return { ok: false, id: null, erro: String(e && e.message || e), mensagem: "Câmara ou modelo indisponível. Escolhe o perfil na lista." }; });
   }
 
   function registar(video, id) {
@@ -123,7 +150,9 @@
     return comCamara(video, function () {
       var rostos = ler();
       if (!Object.keys(rostos).length) return { ok: false, id: null, mensagem: "Ainda ninguém registou a cara neste aparelho." };
-      return recolher(video, 3).then(function (lista) {
+      // Rápido: se uma imagem já der um perfil com distância <= CERTO, entra logo; senão junta até 3 imagens.
+      var certo = function (lista) { var c = comparar(lista[lista.length - 1], rostos, CERTO); return !!c.id; };
+      return recolher(video, 3, TENTATIVAS_ENTRAR, certo).then(function (lista) {
         if (!lista.length) return { ok: false, id: null, mensagem: "Não vejo uma cara. Olha de frente para a câmara, com boa luz." };
         var c = comparar(media(lista), rostos);
         if (c.id) return { ok: true, id: c.id, distancia: c.distancia, mensagem: "Olá, " + c.id + "." };
@@ -134,7 +163,7 @@
   }
 
   global.Rosto = {
-    registar: registar, identificar: identificar,
+    registar: registar, identificar: identificar, preparar: preparar,
     registados: function () { return Object.keys(ler()).sort(); },
     apagar: function (id) { var r = ler(); delete r[id]; return escrever(r); },
     definirPasta: function (p) { pasta = p; },

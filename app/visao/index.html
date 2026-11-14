@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Visão · Deep Thinkers · ecrãs do protótipo</title>
 <link href="fonte.css" rel="stylesheet">
+<link href="iris.css" rel="stylesheet">
 <style>
 :root{--bg:#0D0C0A;--card:rgba(255,255,255,0.06);--line:rgba(255,255,255,0.10);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--acc:#CFE3F3;--acc-tx:#0D0C0A}
 *{box-sizing:border-box}
@@ -38,6 +39,7 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 </div>
 <div class="acoes">
 <button class="btn btn-sec" type="button" id="repor">Repor a demonstração</button>
+<button class="btn btn-sec" type="button" id="preparar-voz" title="Descarrega uma vez, com internet, o português do reconhecimento de voz. Depois funciona sem internet.">Preparar voz (uma vez, antes da missão)</button>
 <a class="btn btn-acc" href="Main.html">Começar pelo início</a>
 </div>
 </header>
@@ -57,7 +59,15 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 Marta = rotina · Daniel = revisão recomendada · Sofia = prioridade clínica. Tudo é simulado, sem ligação a sistemas da NASA, e a app não faz diagnóstico de SANS.
 </div>
 </main>
+<script src="voz.js"></script>
 <script>
+// Reconhecimento de voz no aparelho: o pacote de português descarrega-se UMA vez, com internet.
+document.getElementById('preparar-voz').addEventListener('click', function () {
+  var e = document.getElementById('estado');
+  if (!window.Voz) { e.textContent = 'Módulo de voz em falta.'; return; }
+  e.textContent = 'A preparar o reconhecimento de voz…';
+  window.Voz.prepararMicrofone().then(function (r) { e.textContent = r.mensagem; });
+});
 document.getElementById('repor').addEventListener('click', function () {
   var n = 0;
   try {

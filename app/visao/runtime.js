@@ -83,7 +83,26 @@
     destino.appendChild(el);
   }
 
+  // Elementos fixos: o ecrã é redesenhado a cada mudança de estado, o que destruiria um <video>.
+  // Um elemento registado em window.DC_FIXOS[nome] fica guardado fora do ecrã e é encaixado
+  // onde o modelo tiver <div data-fixo="nome"></div>.
+  function guardarFixos() {
+    var f = window.DC_FIXOS || {};
+    Object.keys(f).forEach(function (k) { if (f[k] && raiz.contains(f[k])) document.body.appendChild(f[k]); });
+  }
+  function encaixarFixos() {
+    var f = window.DC_FIXOS || {};
+    Array.prototype.forEach.call(raiz.querySelectorAll('[data-fixo]'), function (lugar) {
+      var el = f[lugar.getAttribute('data-fixo')];
+      if (!el) return;
+      lugar.appendChild(el);
+      if (el.tagName === 'VIDEO' && el.srcObject && el.paused) { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
+    });
+  }
+  window.DC_encaixarFixos = function () { if (raiz) encaixarFixos(); };
+
   function desenhar() {
+    guardarFixos();
     var activo = document.activeElement;
     var manter = activo && activo.id && raiz.contains(activo) && /^(INPUT|TEXTAREA)$/.test(activo.tagName) ? activo : null;
     var vals = instancia.renderVals();
@@ -106,33 +125,190 @@
         while (raiz.firstChild) raiz.removeChild(raiz.firstChild);
         raiz.appendChild(frag);
         manter.focus();
-        actualizarFundo();
+        actualizarFundo(vals);
+        if (modoColuna) adaptarColuna();
+        encaixarFixos();
         return;
       }
     }
     while (raiz.firstChild) raiz.removeChild(raiz.firstChild);
     raiz.appendChild(frag);
-    actualizarFundo();
+    actualizarFundo(vals);
+    if (modoColuna) adaptarColuna();
+    encaixarFixos();
   }
 
-  function actualizarFundo() {
-    var tema = raiz.firstElementChild && raiz.firstElementChild.className;
-    document.body.style.background = tema === 'tema-claro' ? '#E6EBF0' : '#050506';
+  // ---------- Fundo ----------
+  // O fundo do ecrã passa para o palco inteiro (ocupa a janela toda, sem riscas nos lados)
+  // e acompanha a cor da íris escolhida (classes em iris.css).
+  var IRIS = ['original', 'castanho', 'avela', 'verde', 'azul', 'cinzento', 'ambar'];
+  function irisAtual(vals) {
+    var i = vals && vals.irisFundo;
+    if (!i) { try { i = window.localStorage.getItem('visao-iris'); } catch (e) { i = null; } }
+    return IRIS.indexOf(i) >= 0 ? i : 'original';
+  }
+  function actualizarFundo(vals) {
+    var ecra = raiz.firstElementChild, palco = document.getElementById('palco');
+    if (!ecra) return;
+    var tema = /tema-claro/.test(ecra.className) ? 'tema-claro' : 'tema-escuro';
+    var classe = tema + ' iris-' + irisAtual(vals);
+    ecra.className = classe;
+    palco.className = classe;
+    var fundo = ecra.style.getPropertyValue('background') || ecra.style.background;
+    if (fundo && fundo !== 'transparent') palco.style.background = fundo;
+    ecra.style.background = 'transparent';
+    ecra.style.overflow = 'visible';
+    document.body.style.background = tema === 'tema-claro' ? '#FAFBFC' : '#0D0C0A';
+  }
+
+  // ---------- Tamanho e adaptação ----------
+  // Ecrãs largos (PC, portátil, tablet, televisão): o desenho (1194 x 834) cresce ou encolhe
+  // até caber, e o fundo enche a janela toda.
+  // Ecrãs estreitos (telemóvel ao alto) ou baixos (telemóvel deitado): MODO COLUNA, os blocos
+  // do ecrã ficam uns por baixo dos outros, em tamanho real, com scroll; a barra de navegação
+  // fica fixa em baixo.
+  var modoColuna = false;
+  function decidirModo() {
+    var w = window.innerWidth, h = window.innerHeight;
+    modoColuna = w < 820 || h < 520;
+    document.documentElement.classList.toggle('modo-coluna', modoColuna);
   }
 
   function ajustar() {
     var palco = document.getElementById('palco');
-    var esc = Math.min(window.innerWidth / 1194, window.innerHeight / 834, 1.6);
-    palco.style.transform = 'scale(' + esc + ')';
+    var w = window.innerWidth, h = window.innerHeight;
+    var st = palco.style, r = raiz.style;
+    st.position = 'fixed'; st.left = '0'; st.top = '0'; st.transformOrigin = '0 0';
+    st.borderRadius = '0'; st.boxShadow = 'none';
+    if (modoColuna) {
+      st.transform = 'none'; st.width = '100%'; st.height = '100%';
+      st.overflowX = 'hidden'; st.overflowY = 'auto';
+      r.position = 'relative'; r.left = '0'; r.top = '0'; r.width = '100%'; r.height = 'auto';
+      adaptarColuna();
+      return;
+    }
+    var esc = Math.min(w / 1194, h / 834);
+    var pw = w / esc, ph = h / esc;
+    st.overflow = 'hidden';
+    st.width = pw + 'px'; st.height = ph + 'px';
+    st.transform = 'scale(' + esc + ')';
+    r.position = 'absolute'; r.width = '1194px'; r.height = '834px';
+    r.left = ((pw - 1194) / 2) + 'px'; r.top = ((ph - 834) / 2) + 'px';
+  }
+
+  function soImagens(el) {
+    var imgs = el.querySelectorAll('img').length;
+    return imgs > 0 && el.querySelectorAll('*').length === imgs && !el.textContent.trim();
+  }
+
+  // Passa os blocos posicionados (left/top em píxeis) para uma coluna.
+  function adaptarColuna() {
+    var ecra = raiz.firstElementChild;
+    if (!ecra || ecra.getAttribute('data-coluna')) return;   // já adaptado (o desenho seguinte cria um novo)
+    ecra.setAttribute('data-coluna', '1');
+    var es = ecra.style;
+    es.position = 'relative'; es.width = '100%'; es.height = 'auto'; es.minHeight = '100%';
+    es.boxSizing = 'border-box'; es.padding = '16px 14px 132px';
+    es.display = 'flex'; es.flexDirection = 'column'; es.gap = '14px'; es.overflow = 'visible';
+    var largura = Math.max(260, ecra.clientWidth - 28);
+
+    Array.prototype.slice.call(ecra.children).forEach(function (b) {
+      var s = b.style;
+      // barra de navegação: fixa em baixo, ao centro
+      if (b.tagName === 'NAV' && b.getAttribute('aria-label') === 'Secções da app') {
+        s.position = 'fixed'; s.left = '50%'; s.bottom = '12px'; s.top = 'auto'; s.transform = 'translateX(-50%)'; s.zIndex = '6';
+        s.maxWidth = 'calc(100vw - 20px)'; s.boxSizing = 'border-box';
+        return;
+      }
+      // camadas de ecrã cheio: escurecer por trás das janelas e gradiente da navegação
+      if (s.left === '-1500px') {
+        s.position = 'fixed'; s.left = '0'; s.right = '0'; s.bottom = '0';
+        if (s.top === '-1500px') { s.top = '0'; s.zIndex = '20'; }
+        else { s.top = 'auto'; s.height = '110px'; s.zIndex = '5'; }
+        return;
+      }
+      // janelas (perguntas obrigatórias, ajuda): ao centro, com scroll se forem altas
+      if (b.getAttribute('role') === 'dialog' || b.getAttribute('aria-modal') === 'true') {
+        s.position = 'fixed'; s.left = '12px'; s.right = '12px'; s.top = '50%'; s.transform = 'translateY(-50%)';
+        s.width = 'auto'; s.maxWidth = '600px'; s.margin = '0 auto'; s.maxHeight = '88vh'; s.overflowY = 'auto'; s.zIndex = '21';
+        return;
+      }
+      var w0 = parseFloat(s.width) || b.offsetWidth || largura;
+      var h0 = parseFloat(s.height) || 0;
+      var nAbs = 0;
+      Array.prototype.forEach.call(b.querySelectorAll('*'), function (x) { if (x.style && x.style.position === 'absolute') nAbs++; });
+      s.position = 'relative'; s.left = 'auto'; s.top = 'auto'; s.right = 'auto'; s.bottom = 'auto';
+      s.flex = 'none'; s.margin = '0'; s.transform = 'none';
+
+      if (b.tagName === 'IMG' || soImagens(b)) {
+        // íris: tamanho moderado, ao centro
+        var lado = Math.min(240, largura);
+        s.width = lado + 'px'; s.height = lado + 'px'; s.alignSelf = 'center';
+        Array.prototype.forEach.call(b.querySelectorAll('img'), function (im) { im.style.width = '100%'; im.style.height = '100%'; im.style.position = 'static'; });
+        return;
+      }
+      if (nAbs > 4 && h0) {
+        // gráfico com posições fixas: mantém o desenho, encolhe até um limite e faz scroll para o lado
+        var z = Math.max(largura / w0, 0.62);
+        if (z >= 1) z = 1;
+        s.zoom = z;
+        if (w0 * z > largura + 1) {
+          var rolo = document.createElement('div');
+          rolo.style.cssText = 'width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;flex:none';
+          ecra.insertBefore(rolo, b); rolo.appendChild(b);
+        }
+        return;
+      }
+      // bloco normal: ocupa a largura toda, altura conforme o conteúdo
+      s.width = '100%'; s.maxWidth = '100%'; s.height = 'auto'; s.minHeight = '0'; s.boxSizing = 'border-box';
+      b.classList.add('fluido');
+      // decorações largas em posição fixa (ex.: linha da barra de progresso) deixam de fazer sentido
+      Array.prototype.forEach.call(b.querySelectorAll('[aria-hidden="true"]'), function (x) {
+        if (x.style.position === 'absolute' && x.offsetWidth > 120) x.style.display = 'none';
+      });
+    });
+
+    // cabeçalhos (logótipo, tema, perfil): passam para duas linhas em vez de espremer o texto
+    Array.prototype.slice.call(ecra.children, 0, 2).forEach(function (b) {
+      if (!b.classList.contains('fluido')) return;
+      [b].concat(Array.prototype.slice.call(b.children)).forEach(function (el) {
+        if (el.style.display === 'flex' && el.style.flexDirection !== 'column') { el.style.flexWrap = 'wrap'; el.style.rowGap = '10px'; }
+      });
+      // botões e etiquetas curtas não partem a meio (textos longos continuam a partir normalmente)
+      Array.prototype.forEach.call(b.querySelectorAll('a, button, span'), function (el) { if (el.textContent.trim().length <= 26) el.style.whiteSpace = 'nowrap'; });
+    });
+    // grelhas de duas colunas (ex.: perfis): uma coluna quando não há espaço
+    Array.prototype.forEach.call(ecra.querySelectorAll('.fluido *'), function (el) {
+      if (el.style.display !== 'grid' || el.clientWidth >= 440) return;
+      var gtc = el.style.gridTemplateColumns || '', m = gtc.match(/repeat\((\d+)/);
+      var cols = m ? Number(m[1]) : gtc.trim().split(/\s+(?![^(]*\))/).filter(Boolean).length;
+      // 2 ou 3 colunas de cartões: passam a uma coluna (grelhas de muitos quadrados, como a de Amsler, ficam)
+      if (cols >= 2 && cols <= 3 && el.children.length <= 8) el.style.gridTemplateColumns = '1fr';
+    });
+    // linhas de botões que não cabem passam para a linha seguinte
+    Array.prototype.forEach.call(ecra.querySelectorAll('.fluido, .fluido *'), function (el) {
+      var st = el.style;
+      if (!st || st.display !== 'flex' || st.flexDirection === 'column') return;
+      if (el.scrollWidth > el.clientWidth + 2) st.flexWrap = 'wrap';
+    });
+    // textos numa só linha que não cabem passam a partir
+    Array.prototype.forEach.call(ecra.querySelectorAll('.fluido span, .fluido a, .fluido button'), function (el) {
+      if (el.scrollWidth > el.clientWidth + 2 || el.getBoundingClientRect().right > window.innerWidth) { el.style.whiteSpace = 'normal'; }
+    });
   }
 
   window.addEventListener('DOMContentLoaded', function () {
     modelo = document.getElementById('dc-modelo').content;
     raiz = document.getElementById('raiz');
     instancia = new window.Component({});
+    decidirModo();
+    ajustar();
     desenhar();
     if (typeof instancia.componentDidMount === 'function') instancia.componentDidMount();
     ajustar();
-    window.addEventListener('resize', ajustar);
+    // ao rodar ou redimensionar: decide o modo e volta a desenhar (o modo coluna mexe nos blocos)
+    var mudar = function () { var antes = modoColuna; decidirModo(); if (antes !== modoColuna) desenhar(); ajustar(); };
+    window.addEventListener('resize', mudar);
+    window.addEventListener('orientationchange', function () { setTimeout(mudar, 200); });
   });
 })();

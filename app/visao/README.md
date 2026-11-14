@@ -45,6 +45,37 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Níveis do ecrã: verde 0, amarelo 1 (condições duvidosas), laranja 2 (= amarelo do motor, ou sintomas), vermelho 3 (= vermelho do motor).
 - O ecrã de teste antigo (`app/camara/teste_visao.html`) usa 10 linhas e grelha 3x3. **Não misturar os dois no mesmo perfil.**
 
+## Correcções de 14 Nov (pedido da equipa)
+
+- **«Tela» em vez de «tablet»** em todos os textos.
+- **Íris**: a imagem do olho no ecrã inicial muda com o perfil seleccionado; cada perfil guarda a sua íris
+  (`visao-iris-<ID>`, escolhida em Perfil). Ver `Visao.irisDe(id)` e `Visao.guardarIris(id, iris)`.
+- **Fundo acompanha a íris** (`iris.css`): escuro = preto com o brilho da cor da íris; claro = branco com a cor da íris.
+- **Gradiente por baixo da barra de navegação** (cor do fundo: preto no escuro, branco no claro) quando há conteúdo por trás.
+- **Instruções antes do teste**: acuidade e grelha de Amsler começam com um ecrã de instruções e o botão «Começar».
+- **Voz** (`voz.js`): instruções faladas em português (vozes do sistema, sem internet): «Que letras vês?», «Afasta-te um pouco
+  da tela», «Aproxima-te», «Diz seguinte para avançar». Botão «Voz ligada/desligada».
+  **Microfone** (opcional): diz as letras, «seguinte», «apagar», «não consigo», «tudo direito». Só funciona se o navegador
+  reconhecer a voz **no aparelho** (`processLocally`, Chrome/Edge recentes); o som nunca sai do aparelho.
+  O pacote de português descarrega-se uma vez, com internet, em `index.html` → «Preparar voz». Sem isso, usam-se os botões.
+- **Indicador de acertos**: em vez de «toca nas letras que reconheces», o astronauta toca na letra que vê num teclado
+  (C D E F L O P T Z). Cada letra fica verde (certa) ou vermelha (errada); a linha conta como lida com 60% certas.
+  Os acertos ficam guardados (`acertos_oe`, `acertos_od`, ex.: "14/15").
+- **Ecrã de acuidade simplificado**: só o olho, a linha, as letras, os acertos e o teclado.
+- **Responsividade** (`runtime.js`): ecrãs largos (PC, tablet, TV) mostram o desenho inteiro, ampliado, com o fundo a encher a janela.
+  Ecrãs estreitos ou baixos (telemóvel; largura < 820 px ou altura < 520 px) passam a **modo coluna**: os blocos ficam uns por baixo
+  dos outros, em tamanho real, com scroll; a barra de navegação fica fixa em baixo; grelhas de cartões passam a uma coluna;
+  gráficos com posições fixas (linha temporal SANS) deslizam para o lado. Não há rotação do ecrã.
+- **Teste dividido em duas metades** (acuidade e grelha de Amsler): à esquerda o teste; à direita a **imagem da câmara em directo**
+  com a distância por cima (cm, «Distância certa / Perto demais / Longe demais», moldura verde ou amarela) e os botões de voz.
+  O `<video>` é um só: fica registado em `window.DC_FIXOS.camara` e o `runtime.js` encaixa-o onde o ecrã tiver
+  `<div data-fixo="camara">` (o ecrã é redesenhado a cada mudança, por isso o vídeo não pode viver dentro do modelo).
+  Nada é gravado: a imagem só é mostrada e usada para medir a distância.
+- **Entrada pelo rosto mais rápida** (`../camara/rosto.js`): os modelos são carregados e «aquecidos» ao abrir o `Main`
+  (`Rosto.preparar()`, sem ligar a câmara); modelos e câmara arrancam ao mesmo tempo; a análise usa imagens mais pequenas (224);
+  basta uma imagem com boa semelhança (distância ≤ 0,46) para entrar; depois de reconhecer, segue sozinho para o `Hoje`.
+  O círculo do `Main` mostra a câmara enquanto verifica (`data-fixo="rosto"`).
+
 ## Por fazer
 
 - O questionário pré-exame VISION GUARD (9 perguntas, `REGRAS.prontidao`, `Motor.prontidao`) só existe em `app/camara/teste_visao.html`.
