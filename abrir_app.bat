@@ -1,8 +1,7 @@
 @echo off
-REM Windows: duplo clique para abrir a app SEM internet.
-REM Cria um servidor local (http://localhost:8000) porque o browser
-REM nao deixa usar a camara nem carregar o modelo a partir de file://.
+REM Windows: double-click to open the app WITHOUT internet.
+REM Starts a local server (http://localhost:8000); servidor.py stops the browser keeping old copies.
 cd /d "%~dp0"
-echo A abrir a app em http://localhost:8000/app/ (fecha esta janela para parar)
+echo Opening the app at http://localhost:8000/app/visao/Main.html (close this window to stop)
 start "" "http://localhost:8000/app/visao/Main.html"
-python -m http.server 8000
+python servidor.py 8000

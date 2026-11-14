@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visão · Deep Thinkers · ecrãs do protótipo</title>
-<link href="fonte.css" rel="stylesheet">
-<link href="iris.css" rel="stylesheet">
+<title>Vision · Deep Thinkers · prototype screens</title>
+<link href="fonte.css?v=20261114c" rel="stylesheet">
+<link href="iris.css?v=20261114c" rel="stylesheet">
 <style>
 :root{--bg:#0D0C0A;--card:rgba(255,255,255,0.06);--line:rgba(255,255,255,0.10);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--acc:#CFE3F3;--acc-tx:#0D0C0A}
 *{box-sizing:border-box}
@@ -34,38 +34,38 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 <main>
 <header>
 <div>
-<span class="sub">Deep Thinkers · NASA Space Apps 2026 · protótipo da app de visão</span>
-<h1>Visão · todos os ecrãs</h1>
+<span class="sub">Deep Thinkers · NASA Space Apps 2026 · vision app prototype</span>
+<h1>Vision · all screens</h1>
 </div>
 <div class="acoes">
-<button class="btn btn-sec" type="button" id="repor">Repor a demonstração</button>
-<button class="btn btn-sec" type="button" id="preparar-voz" title="Descarrega uma vez, com internet, o português do reconhecimento de voz. Depois funciona sem internet.">Preparar voz (uma vez, antes da missão)</button>
-<a class="btn btn-acc" href="Main.html">Começar pelo início</a>
+<button class="btn btn-sec" type="button" id="repor">Reset the demo</button>
+<button class="btn btn-sec" type="button" id="preparar-voz" title="Downloads the speech-recognition language pack once, with internet. After that it works offline.">Prepare voice (once, before the mission)</button>
+<a class="btn btn-acc" href="Main.html">Start from the beginning</a>
 </div>
 </header>
 <div id="estado" role="status"></div>
 <div class="grelha">
-<a class="cartao" href="Main.html"><img src="assets/miniaturas/Main.jpg" alt=""><b>1 · Entrar</b><span>Escolher o perfil e entrar pelo rosto ou pela lista.</span></a>
-<a class="cartao" href="Hoje.html"><img src="assets/miniaturas/Hoje.jpg" alt=""><b>2 · Hoje</b><span>Recomendação do dia e notificação de movimento da nave.</span></a>
-<a class="cartao" href="Perfil.html"><img src="assets/miniaturas/Perfil.jpg" alt=""><b>3 · Perfil</b><span>Dados oficiais, personalização e eventos da nave com gráfico.</span></a>
-<a class="cartao" href="TesteRapido.html"><img src="assets/miniaturas/TesteRapido.jpg" alt=""><b>4 · Testes rápidos</b><span>Antes de começar, acuidade de perto, grelha de Amsler e resultado.</span></a>
-<a class="cartao" href="OCT.html"><img src="assets/miniaturas/OCT.jpg" alt=""><b>5 · OCT (opcional)</b><span>Registar os valores do aparelho e comparar com o histórico.</span></a>
-<a class="cartao" href="Tendencia.html"><img src="assets/miniaturas/Tendencia.jpg" alt=""><b>6 · Histórico</b><span>Tendência da retina face à base pré-voo.</span></a>
-<a class="cartao" href="SANS.html"><img src="assets/miniaturas/SANS.jpg" alt=""><b>7 · Monitorização SANS</b><span>Linha temporal dos exames e eventos da missão.</span></a>
-<a class="cartao" href="Alerta.html"><img src="assets/miniaturas/Alerta.jpg" alt=""><b>8 · Alertas médicos</b><span>Alertas em quatro níveis, com detalhe e envio ao médico de voo.</span></a>
+<a class="cartao" href="Main.html"><img src="assets/miniaturas/Main.jpg" alt=""><b>1 · Sign in</b><span>Choose the profile and sign in by face or from the list.</span></a>
+<a class="cartao" href="Hoje.html"><img src="assets/miniaturas/Hoje.jpg" alt=""><b>2 · Today</b><span>Daily advice and spacecraft-motion notification.</span></a>
+<a class="cartao" href="Perfil.html"><img src="assets/miniaturas/Perfil.jpg" alt=""><b>3 · Profile</b><span>Records, personalisation and spacecraft events with a chart.</span></a>
+<a class="cartao" href="TesteRapido.html"><img src="assets/miniaturas/TesteRapido.jpg" alt=""><b>4 · Quick tests</b><span>Before you start, near acuity, Amsler grid and result.</span></a>
+<a class="cartao" href="OCT.html"><img src="assets/miniaturas/OCT.jpg" alt=""><b>5 · OCT (optional)</b><span>Record the device values and compare with history.</span></a>
+<a class="cartao" href="Tendencia.html"><img src="assets/miniaturas/Tendencia.jpg" alt=""><b>6 · History</b><span>Retina trend against the pre-flight baseline.</span></a>
+<a class="cartao" href="SANS.html"><img src="assets/miniaturas/SANS.jpg" alt=""><b>7 · SANS monitoring</b><span>Timeline of exams and mission events.</span></a>
+<a class="cartao" href="Alerta.html"><img src="assets/miniaturas/Alerta.jpg" alt=""><b>8 · Medical alerts</b><span>Alerts on four levels, with detail and sending to the flight surgeon.</span></a>
 </div>
 <div class="nota">
-<b>Como usar.</b> Abre esta pasta e faz duplo clique em <b>index.html</b>, ou começa em <b>Main.html</b>. Funciona sem internet. Para a câmara (distância e entrada pelo rosto), abre a app com o ficheiro <b>abrir_app</b> da pasta do projecto (http://localhost:8000); com duplo clique tudo funciona menos a câmara. O perfil, o tema e as respostas ficam guardados no navegador: usa <b>Repor a demonstração</b> para voltar a ver a notificação de movimento e começar de novo.<br>
-Marta = rotina · Daniel = revisão recomendada · Sofia = prioridade clínica. Tudo é simulado, sem ligação a sistemas da NASA, e a app não faz diagnóstico de SANS.
+<b>How to use.</b> Open this folder and double-click <b>index.html</b>, or start at <b>Main.html</b>. Works without internet. For the camera (distance and face sign-in), open the app with the file <b>abrir_app</b> in the project folder (http://localhost:8000); with a double-click everything works except the camera. Profile, theme and answers are kept in the browser: use <b>Reset the demo</b> to see the motion notification again and start over.<br>
+Marta = routine · Daniel = review advised · Sofia = clinical priority. Everything is simulated, with no link to NASA systems, and the app does not diagnose SANS.
 </div>
 </main>
-<script src="voz.js"></script>
+<script src="voz.js?v=20261114c"></script>
 <script>
 // Reconhecimento de voz no aparelho: o pacote de português descarrega-se UMA vez, com internet.
 document.getElementById('preparar-voz').addEventListener('click', function () {
   var e = document.getElementById('estado');
-  if (!window.Voz) { e.textContent = 'Módulo de voz em falta.'; return; }
-  e.textContent = 'A preparar o reconhecimento de voz…';
+  if (!window.Voz) { e.textContent = 'Voice module missing.'; return; }
+  e.textContent = 'Preparing speech recognition…';
   window.Voz.prepararMicrofone().then(function (r) { e.textContent = r.mensagem; });
 });
 document.getElementById('repor').addEventListener('click', function () {
@@ -74,9 +74,9 @@ document.getElementById('repor').addEventListener('click', function () {
     Object.keys(window.localStorage).forEach(function (k) {
       if (k.indexOf('visao-') === 0) { window.localStorage.removeItem(k); n++; }   // os testes reais (dt_registos) e os rostos (dt_rostos) não são apagados aqui
     });
-    document.getElementById('estado').textContent = 'Demonstração reposta.';
+    document.getElementById('estado').textContent = 'Demo reset.';
   } catch (e) {
-    document.getElementById('estado').textContent = 'Este navegador não deixa guardar dados locais: cada página começa sempre do zero.';
+    document.getElementById('estado').textContent = 'This browser does not allow local data: each page always starts from scratch.';
   }
 });
 </script>

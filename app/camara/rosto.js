@@ -40,7 +40,7 @@
   function escrever(o) { try { localStorage.setItem(CHAVE, JSON.stringify(o)); return true; } catch (e) { return false; } }
 
   function carregar() {
-    if (!global.faceapi) return Promise.reject(new Error("face-api não carregado"));
+    if (!global.faceapi) return Promise.reject(new Error("face-api not loaded"));
     if (!carregado) {
       carregado = Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(pasta),
@@ -52,7 +52,7 @@
   }
 
   // Carrega os modelos e faz uma análise a uma imagem vazia, para o navegador preparar os cálculos.
-  // Chamar ao abrir o ecrã de entrada: assim, quando a pessoa toca em "Entrar com o rosto", já está tudo pronto.
+  // Chamar ao abrir o ecrã de entrada: assim, quando a pessoa toca em "Sign in with face", já está tudo pronto.
   // Não liga a câmara.
   function preparar() {
     if (!aquecido) {
@@ -131,16 +131,16 @@
       .then(function () { return esperar(80); })
       .then(fn)
       .then(function (r) { fecharCamara(video, aberta); return r; },
-            function (e) { cam.then(function () { fecharCamara(video, aberta); }, function () {}); return { ok: false, id: null, erro: String(e && e.message || e), mensagem: "Câmara ou modelo indisponível. Escolhe o perfil na lista." }; });
+            function (e) { cam.then(function () { fecharCamara(video, aberta); }, function () {}); return { ok: false, id: null, erro: String(e && e.message || e), mensagem: "Camera or model unavailable. Pick your profile from the list." }; });
   }
 
   function registar(video, id) {
     return comCamara(video, function () {
       return recolher(video, AMOSTRAS, TEMPO_REGISTO).then(function (lista) {
-        if (lista.length < 3) return { ok: false, amostras: lista.length, mensagem: "Não consegui ver bem a tua cara. Olha de frente para a câmara, com boa luz e sozinho(a) na imagem." };
+        if (lista.length < 3) return { ok: false, amostras: lista.length, mensagem: "I could not see your face clearly. Look straight at the camera, in good light, alone in the frame." };
         var r = ler(); r[id] = media(lista);
-        if (!escrever(r)) return { ok: false, amostras: lista.length, mensagem: "Não foi possível guardar neste aparelho." };
-        return { ok: true, amostras: lista.length, mensagem: "Cara registada para " + id + "." };
+        if (!escrever(r)) return { ok: false, amostras: lista.length, mensagem: "Could not save on this device." };
+        return { ok: true, amostras: lista.length, mensagem: "Face registered for " + id + "." };
       });
     });
   }
@@ -148,15 +148,15 @@
   function identificar(video) {
     return comCamara(video, function () {
       var rostos = ler();
-      if (!Object.keys(rostos).length) return { ok: false, id: null, mensagem: "Ainda ninguém registou a cara neste aparelho." };
+      if (!Object.keys(rostos).length) return { ok: false, id: null, mensagem: "No one has registered a face on this device yet." };
       // Rápido: se uma imagem já der um perfil com distância <= CERTO, entra logo; senão junta até 3 imagens.
       var certo = function (lista) { var c = comparar(lista[lista.length - 1], rostos, CERTO); return !!c.id; };
       return recolher(video, 3, TEMPO_ENTRAR, certo).then(function (lista) {
-        if (!lista.length) return { ok: false, id: null, mensagem: "Não vejo uma cara. Olha de frente para a câmara, com boa luz." };
+        if (!lista.length) return { ok: false, id: null, mensagem: "I can't see a face. Look straight at the camera, in good light." };
         var c = comparar(media(lista), rostos);
-        if (c.id) return { ok: true, id: c.id, distancia: c.distancia, mensagem: "Olá, " + c.id + "." };
+        if (c.id) return { ok: true, id: c.id, distancia: c.distancia, mensagem: "Hi, " + c.id + "." };
         return { ok: false, id: null, distancia: c.distancia,
-                 mensagem: c.motivo === "ambiguo" ? "Não tenho a certeza de quem és. Escolhe o perfil na lista." : "Não reconheci esta cara. Escolhe o perfil na lista ou regista a tua cara." };
+                 mensagem: c.motivo === "ambiguo" ? "I am not sure who you are. Pick your profile from the list." : "Face not recognised. Pick your profile from the list or register your face." };
       });
     });
   }

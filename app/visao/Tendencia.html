@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tendência · Visão</title>
-<link href="fonte.css" rel="stylesheet">
-<link href="iris.css" rel="stylesheet">
+<title>Trend · Vision</title>
+<link href="fonte.css?v=20261114c" rel="stylesheet">
+<link href="iris.css?v=20261114c" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,13 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js"></script>
-<script src="../../motor/regras.js"></script>
-<script src="../../motor/motor.js"></script>
-<script src="../../motor/modelo.js"></script>
-<script src="../armazenamento.js"></script>
-<script src="ligacao.js"></script>
-<script src="runtime.js"></script>
+<script src="../dados.js?v=20261114c"></script>
+<script src="../../motor/regras.js?v=20261114c"></script>
+<script src="../../motor/motor.js?v=20261114c"></script>
+<script src="../../motor/modelo.js?v=20261114c"></script>
+<script src="../armazenamento.js?v=20261114c"></script>
+<script src="ligacao.js?v=20261114c"></script>
+<script src="runtime.js?v=20261114c"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -34,7 +34,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
 <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Visão</span>
+<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Vision</span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -49,20 +49,20 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 
 <header style="position: absolute; left: 40px; right: 40px; top: 88px; display: flex; align-items: flex-end; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 14px; color: var(--tx2)">OCT · retina à volta do nervo óptico, face à tua base pré-voo</span>
-<h1 style="margin: 0; font-size: 34px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">Histórico</h1>
+<span style="font-size: 14px; color: var(--tx2)">OCT · retina around the optic nerve, vs your pre-flight baseline</span>
+<h1 style="margin: 0; font-size: 34px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">History</h1>
 </div>
-<nav aria-label="Tipo de avaliação" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
-<a href="TesteRapido.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">Testes rápidos</a>
+<nav aria-label="Check type" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
+<a href="TesteRapido.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">Quick tests</a>
 <a href="OCT.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">OCT</a>
-<span aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--acc-tx); background: var(--acc)">Histórico</span>
+<span aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--acc-tx); background: var(--acc)">History</span>
 </nav>
 </header>
 
 <section aria-labelledby="grafico-titulo" style="position: absolute; left: 40px; top: 172px; width: 714px; height: 548px; box-sizing: border-box; padding: 22px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
-<h2 id="grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Espessura da retina · olho esquerdo</h2>
-<div role="group" aria-label="Cenário de demonstração" style="display: flex; gap: 3px; padding: 3px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2)">
+<h2 id="grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Retinal thickness · left eye</h2>
+<div role="group" aria-label="Demo scenario" style="display: flex; gap: 3px; padding: 3px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2)">
 <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
 <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 15px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; color: {{ t.fg }}; background: {{ t.bg }}">{{ t.label }}</button>
 </sc-for>
@@ -95,7 +95,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <text x="395.2" y="350">90</text>
 <text x="509.6" y="350">120</text>
 <text x="624" y="350">150</text>
-<text x="338" y="374">Dia de missão</text>
+<text x="338" y="374">Mission day</text>
 </g>
 <polyline points="{{ linePts }}" style="fill: none; stroke: var(--line-glow); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round"></polyline>
 <polyline points="{{ linePts }}" style="fill: none; stroke: var(--tx); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round"></polyline>
@@ -105,17 +105,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <text x="{{ labelX }}" y="{{ labelY }}" style="font-size: 15px; font-weight: 700; fill: {{ statusFg }}">{{ lastLabel }}</text>
 </svg>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px">
-<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--ok); opacity: 0.45"></span>Referência simulada</span>
-<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--warn); opacity: 0.5"></span>Acima da referência</span>
-<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--bad); opacity: 0.4"></span>Zona de prioridade</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--ok); opacity: 0.45"></span>Simulated reference</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--warn); opacity: 0.5"></span>Above the reference</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--bad); opacity: 0.4"></span>Priority zone</span>
 <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--tx)"></span>{{ who }}</span>
-<span style="margin-left: auto; font-size: 12px; color: var(--tx3)">Cenário de demonstração · dados simulados</span>
+<span style="margin-left: auto; font-size: 12px; color: var(--tx3)">Demo scenario · simulated data</span>
 </div>
 </section>
 
 <div style="position: absolute; left: 774px; top: 172px; width: 380px; display: flex; flex-direction: column; gap: 12px">
 
-<section aria-live="polite" aria-label="Estado" style="padding: 18px 22px; border-radius: 28px; background: radial-gradient(110% 90% at 50% 0%, {{ statusGlow }}, rgba(0,0,0,0) 70%), var(--card); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+<section aria-live="polite" aria-label="Status" style="padding: 18px 22px; border-radius: 28px; background: radial-gradient(110% 90% at 50% 0%, {{ statusGlow }}, rgba(0,0,0,0) 70%), var(--card); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
 <svg aria-hidden="true" width="240" height="136" viewBox="0 0 300 170">
 <defs>
 <linearGradient id="arco-gradiente" x1="30" y1="0" x2="270" y2="0" gradientUnits="userSpaceOnUse">
@@ -132,7 +132,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <circle cx="{{ knobX }}" cy="{{ knobY }}" r="11" style="fill: var(--tx)"></circle>
 <circle cx="{{ knobX }}" cy="{{ knobY }}" r="4" style="fill: var(--bg)"></circle>
 <text x="150" y="132" style="font-size: 40px; font-weight: 300; fill: var(--tx); text-anchor: middle; letter-spacing: -1px">{{ lastLabel }}</text>
-<text x="150" y="160" style="font-size: 13px; fill: var(--tx2); text-anchor: middle">acima da tua base</text>
+<text x="150" y="160" style="font-size: 13px; fill: var(--tx2); text-anchor: middle">above your baseline</text>
 </svg>
 <span style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: {{ statusFg }}; background: var(--chip); border-radius: 999px; padding: 5px 12px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 4px; background: {{ statusDot }}; box-shadow: 0 0 10px {{ statusDot }}"></span>{{ statusName }}</span>
 <h2 style="margin: 2px 0 0; font-size: 22px; font-weight: 400; letter-spacing: -0.3px; color: var(--tx)">{{ statusTitle }}</h2>
@@ -140,7 +140,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </section>
 
 <section aria-labelledby="fazer-titulo" style="padding: 16px 22px 8px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column">
-<h2 id="fazer-titulo" style="margin: 0 0 4px; font-size: 15px; font-weight: 600; color: var(--tx)">O que fazer</h2>
+<h2 id="fazer-titulo" style="margin: 0 0 4px; font-size: 15px; font-weight: 600; color: var(--tx)">What to do</h2>
 <sc-for list="{{ actions }}" as="a" hint-placeholder-count="3">
 <div style="display: flex; gap: 12px; align-items: center; min-height: 40px; border-bottom: {{ a.rule }}">
 <span aria-hidden="true" style="width: 22px; height: 22px; flex: none; border-radius: 11px; background: var(--acc-soft); color: var(--acc-text); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ a.n }}</span>
@@ -150,19 +150,19 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </section>
 
 <sc-if value="{{ isRed }}" hint-placeholder-val="{{ false }}">
-<a href="Alerta.html" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 24px; background: var(--bad-btn); color: var(--bad-btn-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--bad-btn-glow)">Abrir alertas</a>
+<a href="Alerta.html" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 24px; background: var(--bad-btn); color: var(--bad-btn-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--bad-btn-glow)">Open alerts</a>
 </sc-if>
 <sc-if value="{{ notRed }}" hint-placeholder-val="{{ true }}">
-<a href="TesteRapido.html" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 24px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 600; text-decoration: none">Fazer testes rápidos</a>
+<a href="TesteRapido.html" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 24px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 600; text-decoration: none">Do quick tests</a>
 </sc-if>
 </div>
 
 <div aria-hidden="true" style="position: absolute; left: -1500px; right: -1500px; top: 712px; bottom: -1500px; pointer-events: none; background: linear-gradient(180deg, transparent 0, var(--bg) 90px)"></div>
-<nav aria-label="Secções da app" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
-<a href="Hoje.html" aria-label="Hoje" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
-<a href="TesteRapido.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg>Avaliações</a>
-<a href="SANS.html" aria-label="Monitorização SANS" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
-<a href="Alerta.html" aria-label="Alertas" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></a>
+<nav aria-label="App sections" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
+<a href="Hoje.html" aria-label="Today" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a href="TesteRapido.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg>Checks</a>
+<a href="SANS.html" aria-label="SANS monitoring" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+<a href="Alerta.html" aria-label="Alerts" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></a>
 </nav>
 
 </div>
@@ -234,19 +234,19 @@ class Component extends DCLogic {
     if (TB) level = TB.level;
     const pct = (x) => x.toFixed(1).replace('.', ',') + '%';
     const looks = [
-      { name: 'Verde · rotina', title: 'Dentro da referência', fg: 'var(--ok-tx)', dot: 'var(--ok)', glow: 'var(--ok-glow)' },
-      { name: 'Laranja · revisão recomendada', title: 'Acima da tua referência', fg: 'var(--warn-tx)', dot: 'var(--warn)', glow: 'var(--warn-glow)' },
-      { name: 'Vermelho · prioridade clínica', title: 'Avisar o médico de voo', fg: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)' }
+      { name: 'Green · routine', title: 'Within the reference', fg: 'var(--ok-tx)', dot: 'var(--ok)', glow: 'var(--ok-glow)' },
+      { name: 'Orange · review advised', title: 'Above your reference', fg: 'var(--warn-tx)', dot: 'var(--warn)', glow: 'var(--warn-glow)' },
+      { name: 'Red · clinical priority', title: 'Tell the flight surgeon', fg: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)' }
     ];
     const texts = [
-      'Dia ' + day + ': +' + pct(v) + ' face à tua base. Referência simulada: até +' + pct(p90(day)) + '.',
-      'Dia ' + day + ': +' + pct(v) + ' face à tua base. Referência simulada: até +' + pct(p90(day)) + '. A equipa médica revê.',
-      'Dia ' + day + ': +' + pct(v) + ' face à tua base. Limite de prioridade simulado: +' + pct(p97(day)) + '.'
+      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated reference: up to +' + pct(p90(day)) + '.',
+      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated reference: up to +' + pct(p90(day)) + '. The medical team reviews it.',
+      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated priority limit: +' + pct(p97(day)) + '.'
     ];
     const actionSets = [
-      ['Segue o calendário normal.', 'Próximo teste rápido daqui a 7 dias.', 'Próximo OCT daqui a um mês.'],
-      ['A equipa médica revê o resultado.', 'Repete os testes rápidos em 2 a 3 dias.', 'Usa os óculos de reserva, se precisares.'],
-      ['Avisa já o médico de voo.', 'O pacote para a Terra está pronto.', 'Sem contacto? Segue o plano de espera.']
+      ['Keep the normal schedule.', 'Next quick test in 7 days.', 'Next OCT in one month.'],
+      ['The medical team reviews the result.', 'Repeat the quick tests in 2 to 3 days.', 'Use the spare glasses if you need them.'],
+      ['Tell the flight surgeon now.', 'The package for Earth is ready.', 'No contact? Follow the holding plan.']
     ];
     const acts = actionSets[level];
     const actions = acts.map((t, i) => ({ n: i + 1, t: t, rule: i < acts.length - 1 ? '1px solid var(--line2)' : '0' }));
@@ -259,9 +259,9 @@ class Component extends DCLogic {
     const kA = G(v);
     const a90 = G(p90(day));
     const a97 = G(p97(day));
-    const chips = { A: 'Marta Silveira · Dia 60', B: 'Daniel Cossa · Dia 90', C: 'Sofia Lindqvist · Dia 84' };
+    const chips = { A: 'Marta Silveira · Day 60', B: 'Daniel Cossa · Day 90', C: 'Sofia Lindqvist · Day 84' };
     const euReal = window.Visao ? window.Visao.eu() : null;
-    if (euReal) Object.keys(chips).forEach((k) => { chips[k] = 'Exemplo simulado · ' + chips[k]; });
+    if (euReal) Object.keys(chips).forEach((k) => { chips[k] = 'Simulated example · ' + chips[k]; });
     const tabs = [
       { id: 'A', label: 'A · Marta' },
       { id: 'B', label: 'B · Daniel' },
@@ -276,10 +276,10 @@ class Component extends DCLogic {
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
-      selo: 'Dados simulados',
+      selo: 'Simulated data',
       claro: claro,
       escuro: !claro,
-      temaLabel: claro ? 'Modo escuro' : 'Modo claro',
+      temaLabel: claro ? 'Dark mode' : 'Light mode',
       toggleTema: () => {
         const nt = this.state.tema === 'escuro' ? 'claro' : 'escuro';
         this.setState({ tema: nt });
@@ -298,7 +298,7 @@ class Component extends DCLogic {
       labelY: (Math.max(lastY, 30) + 5).toFixed(1),
       lastLabel: '+' + pct(v),
       who: ({ A: 'Marta', B: 'Daniel', C: 'Sofia' })[s.who],
-      chartLabel: 'Astronauta ' + s.who + ': +' + pct(v) + ' face à base no dia ' + day + '. Estado ' + look.name + '.',
+      chartLabel: 'Astronaut ' + s.who + ': +' + pct(v) + ' vs baseline on day ' + day + '. Status ' + look.name + '.',
       knobX: gx(kA, 120),
       knobY: gy(kA, 120),
       t90x1: gx(a90, 104), t90y1: gy(a90, 104), t90x2: gx(a90, 136), t90y2: gy(a90, 136),

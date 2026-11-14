@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alertas médicos · Visão</title>
-<link href="fonte.css" rel="stylesheet">
-<link href="iris.css" rel="stylesheet">
+<title>Medical alerts · Vision</title>
+<link href="fonte.css?v=20261114c" rel="stylesheet">
+<link href="iris.css?v=20261114c" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,13 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js"></script>
-<script src="../../motor/regras.js"></script>
-<script src="../../motor/motor.js"></script>
-<script src="../../motor/modelo.js"></script>
-<script src="../armazenamento.js"></script>
-<script src="ligacao.js"></script>
-<script src="runtime.js"></script>
+<script src="../dados.js?v=20261114c"></script>
+<script src="../../motor/regras.js?v=20261114c"></script>
+<script src="../../motor/motor.js?v=20261114c"></script>
+<script src="../../motor/modelo.js?v=20261114c"></script>
+<script src="../armazenamento.js?v=20261114c"></script>
+<script src="ligacao.js?v=20261114c"></script>
+<script src="runtime.js?v=20261114c"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -34,7 +34,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
 <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Visão</span>
+<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Vision</span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -43,23 +43,23 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ claro }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
 {{ temaLabel }}</button>
 <a href="Perfil.html" style="display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 14px 0 4px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2); font-size: 13px; font-weight: 600; color: var(--tx); text-decoration: none">
-<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ eu.ini }}</span>{{ eu.nome }}<span style="font-weight: 500; color: var(--tx3)">· Dia {{ eu.dia }}</span></a>
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ eu.ini }}</span>{{ eu.nome }}<span style="font-weight: 500; color: var(--tx3)">· Day {{ eu.dia }}</span></a>
 </div>
 </div>
 
 <header style="position: absolute; left: 40px; right: 40px; top: 84px; display: flex; align-items: flex-end; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 14px; color: var(--tx2)">O que aconteceu, quando e o que fazer. Nunca é um diagnóstico.</span>
-<h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">Alertas médicos</h1>
+<span style="font-size: 14px; color: var(--tx2)">What happened, when and what to do. Never a diagnosis.</span>
+<h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">Medical alerts</h1>
 </div>
-<div role="group" aria-label="Filtrar por nível" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
+<div role="group" aria-label="Filter by level" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
 <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="5">
 <button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.on }}" style="display: flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border: 0; border-radius: 18px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; color: {{ f.fg }}; background: {{ f.bg }}; opacity: {{ f.op }}"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 4px; background: {{ f.dot }}; display: {{ f.dotShow }}"></span>{{ f.t }} <span style="font-weight: 500">{{ f.n }}</span></button>
 </sc-for>
 </div>
 </header>
 
-<div aria-label="Lista de alertas" style="position: absolute; left: 40px; top: 156px; width: 420px; height: 572px; display: flex; flex-direction: column; gap: 10px">
+<div aria-label="Alert list" style="position: absolute; left: 40px; top: 156px; width: 420px; height: 572px; display: flex; flex-direction: column; gap: 10px">
 <sc-for list="{{ lista }}" as="a" hint-placeholder-count="5">
 <button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.on }}" style="display: flex; gap: 12px; align-items: flex-start; padding: 13px 16px; border-radius: 20px; border: 1px solid {{ a.borda }}; background: {{ a.fundo }}; box-shadow: var(--card-shadow); font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
 <span aria-hidden="true" style="width: 10px; height: 10px; flex: none; margin-top: 4px; border-radius: 5px; background: {{ a.dot }}; box-shadow: 0 0 10px {{ a.dot }}"></span>
@@ -71,7 +71,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </button>
 </sc-for>
 <div style="flex-grow: 1"></div>
-<span style="font-size: 12px; line-height: 1.4; color: var(--tx3)">Os alertas não classificam nada como SANS. A interpretação é da equipa médica. Limites provisórios, a validar pela equipa de saúde.</span>
+<span style="font-size: 12px; line-height: 1.4; color: var(--tx3)">Alerts never classify anything as SANS. Interpretation is up to the medical team. Provisional limits, to be validated by the health team.</span>
 </div>
 
 <section aria-live="polite" aria-labelledby="det-titulo" style="position: absolute; left: 476px; top: 156px; width: 678px; height: 572px; box-sizing: border-box; padding: 22px 26px; border-radius: 28px; background: radial-gradient(70% 45% at 0% 0%, {{ d.glow }}, rgba(0,0,0,0) 65%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid {{ d.linha }}; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 12px">
@@ -93,13 +93,13 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 12px; color: var(--tx3)">{{ pacoteTxt }}</span>
 <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
-<button type="button" onClick="{{ send }}" style="height: 50px; border: 0; border-radius: 25px; background: var(--bad-btn); color: var(--bad-btn-tx); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 28px var(--bad-btn-glow)">Enviar ao médico de voo</button>
+<button type="button" onClick="{{ send }}" style="height: 50px; border: 0; border-radius: 25px; background: var(--bad-btn); color: var(--bad-btn-tx); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 28px var(--bad-btn-glow)">Send to the flight surgeon</button>
 </sc-if>
 <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; align-items: center; gap: 12px; border-radius: 20px; padding: 6px 6px 6px 16px; background: var(--teal-soft); border: 1px solid var(--teal-line)">
 <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: var(--teal); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-<span style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1"><span style="font-size: 15px; font-weight: 700; color: var(--tx)">Na fila de envio</span><span style="font-size: 13px; color: var(--tx2)">Segue assim que houver contacto com a Terra.</span></span>
-<button type="button" onClick="{{ undo }}" style="height: 42px; padding: 0 16px; border: 0; border-radius: 21px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Desfazer</button>
+<span style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1"><span style="font-size: 15px; font-weight: 700; color: var(--tx)">Queued for sending</span><span style="font-size: 13px; color: var(--tx2)">Sends as soon as there is contact with Earth.</span></span>
+<button type="button" onClick="{{ undo }}" style="height: 42px; padding: 0 16px; border: 0; border-radius: 21px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Undo</button>
 </div>
 </sc-if>
 </div>
@@ -112,11 +112,11 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </section>
 
 <div aria-hidden="true" style="position: absolute; left: -1500px; right: -1500px; top: 712px; bottom: -1500px; pointer-events: none; background: linear-gradient(180deg, transparent 0, var(--bg) 90px)"></div>
-<nav aria-label="Secções da app" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
-<a href="Hoje.html" aria-label="Hoje" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
-<a href="TesteRapido.html" aria-label="Avaliações" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg></a>
-<a href="SANS.html" aria-label="Monitorização SANS" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
-<a href="Alerta.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>Alertas</a>
+<nav aria-label="App sections" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
+<a href="Hoje.html" aria-label="Today" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a href="TesteRapido.html" aria-label="Checks" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg></a>
+<a href="SANS.html" aria-label="SANS monitoring" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+<a href="Alerta.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg>Alerts</a>
 </nav>
 
 </div>
@@ -152,40 +152,40 @@ class Component extends DCLogic {
     const euReal = window.Visao ? window.Visao.eu() : null;
     const eu = euReal || eus[s.perfil] || eus.B;
     const NIV = [
-      { nome: 'Verde · rotina', curto: 'Verde', cor: 'var(--ok-tx)', dot: 'var(--ok)', soft: 'var(--ok-soft)', glow: 'var(--ok-glow)', linha: 'var(--ok-line)' },
-      { nome: 'Amarelo · interferência potencial', curto: 'Amarelo', cor: 'var(--ylw-tx)', dot: 'var(--ylw)', soft: 'var(--ylw-soft)', glow: 'var(--ylw-glow)', linha: 'var(--ylw-line)' },
-      { nome: 'Laranja · revisão clínica recomendada', curto: 'Laranja', cor: 'var(--warn-tx)', dot: 'var(--warn)', soft: 'var(--warn-soft)', glow: 'var(--warn-glow)', linha: 'var(--warn-line)' },
-      { nome: 'Vermelho · prioridade clínica', curto: 'Vermelho', cor: 'var(--bad-tx)', dot: 'var(--bad)', soft: 'var(--bad-soft)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
+      { nome: 'Green · routine', curto: 'Green', cor: 'var(--ok-tx)', dot: 'var(--ok)', soft: 'var(--ok-soft)', glow: 'var(--ok-glow)', linha: 'var(--ok-line)' },
+      { nome: 'Yellow · possible interference', curto: 'Yellow', cor: 'var(--ylw-tx)', dot: 'var(--ylw)', soft: 'var(--ylw-soft)', glow: 'var(--ylw-glow)', linha: 'var(--ylw-line)' },
+      { nome: 'Orange · clinical review advised', curto: 'Orange', cor: 'var(--warn-tx)', dot: 'var(--warn)', soft: 'var(--warn-soft)', glow: 'var(--warn-glow)', linha: 'var(--warn-line)' },
+      { nome: 'Red · clinical priority', curto: 'Red', cor: 'var(--bad-tx)', dot: 'var(--bad)', soft: 'var(--bad-soft)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
     ];
     const L = {
-      sans: { t: 'Ver na monitorização SANS', href: 'SANS.html' },
-      teste: { t: 'Repetir o teste', href: 'TesteRapido.html' },
-      evento: { t: 'Ver evento no perfil', href: 'Perfil.html', evento: true },
-      oct: { t: 'Ver histórico do OCT', href: 'OCT.html', oct: true },
-      hist: { t: 'Ver histórico', href: 'Tendencia.html' }
+      sans: { t: 'See in SANS monitoring', href: 'SANS.html' },
+      teste: { t: 'Repeat the test', href: 'TesteRapido.html' },
+      evento: { t: 'See event in profile', href: 'Perfil.html', evento: true },
+      oct: { t: 'See OCT history', href: 'OCT.html', oct: true },
+      hist: { t: 'See history', href: 'Tendencia.html' }
     };
     // [id, nivel, titulo, quandoCurto, o que, quando, fontes, fiabilidade, acção, revisão, links, pacote]
     const D = {
       A: [
-        ['a1', 0, 'Testes de rotina dentro da tua base', 'Dia 60', 'Acuidade 5/5 nos dois olhos e grelha de Amsler sem alterações. OCT do dia 60 +6,9% face à base, dentro da referência simulada.', 'Dia 60 · 08:05 UTC', 'Teste rápido na tela · OCT externo de bordo · base pré-voo', 'Boas condições (fiabilidade 92/100). Imagem OCT de boa qualidade.', 'Segue o calendário normal. Próximo OCT no dia 90.', 'Não necessária', ['sans', 'hist'], false],
-        ['a2', 1, 'Grelha de Amsler com condições limitadas', 'Dia 58', 'A grelha de Amsler foi feita com pouca luz e ficou marcada como «condições limitadas».', 'Dia 58 · 21:40 UTC', 'Verificação automática das condições do teste', 'Resultado com fiabilidade reduzida.', 'Repetida no dia 60 com boa luz: sem alterações.', 'Resolvido no dia 60', ['teste'], false]
+        ['a1', 0, 'Routine tests within your baseline', 'Day 60', 'Acuity 5/5 in both eyes and Amsler grid unchanged. OCT on day 60 +6.9% vs baseline, within the simulated reference.', 'Day 60 · 08:05 UTC', 'Quick test on screen · external on-board OCT · pre-flight baseline', 'Good conditions (reliability 92/100). Good-quality OCT image.', 'Keep the normal schedule. Next OCT on day 90.', 'Not needed', ['sans', 'hist'], false],
+        ['a2', 1, 'Amsler grid with limited conditions', 'Day 58', 'The Amsler grid was done in low light and was flagged as “limited conditions”.', 'Day 58 · 21:40 UTC', 'Automatic check of test conditions', 'Result with reduced reliability.', 'Repeated on day 60 in good light: no changes.', 'Resolved on day 60', ['teste'], false]
       ],
       B: [
-        ['b1', 2, 'Retina acima da tua base pré-voo', 'Dia 90', 'OCT do olho esquerdo: espessura da retina peripapilar +17,0% face à base (362 → 424 µm). Sinais de edema ligeiro a confirmar.', 'Dia 90 · 09:15 UTC', 'OCT externo de bordo (simulado) · base pré-voo', 'Imagem de boa qualidade. Sem interferências registadas.', 'Revisão pela equipa médica. Antecipar o próximo OCT para o dia 100, se o médico concordar.', 'Pendente', ['oct', 'sans'], false],
-        ['b2', 2, 'Variação da acuidade entre avaliações seguidas', 'Dia 90', 'Olho esquerdo desceu de 5/5 (dia 87) para 4/5 (dia 90). Olho direito sem alteração.', 'Dia 90 · 10:42 UTC', 'Teste rápido na tela · respostas do astronauta', 'Condições limitadas: movimento durante o teste (10:42–10:43 UTC). O movimento não descarta a alteração.', 'Repetir em condições estáveis. A alteração segue para revisão médica.', 'Pendente', ['teste', 'sans'], false],
-        ['b3', 2, 'Zonas novas na grelha de Amsler (OE)', 'Dia 87', 'Duas zonas ligeiras marcadas no olho esquerdo, fora do centro. No teste anterior não havia zonas.', 'Dia 87 · 08:10 UTC', 'Teste rápido na tela', 'Boas condições (fiabilidade 91/100).', 'Revisão pela equipa médica. Repetir a grelha no próximo teste.', 'Pendente', ['sans'], false],
-        ['b4', 1, 'Movimento da nave durante a acuidade', 'Dia 90', 'A estação registou movimento invulgar durante o teu teste de acuidade.', 'Dia 90 · 10:42–10:43 UTC (52 s)', 'Registo automático da app e da estação', 'O teste de acuidade ficou marcado como «condições limitadas».', 'Responde à notificação do evento no teu perfil e repete o teste de acuidade.', 'EVENTO', ['evento', 'teste'], false],
-        ['b5', 0, 'Grelha de Amsler do OD sem alterações', 'Dia 87', 'Sem zonas marcadas no olho direito.', 'Dia 87 · 08:10 UTC', 'Teste rápido na tela', 'Boas condições (fiabilidade 91/100).', 'Segue o calendário normal para este olho.', 'Não necessária', ['hist'], false]
+        ['b1', 2, 'Retina above your pre-flight baseline', 'Day 90', 'Left-eye OCT: peripapillary retinal thickness +17.0% vs baseline (362 → 424 µm). Signs of mild oedema to be confirmed.', 'Day 90 · 09:15 UTC', 'External on-board OCT (simulated) · pre-flight baseline', 'Good-quality image. No interference recorded.', 'Review by the medical team. Bring the next OCT forward to day 100, if the doctor agrees.', 'Pending', ['oct', 'sans'], false],
+        ['b2', 2, 'Acuity change between consecutive checks', 'Day 90', 'Left eye dropped from 5/5 (day 87) to 4/5 (day 90). Right eye unchanged.', 'Day 90 · 10:42 UTC', 'Quick test on screen · astronaut answers', 'Limited conditions: motion during the test (10:42–10:43 UTC). The motion does not rule out the change.', 'Repeat in stable conditions. The change goes to medical review.', 'Pending', ['teste', 'sans'], false],
+        ['b3', 2, 'New zones on the Amsler grid (LE)', 'Day 87', 'Two mild zones marked in the left eye, off-centre. The previous test had no zones.', 'Day 87 · 08:10 UTC', 'Quick test on screen', 'Good conditions (reliability 91/100).', 'Review by the medical team. Repeat the grid at the next test.', 'Pending', ['sans'], false],
+        ['b4', 1, 'Spacecraft motion during acuity', 'Day 90', 'The station recorded unusual motion during your acuity test.', 'Day 90 · 10:42–10:43 UTC (52 s)', 'Automatic log from the app and station', 'The acuity test was flagged as “limited conditions”.', 'Answer the event notification in your profile and repeat the acuity test.', 'EVENTO', ['evento', 'teste'], false],
+        ['b5', 0, 'RE Amsler grid unchanged', 'Day 87', 'No zones marked in the right eye.', 'Day 87 · 08:10 UTC', 'Quick test on screen', 'Good conditions (reliability 91/100).', 'Keep the normal schedule for this eye.', 'Not needed', ['hist'], false]
       ],
       C: [
-        ['c1', 3, 'Zona nova no centro da grelha de Amsler (OE)', 'Dia 84', 'Zona nova no centro da grelha, olho esquerdo. OCT do mesmo dia: retina +52,9% face à base.', 'Dia 84 · 07:50 UTC', 'Teste rápido · OCT externo de bordo (simulado) · respostas', 'Boas condições (90/100). Imagem OCT de boa qualidade.', 'Avisar já o médico de voo e seguir o plano de espera aprovado.', 'Prioritária', [], true],
-        ['c2', 2, 'Possível achatamento do globo ocular (OE)', 'Dia 84', 'Ecografia ocular com possível achatamento posterior no olho esquerdo. No dia 60 não havia.', 'Dia 84 · 08:30 UTC', 'Ecografia de bordo (simulada)', 'Qualidade aceitável. Recomenda-se confirmar com novo exame.', 'Revisão pela equipa médica.', 'Pendente', ['sans'], false],
-        ['c3', 2, 'Acuidade do OE desceu 2 linhas', 'Dia 84', 'Olho esquerdo de 5/5 para 3/5 em três semanas. Olho direito de 5/5 para 4/5.', 'Dia 63 a dia 84', 'Testes rápidos na tela', 'Boas condições nos últimos três testes.', 'Revisão pela equipa médica. Usar os óculos de reserva para perto, se precisares.', 'Pendente', ['teste', 'hist'], false]
+        ['c1', 3, 'New zone at the centre of the Amsler grid (LE)', 'Day 84', 'New zone at the centre of the grid, left eye. Same-day OCT: retina +52.9% vs baseline.', 'Day 84 · 07:50 UTC', 'Quick test · external on-board OCT (simulated) · answers', 'Good conditions (90/100). Good-quality OCT image.', 'Tell the flight surgeon now and follow the approved holding plan.', 'Priority', [], true],
+        ['c2', 2, 'Possible globe flattening (LE)', 'Day 84', 'Ocular ultrasound with possible posterior flattening in the left eye. Not present on day 60.', 'Day 84 · 08:30 UTC', 'On-board ultrasound (simulated)', 'Acceptable quality. A new exam is recommended to confirm.', 'Review by the medical team.', 'Pending', ['sans'], false],
+        ['c3', 2, 'LE acuity dropped 2 lines', 'Day 84', 'Left eye from 5/5 to 3/5 in three weeks. Right eye from 5/5 to 4/5.', 'Day 63 to day 84', 'Quick tests on screen', 'Good conditions in the last three tests.', 'Review by the medical team. Use the spare reading glasses if you need them.', 'Pending', ['teste', 'hist'], false]
       ]
     };
-    const respTxt = { sim: 'Respondido: sentiste o movimento', nao: 'Respondido: não sentiste', naosei: 'Respondido: não tens a certeza' };
-    const revEvento = s.resp ? respTxt[s.resp] : 'Falta a tua resposta';
-    const todos = ((euReal && window.Visao.alertas()) || D[s.perfil] || D.B).map((r) => ({ id: r[0], nivel: r[1], titulo: r[2], quandoCurto: r[3], que: r[4], quando: r[5], fontes: r[6], fiab: r[7], accao: s.resp && r[9] === 'EVENTO' ? 'Repete o teste de acuidade em condições estáveis.' : r[8], revisao: r[9] === 'EVENTO' ? revEvento : r[9], links: r[10], pacote: r[11] }));
+    const respTxt = { sim: 'Answered: you felt the motion', nao: 'Answered: you did not feel it', naosei: 'Answered: not sure' };
+    const revEvento = s.resp ? respTxt[s.resp] : 'Your answer is missing';
+    const todos = ((euReal && window.Visao.alertas()) || D[s.perfil] || D.B).map((r) => ({ id: r[0], nivel: r[1], titulo: r[2], quandoCurto: r[3], que: r[4], quando: r[5], fontes: r[6], fiab: r[7], accao: s.resp && r[9] === 'EVENTO' ? 'Repeat the acuity test in stable conditions.' : r[8], revisao: r[9] === 'EVENTO' ? revEvento : r[9], links: r[10], pacote: r[11] }));
     const filtroNivel = { todos: -1, vermelho: 3, laranja: 2, amarelo: 1, verde: 0 };
     const fn = filtroNivel[s.filtro];
     const vis = todos.filter((a) => fn === -1 || a.nivel === fn);
@@ -195,14 +195,14 @@ class Component extends DCLogic {
       const nv = NIV[a.nivel];
       return {
         titulo: a.titulo, quandoCurto: a.quandoCurto, nivelCurto: nv.curto, cor: nv.cor, dot: nv.dot,
-        revisao: 'Revisão: ' + a.revisao, vistoTxt: s.vistos[a.id] ? ' · visto' : '',
+        revisao: 'Review: ' + a.revisao, vistoTxt: s.vistos[a.id] ? ' · seen' : '',
         on: on,
         fundo: on ? 'linear-gradient(180deg, var(--card), var(--card2))' : 'var(--card3)',
         borda: on ? nv.linha : 'var(--line2)',
         pick: () => this.setState({ sel: a.id })
       };
     });
-    const filtros = [['todos', 'Todos', -1], ['vermelho', 'Vermelho', 3], ['laranja', 'Laranja', 2], ['amarelo', 'Amarelo', 1], ['verde', 'Verde', 0]].map((f) => {
+    const filtros = [['todos', 'All', -1], ['vermelho', 'Red', 3], ['laranja', 'Orange', 2], ['amarelo', 'Yellow', 1], ['verde', 'Green', 0]].map((f) => {
       const n = f[2] === -1 ? todos.length : todos.filter((a) => a.nivel === f[2]).length;
       const on = s.filtro === f[0];
       return {
@@ -218,26 +218,26 @@ class Component extends DCLogic {
     const d = {
       titulo: selA.titulo, nivelNome: nv.nome, cor: nv.cor, dot: nv.dot, soft: nv.soft, glow: nv.glow, linha: nv.linha,
       campos: [
-        { k: 'O QUE ACONTECEU', v: selA.que },
+        { k: 'WHAT HAPPENED', v: selA.que },
         { k: 'QUANDO', v: selA.quando },
-        { k: 'FONTES DOS DADOS', v: selA.fontes },
-        { k: 'FIABILIDADE TÉCNICA', v: selA.fiab },
-        { k: 'ACÇÃO RECOMENDADA', v: selA.accao },
-        { k: 'ESTADO DA REVISÃO', v: selA.revisao }
+        { k: 'DATA SOURCES', v: selA.fontes },
+        { k: 'TECHNICAL RELIABILITY', v: selA.fiab },
+        { k: 'RECOMMENDED ACTION', v: selA.accao },
+        { k: 'REVIEW STATUS', v: selA.revisao }
       ],
       links: selA.links.map((k) => Object.assign({ go: () => { try { if (L[k].evento) window.localStorage.setItem('visao-abrir', 'eventos'); if (L[k].oct) window.localStorage.setItem('visao-oct-modo', 'comparar'); } catch (e) {} } }, L[k])),
       comPacote: selA.pacote,
-      pacoteTxt: euReal ? 'Pacote pronto: os teus testes rápidos, mapas de Amsler e respostas (guardados neste aparelho).' : 'Pacote pronto: tendência, OCT dos dias 10–84, imagem do OCT, mapa de Amsler e respostas',
+      pacoteTxt: euReal ? 'Package ready: your quick tests, Amsler maps and answers (stored on this device).' : 'Package ready: trend, OCT for days 10–84, OCT image, Amsler map and answers',
       visto: visto,
-      vistoBtn: visto ? 'Visto ✓' : 'Marcar como visto',
+      vistoBtn: visto ? 'Seen ✓' : 'Mark as seen',
       toggleVisto: () => this.setState((st) => { const v = Object.assign({}, st.vistos); v[selA.id] = !v[selA.id]; return { vistos: v }; })
     };
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
-      selo: window.Visao ? window.Visao.selo() : 'Dados simulados',
+      selo: window.Visao ? window.Visao.selo() : 'Simulated data',
       claro: claro, escuro: !claro,
-      temaLabel: claro ? 'Modo escuro' : 'Modo claro',
+      temaLabel: claro ? 'Dark mode' : 'Light mode',
       toggleTema: () => {
         const n = this.state.tema === 'escuro' ? 'claro' : 'escuro';
         this.setState({ tema: n });

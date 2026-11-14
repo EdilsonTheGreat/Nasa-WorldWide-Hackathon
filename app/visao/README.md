@@ -76,6 +76,18 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
   basta uma imagem com boa semelhança (distância ≤ 0,46) para entrar; depois de reconhecer, segue sozinho para o `Hoje`.
   O círculo do `Main` mostra a câmara enquanto verifica (`data-fixo="rosto"`).
 
+## Inglês, voz e perfis (14 Nov, noite)
+
+- **Toda a interface em inglês.** Textos do motor traduzidos em `ligacao.js` (`Visao.en`). OE/OD → LE/RE.
+- **Responder às letras por voz** (botão «Answer by voice» no teste de acuidade): diz as letras («F P», «tee oh zed»),
+  «next», «delete», «can't read», «all straight», «repeat».
+  - Chrome/Edge recentes: reconhecimento **no aparelho** (pacote inglês descarregado uma vez em `index.html` → «Prepare voice»).
+  - Safari e outros: só reconhecem pela internet (serviço da Apple/Google). A app pede autorização explícita
+    («Allow online voice»); a escolha fica em `visao-voz-online`.
+- **Perfil AUTRO1** (criado por engano) é removido automaticamente uma vez (`visao-limpo-autro1`). Qualquer perfil
+  fora da equipa pode ser removido no `Main` («Remove profile», dois toques). Os da equipa nunca são removidos.
+- **Sem cache:** `servidor.py` + versão nos ficheiros (`?v=...`): ao mudar ficheiros, sobe a versão em todos os `.html`.
+
 ## Por fazer
 
 - O questionário pré-exame VISION GUARD (9 perguntas, `REGRAS.prontidao`, `Motor.prontidao`) só existe em `app/camara/teste_visao.html`.

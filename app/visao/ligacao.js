@@ -68,11 +68,41 @@
     return Object.keys(z).map(Number).sort(function (a, b) { return a - b; });
   }
   var NIVEL = { a_calibrar: 0, verde: 0, amarelo: 2, vermelho: 3 };   // cores do motor -> 4 níveis do front (1 = interferência)
-  var OLHO = { od: "olho direito", oe: "olho esquerdo" };
-  var SIGLA = { od: "OD", oe: "OE" };
+  var OLHO = { od: "right eye", oe: "left eye" };
+  var SIGLA = { od: "RE", oe: "LE" };
 
-  // "1 linha(s)" -> "1 linha"; "2 linha(s)" -> "2 linhas"
-  function plural(t) { return String(t).replace(/(\d+) linha\(s\)/g, function (m, n) { return n === "1" ? "1 linha" : n + " linhas"; }); }
+  // "1 linha(s)" -> "1 line"; "2 linha(s)" -> "2 linhas"
+  // O motor (motor/, pasta do Edilson) escreve os motivos em português. A app está em inglês:
+  // esta função traduz esses textos aqui, sem mexer no motor.
+  function lin(n) { return n === "1" ? "1 line" : n + " lines"; }
+  var EN = [
+    [/^Linhas tortas novas no centro da grelha de Amsler\.?$/, "New bent lines at the centre of the Amsler grid."],
+    [/^Linhas tortas novas na grelha de Amsler \(zona ([\d, ]+)\)\.?$/, function (m, z) { return "New bent lines on the Amsler grid (zone " + z + ")."; }],
+    [/^Grelha de Amsler igual à linha de base\.?$/, "Amsler grid same as baseline."],
+    [/^Sem teste de acuidade\.?$/, "No acuity test."],
+    [/^Perdeu (\d+) linha\(s\) de leitura e não melhora com os óculos de reserva\.?$/, function (m, n) { return "Lost " + lin(n) + " of reading, no better with spare glasses."; }],
+    [/^Perdeu (\d+) linha\(s\) de leitura de perto\.?$/, function (m, n) { return "Lost " + lin(n) + " of near reading."; }],
+    [/^Leitura de perto igual à linha de base\.?$/, "Near reading same as baseline."],
+    [/^Primeiro teste guardado como linha de base\.?$/, "First test saved as baseline."],
+    [/^Ainda não há teste rápido\.?$/, "No quick test yet."],
+    [/^Primeiro OCT guardado como linha de base\.?$/, "First OCT saved as baseline."],
+    [/^Ainda não há OCT\.?$/, "No OCT yet."],
+    [/^Retina \+([\d.,]+)%, muito acima do esperado ao dia (\d+) \(limite \+([\d.,]+)%\)\.?$/, function (m, d, dia, l) { return "Retina +" + d + "%, well above expected for day " + dia + " (limit +" + l + "%)."; }],
+    [/^Retina \+([\d.,]+)%, acima do esperado ao dia (\d+) \(até \+([\d.,]+)%\)\.?$/, function (m, d, dia, l) { return "Retina +" + d + "%, above expected for day " + dia + " (up to +" + l + "%)."; }],
+    [/^Retina \+([\d.,]+)%, dentro do esperado ao dia (\d+)\.?$/, function (m, d, dia) { return "Retina +" + d + "%, within expected for day " + dia + "."; }],
+    [/^Subida rápida desde o último OCT \(([\d.,]+) pontos % por dia\)\.?$/, function (m, t) { return "Rapid rise since the last OCT (" + t + " percentage points per day)."; }],
+    [/^A calibrar o teu normal\..*$/, "Calibrating your normal. Do the next test in a week."],
+    [/^Dentro do esperado\..*$/, "Within expected. Next test in a week."],
+    [/^Repete daqui a 3 dias\..*$/, "Repeat in 3 days. Use the spare glasses. Check cabin CO₂."],
+    [/^Avisa já o médico de voo\..*$/, "Tell the flight surgeon now. Your results package is ready."],
+    [/^Leitura de perto abaixo do teu habitual \(linha ([\d.,]+); costumas ler a ([\d.,]+)\)\.?$/, function (m, a, b) { return "Near reading below your usual (line " + a + "; you usually read " + b + ")."; }],
+    [/^Sintomas acima do teu habitual \(soma ([\d.,]+); costuma ser ([\d.,]+)\)\.?$/, function (m, a, b) { return "Symptoms above your usual (sum " + a + "; usually " + b + ")."; }]
+  ];
+  function en(t) {
+    t = String(t || "");
+    for (var i = 0; i < EN.length; i++) if (EN[i][0].test(t)) return t.replace(EN[i][0], EN[i][1]);
+    return t;
+  }
 
   function porOlho(r) { return r.acuidade_oe !== null && r.acuidade_oe !== undefined && r.acuidade_od !== null && r.acuidade_od !== undefined; }
   // Base para comparar: o 1.º teste feito nesta interface (com resultado de cada olho).
@@ -87,11 +117,11 @@
     var M = g.Motor, R = g.REGRAS, primeiro = !base || base.dia === reg.dia, sinais = [];
     ["od", "oe"].forEach(function (e) {
       var am = M.corAmsler(primeiro ? [] : (base["amsler_" + e] || []), reg["amsler_" + e] || [], R);
-      sinais.push({ tipo: "amsler", olho: e, cor: am.cor, motivo: am.motivo.replace(/\.$/, "") + " · " + OLHO[e] + "." });
+      sinais.push({ tipo: "amsler", olho: e, cor: am.cor, motivo: en(am.motivo).replace(/\.$/, "") + " · " + OLHO[e] + "." });
       // acuidade só se compara quando os dois testes têm o resultado de cada olho
       if (!primeiro && porOlho(base) && porOlho(reg)) {
         var ac = M.corAcuidade(base["acuidade_" + e], reg["acuidade_" + e], reg["melhora_" + e], R);
-        sinais.push({ tipo: "acuidade", olho: e, cor: ac.cor, perda: ac.perda, motivo: ac.motivo.replace(/\.$/, "") + " · " + OLHO[e] + "." });
+        sinais.push({ tipo: "acuidade", olho: e, cor: ac.cor, perda: ac.perda, motivo: en(ac.motivo).replace(/\.$/, "") + " · " + OLHO[e] + "." });
       }
     });
     var cor = M.piorCor(sinais.map(function (s) { return s.cor; }));
@@ -108,7 +138,7 @@
     if (nivel === 0 && reg.prontidao && reg.prontidao !== "verde") nivel = 1;      // condições duvidosas: repetir
     return {
       primeiro: primeiro, cor: cor, corOlho: corOlho, nivel: nivel, nSint: nSint,
-      motivos: sinais.filter(function (s) { return s.cor === "amarelo" || s.cor === "vermelho"; }).map(function (s) { return plural(s.motivo); }),
+      motivos: sinais.filter(function (s) { return s.cor === "amarelo" || s.cor === "vermelho"; }).map(function (s) { return s.motivo; }),
       sinais: sinais
     };
   }
@@ -120,9 +150,9 @@
     var regs = rapidos(id), d = diaDe(id), base = baseDe(regs);
     return {
       id: id, nome: nomeDe(id), curto: nomeDe(id).split(" ")[0], ini: iniciais(id), dia: d,
-      ola: "Olá, " + nomeDe(id).split(" ")[0] + ".",
-      ant: base && base.dia !== d ? "tua base, dia " + base.dia : "sem testes anteriores",
-      papel: "Equipa Deep Thinkers · Dia " + d, testes: regs.length
+      ola: "Hi, " + nomeDe(id).split(" ")[0] + ".",
+      ant: base && base.dia !== d ? "your baseline, day " + base.dia : "no previous tests",
+      papel: "Deep Thinkers team · Day " + d, testes: regs.length
     };
   }
 
@@ -152,9 +182,9 @@
     var mOE = melhora(ac.oe), mOD = melhora(ac.od);
     var cam = camara.resumo();
     var ressalvas = [];
-    if (t.resp === "sim") ressalvas.push("Movimento da nave sentido antes ou durante o teste.");
-    if (t.resp === "naosei") ressalvas.push("Movimento da nave por confirmar.");
-    if (cam.n > 0 && cam.foraPct >= 40) ressalvas.push("Distância fora do intervalo em " + cam.foraPct + "% das medições.");
+    if (t.resp === "sim") ressalvas.push("Spacecraft motion felt before or during the test.");
+    if (t.resp === "naosei") ressalvas.push("Spacecraft motion unconfirmed.");
+    if (cam.n > 0 && cam.foraPct >= 40) ressalvas.push("Distance out of range in " + cam.foraPct + "% of readings.");
     var reg = g.Armazem.guardar({
       astronauta_id: id, dia: d,
       amsler_zonas: uniao, amsler_od: zo.od, amsler_oe: zo.oe, amsler_centro: uniao.indexOf(g.REGRAS.amsler.zona_centro) !== -1 ? 1 : 0,
@@ -173,15 +203,15 @@
       prontidao: ressalvas.length ? "amarelo" : "verde", ressalvas: ressalvas,
       alerta_clinico: t.q[3] === 2
     });
-    if (!reg) return { erro: "Não foi possível guardar neste aparelho." };
+    if (!reg) return { erro: "Could not save on this device." };
     var regs = rapidos(id), av = avaliarRegisto(baseDe(regs), reg);
     var modelo = g.Modelo ? g.Modelo.treinar(g.Armazem.registosDe(id), g.FAIXAS, d) : null;
     return {
       registo: reg, nivel: av.nivel, cor: av.cor, primeiro: av.primeiro, motivos: av.motivos, ressalvas: ressalvas,
       alerta_clinico: reg.alerta_clinico, distancia: cam,
-      texto_motor: (g.REGRAS.textos[av.cor] || g.REGRAS.textos.verde).mensagem,
+      texto_motor: en((g.REGRAS.textos[av.cor] || g.REGRAS.textos.verde).mensagem),
       proximo_dias: (g.REGRAS.textos[av.cor] || g.REGRAS.textos.verde).proximo_teste_dias,
-      modelo: modelo ? { avisos: modelo.avisos || [], testes_aprendidos: modelo.estado.rapido.n } : null,
+      modelo: modelo ? { avisos: (modelo.avisos || []).map(en), testes_aprendidos: modelo.estado.rapido.n } : null,
       testes: regs.length
     };
   }
@@ -203,8 +233,8 @@
   }
   function amTxt(r) {
     var n = (r.celulas_od || []).length + (r.celulas_oe || []).length;
-    if (!n) return "Sem zonas";
-    return r.amsler_centro ? "Zona no centro" : n + (n === 1 ? " quadrado" : " quadrados");
+    if (!n) return "No zones";
+    return r.amsler_centro ? "Zone at centre" : n + (n === 1 ? " square" : " squares");
   }
 
   // Ecrã Hoje.
@@ -212,35 +242,35 @@
     var me = eu(); if (!me) return null;
     var u = ultimoAvaliado(me.id);
     var E = [
-      { estado: "Verde · rotina", cor: "var(--ok-tx)", dot: "var(--ok)" },
-      { estado: "Laranja · revisão recomendada", cor: "var(--warn-tx)", dot: "var(--warn)" },
-      { estado: "Vermelho · prioridade clínica", cor: "var(--bad-tx)", dot: "var(--bad)" }
+      { estado: "Green · routine", cor: "var(--ok-tx)", dot: "var(--ok)" },
+      { estado: "Orange · review advised", cor: "var(--warn-tx)", dot: "var(--warn)" },
+      { estado: "Red · clinical priority", cor: "var(--bad-tx)", dot: "var(--bad)" }
     ];
     var IDX = { verde: 0, amarelo: 1, vermelho: 2 };
     if (!u) {
-      var vazio = { valor: "–", uni: "", estado: "Sem testes", cor: "var(--tx3)", dot: "var(--tx3)" };
+      var vazio = { valor: "–", uni: "", estado: "No tests", cor: "var(--tx3)", dot: "var(--tx3)" };
       return {
-        p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: me.dia, acu: "–", amsler: "–", sans: "Linha temporal dos teus testes", limTxt: "" },
-        nivel: 0, rec: { titulo: "Faz o teu primeiro teste", texto: "Ainda não há testes guardados neste aparelho. O primeiro teste fica como a tua base." },
-        olhoEsq: vazio, olhoDir: vazio, olhosSub: "Ainda sem testes", alertas: "Nenhum",
-        olhosNota: "Sem OCT a bordo: o estado vem dos testes rápidos, comparados com a tua base (o teu primeiro teste)."
+        p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: me.dia, acu: "–", amsler: "–", sans: "Timeline of your tests", limTxt: "" },
+        nivel: 0, rec: { titulo: "Do your first test", texto: "No tests stored on this device yet. Your first test becomes your baseline." },
+        olhoEsq: vazio, olhoDir: vazio, olhosSub: "No tests yet", alertas: "None",
+        olhosNota: "No OCT on board: status comes from the quick tests, compared with your baseline (your first test)."
       };
     }
     var r = u.reg, av = u.av, nivel3 = av.nivel >= 3 ? 2 : (av.nivel === 2 ? 1 : 0);
     var prox = r.dia + ((g.REGRAS.textos[av.cor] || {}).proximo_teste_dias || 7);
-    var titulos = ["Tudo dentro da tua base", "Repete os testes rápidos", "Avisa o médico de voo"];
-    var texto = av.motivos.length ? av.motivos.join(" ") : (av.primeiro ? "Primeiro teste guardado como a tua base. Próximo teste rápido no dia " + prox + "."
-      : "Acuidade e grelha de Amsler iguais à tua base. Próximo teste rápido no dia " + prox + ".");
-    if (av.nSint && !av.motivos.length) texto = "Indicaste sintomas no último teste. A equipa médica vai rever.";
+    var titulos = ["All within your baseline", "Repeat the quick tests", "Tell the flight surgeon"];
+    var texto = av.motivos.length ? av.motivos.join(" ") : (av.primeiro ? "First test saved as your baseline. Next quick test on day " + prox + "."
+      : "Acuity and Amsler grid same as your baseline. Next quick test on day " + prox + ".");
+    if (av.nSint && !av.motivos.length) texto = "You reported symptoms in the last test. The medical team will review them.";
     var nAl = alertas().filter(function (a) { return a[1] >= 2; }).length;
     return {
-      p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: prox, acu: (r.acuidade_oe === null || r.acuidade_oe === undefined) ? "Ambos " + acTxt(r, "oe") : "OE " + acTxt(r, "oe") + " · OD " + acTxt(r, "od"), amsler: amTxt(r), sans: "Linha temporal dos teus testes", limTxt: "" },
+      p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: prox, acu: (r.acuidade_oe === null || r.acuidade_oe === undefined) ? "Ambos " + acTxt(r, "oe") : "LE " + acTxt(r, "oe") + " · RE " + acTxt(r, "od"), amsler: amTxt(r), sans: "Timeline of your tests", limTxt: "" },
       nivel: nivel3, rec: { titulo: titulos[nivel3], texto: texto },
       olhoEsq: Object.assign({ valor: acTxt(r, "oe"), uni: "" }, E[IDX[av.corOlho.oe]]),
       olhoDir: Object.assign({ valor: acTxt(r, "od"), uni: "" }, E[IDX[av.corOlho.od]]),
-      olhosSub: "Último teste rápido · dia " + r.dia,
-      olhosNota: "Linhas lidas por olho e estado face à tua base (dia " + baseDe(u.regs).dia + "). Sem OCT a bordo: decisão do motor de regras com os testes rápidos.",
-      alertas: nAl ? nAl + " para revisão" : "Nenhum activo", nAlertas: nAl
+      olhosSub: "Last quick test · day " + r.dia,
+      olhosNota: "Lines read per eye and status vs your baseline (day " + baseDe(u.regs).dia + "). No OCT on board: decision by the rules engine from the quick tests.",
+      alertas: nAl ? nAl + " to review" : "None active", nAlertas: nAl
     };
   }
 
@@ -252,12 +282,12 @@
     regs.forEach(function (r) {
       var av = avaliarRegisto(baseDe(regs), r);
       var pior = function (tipo) { return N[g.Motor.piorCor(av.sinais.filter(function (s) { return s.tipo === tipo; }).map(function (s) { return s.cor; }))]; };
-      T.acu.push([r.dia, av.primeiro ? 0 : pior("acuidade"), "OE " + acTxt(r, "oe") + " · OD " + acTxt(r, "od") + (av.primeiro ? " · base" : "")]);
-      T.ams.push([r.dia, pior("amsler"), amTxt(r) + " · OD " + (r.celulas_od || []).length + " · OE " + (r.celulas_oe || []).length + (av.primeiro ? " · base" : "")]);
-      var s = [["focar", r.perg_focar], ["contraste", r.perg_contraste], ["dores de cabeça", r.perg_dor_cabeca], ["imagens duplas", r.perg_visao_dupla]]
-        .filter(function (x) { return x[1] > 0; }).map(function (x) { return x[0] + (x[1] >= 3 ? " (marcado)" : " (ligeiro)"); });
+      T.acu.push([r.dia, av.primeiro ? 0 : pior("acuidade"), "LE " + acTxt(r, "oe") + " · RE " + acTxt(r, "od") + (av.primeiro ? " · baseline" : "")]);
+      T.ams.push([r.dia, pior("amsler"), amTxt(r) + " · RE " + (r.celulas_od || []).length + " · LE " + (r.celulas_oe || []).length + (av.primeiro ? " · baseline" : "")]);
+      var s = [["focar", r.perg_focar], ["contraste", r.perg_contraste], ["headaches", r.perg_dor_cabeca], ["double vision", r.perg_visao_dupla]]
+        .filter(function (x) { return x[1] > 0; }).map(function (x) { return x[0] + (x[1] >= 3 ? " (marked)" : " (mild)"); });
       if (s.length) T.sin.push([r.dia, av.nSint ? 2 : 0, s.join(", ")]);
-      if (r.evento_nave === "sim" || r.evento_nave === "naosei") T.mov.push([r.dia, 4, r.evento_nave === "sim" ? "Sentiste movimento da nave no teste" : "Movimento da nave por confirmar"]);
+      if (r.evento_nave === "sim" || r.evento_nave === "naosei") T.mov.push([r.dia, 4, r.evento_nave === "sim" ? "You felt spacecraft motion during the test" : "Spacecraft motion unconfirmed"]);
     });
     return T;
   }
@@ -268,26 +298,26 @@
     var regs = rapidos(me.id), L = [];
     regs.slice().reverse().forEach(function (r) {
       var av = avaliarRegisto(baseDe(regs), r);
-      var fiab = r.sem_camara ? "Distância não medida pela câmara." : "Distância média " + r.distancia_cm + " cm" + (r.fora_distancia_pct ? " · fora do intervalo em " + r.fora_distancia_pct + "% das medições." : ".");
+      var fiab = r.sem_camara ? "Distance not measured by the camera." : "Average distance " + r.distancia_cm + " cm" + (r.fora_distancia_pct ? " · out of range in " + r.fora_distancia_pct + "% of readings." : ".");
       if ((r.ressalvas || []).length) fiab += " " + r.ressalvas.join(" ");
-      var fontes = "Teste rápido na tela · motor de regras (limites provisórios) · base do dia " + baseDe(regs).dia;
+      var fontes = "Quick test on screen · rules engine (provisional limits) · baseline from day " + baseDe(regs).dia;
       if (av.nivel >= 2) {
-        (av.motivos.length ? av.motivos : ["Sintomas indicados no questionário."]).forEach(function (m, i) {
+        (av.motivos.length ? av.motivos : ["Symptoms reported in the questionnaire."]).forEach(function (m, i) {
           var verm = av.nivel === 3 && /centro|não melhora/.test(m);
-          L.push(["r" + r.dia + "-" + i, verm ? 3 : 2, m.replace(/\.$/, ""), "Dia " + r.dia, m + " Comparação com a tua base.", "Dia " + r.dia, fontes, fiab,
-            verm ? "Avisar já o médico de voo." : "Revisão pela equipa médica. Repetir o teste em 2 a 3 dias.", verm ? "Prioritária" : "Pendente", ["teste", "sans"], verm]);
+          L.push(["r" + r.dia + "-" + i, verm ? 3 : 2, m.replace(/\.$/, ""), "Day " + r.dia, m + " Compared with your baseline.", "Day " + r.dia, fontes, fiab,
+            verm ? "Tell the flight surgeon now." : "Review by the medical team. Repeat the test in 2 to 3 days.", verm ? "Priority" : "Pending", ["teste", "sans"], verm]);
         });
       } else if (av.nivel === 1) {
-        L.push(["r" + r.dia, 1, "Teste com condições a confirmar", "Dia " + r.dia, "O resultado foi igual à base, mas as condições podem ter afectado o teste.", "Dia " + r.dia, fontes, fiab, "Repete o teste quando puderes.", "Repetir", ["teste"], false]);
+        L.push(["r" + r.dia, 1, "Test with conditions to confirm", "Day " + r.dia, "The result matched the baseline, but conditions may have affected the test.", "Day " + r.dia, fontes, fiab, "Repeat the test when you can.", "Repeat", ["teste"], false]);
       }
-      if (r.alerta_clinico) L.push(["c" + r.dia, 3, "Imagens duplas marcadas", "Dia " + r.dia, "Respondeste «Marcado» a imagens duplas.", "Dia " + r.dia, "Respostas do astronauta", fiab, "Avisar já o médico de voo.", "Prioritária", ["sans"], true]);
+      if (r.alerta_clinico) L.push(["c" + r.dia, 3, "Double vision marked", "Day " + r.dia, "You answered “Marked” to double vision.", "Day " + r.dia, "Astronaut answers", fiab, "Tell the flight surgeon now.", "Priority", ["sans"], true]);
     });
     if (!L.length) {
       var u = regs[regs.length - 1];
-      L.push(["ok", 0, u ? "Testes de rotina dentro da tua base" : "Ainda sem testes", u ? "Dia " + u.dia : "Dia " + me.dia,
-        u ? "Acuidade OE " + acTxt(u, "oe") + " · OD " + acTxt(u, "od") + ". Grelha de Amsler: " + amTxt(u).toLowerCase() + "." : "Faz o primeiro teste rápido: fica guardado como a tua base.",
-        u ? "Dia " + u.dia : "–", "Teste rápido na tela · motor de regras", u ? (u.sem_camara ? "Distância não medida pela câmara." : "Distância média " + u.distancia_cm + " cm.") : "–",
-        "Segue o calendário normal.", "Não necessária", ["teste"], false]);
+      L.push(["ok", 0, u ? "Routine tests within your baseline" : "No tests yet", u ? "Day " + u.dia : "Day " + me.dia,
+        u ? "Acuity LE " + acTxt(u, "oe") + " · RE " + acTxt(u, "od") + ". Amsler grid: " + amTxt(u).toLowerCase() + "." : "Do your first quick test: it is saved as your baseline.",
+        u ? "Day " + u.dia : "–", "Quick test on screen · rules engine", u ? (u.sem_camara ? "Distance not measured by the camera." : "Average distance " + u.distancia_cm + " cm.") : "–",
+        "Keep the normal schedule.", "Not needed", ["teste"], false]);
     }
     return L;
   }
@@ -298,17 +328,17 @@
     var regs = rapidos(me.id), base = baseDe(regs), u = regs[regs.length - 1];
     var av = u ? avaliarRegisto(base, u) : null;
     var rosto = g.Rosto ? g.Rosto.registados().indexOf(me.id) !== -1 : (function () { try { return !!(JSON.parse(ler("dt_rostos")) || {})[me.id]; } catch (e) { return false; } })();
-    var COR = { verde: "Verde · rotina", amarelo: "Laranja · revisão", vermelho: "Vermelho · prioridade" };
+    var COR = { verde: "Green · routine", amarelo: "Orange · review", vermelho: "Red · priority" };
     var dist = regs.filter(function (r) { return r.distancia_cm; }).map(function (r) { return r.distancia_cm; });
     return {
-      nome: me.nome, curto: me.curto, ini: me.ini, papel: "Equipa Deep Thinkers", dia: me.dia,
+      nome: me.nome, curto: me.curto, ini: me.ini, papel: "Deep Thinkers team", dia: me.dia,
       entrada: ler("visao-entrada") === "rosto" ? "rosto" : "lista",
       grupos: [
-        { titulo: "SESSÃO", linhas: [["Perfil", me.id], ["Dia de missão", String(me.dia)], ["Rosto registado", rosto ? "Sim · só o descritor numérico" : "Não"], ["Dados", "Guardados só neste aparelho"]] },
-        { titulo: "TESTES RÁPIDOS", linhas: [["Testes guardados", String(regs.length)], ["Base", base ? "Dia " + base.dia + " · OE " + acTxt(base, "oe") + " · OD " + acTxt(base, "od") : "Por fazer"],
-          ["Último teste", u ? "Dia " + u.dia + " · OE " + acTxt(u, "oe") + " · OD " + acTxt(u, "od") : "–"], ["Grelha de Amsler", u ? amTxt(u) : "–"]] },
-        { titulo: "ESTADO", linhas: [["Semáforo", av ? COR[av.cor] : "Sem testes"], ["Distância média", dist.length ? Math.round(dist.reduce(function (a, b) { return a + b; }, 0) / dist.length) + " cm" : "Não medida"],
-          ["OCT", "Sem OCT a bordo"], ["Limites", g.REGRAS.provisorio ? "Provisórios · a validar" : "Validados"]] }
+        { titulo: "SESSION", linhas: [["Profile", me.id], ["Mission day", String(me.dia)], ["Face registered", rosto ? "Yes · numeric descriptor only" : "No"], ["Data", "Stored on this device only"]] },
+        { titulo: "QUICK TESTS", linhas: [["Tests saved", String(regs.length)], ["Baseline", base ? "Day " + base.dia + " · LE " + acTxt(base, "oe") + " · RE " + acTxt(base, "od") : "To do"],
+          ["Last test", u ? "Day " + u.dia + " · LE " + acTxt(u, "oe") + " · RE " + acTxt(u, "od") : "–"], ["Amsler grid", u ? amTxt(u) : "–"]] },
+        { titulo: "ESTADO", linhas: [["Traffic light", av ? COR[av.cor] : "No tests"], ["Average distance", dist.length ? Math.round(dist.reduce(function (a, b) { return a + b; }, 0) / dist.length) + " cm" : "Not measured"],
+          ["OCT", "No OCT on board"], ["Limits", g.REGRAS.provisorio ? "Provisional · to validate" : "Validated"]] }
       ].map(function (gr) { return { titulo: gr.titulo, linhas: gr.linhas.map(function (x) { return { k: x[0], v: x[1] }; }) }; })
     };
   }
@@ -328,7 +358,7 @@
       days: octs.map(function (r) { return r.dia; }),
       vals: octs.map(function (r) { return Math.round((r.oct_um / base - 1) * 1000) / 10; }),
       p10: faixa("p10"), p90: faixa("p90"), p97: faixa("p97"),
-      level: { verde: 0, amarelo: 1, vermelho: 2, a_calibrar: 0 }[c.cor], motivo: c.motivo, dia: octs[octs.length - 1].dia
+      level: { verde: 0, amarelo: 1, vermelho: 2, a_calibrar: 0 }[c.cor], motivo: en(c.motivo), dia: octs[octs.length - 1].dia
     };
   }
 
@@ -370,11 +400,28 @@
     };
   })();
 
+  // Remove um perfil que não é da equipa: testes, rosto e preferências (os da equipa ficam sempre).
+  function removerPerfil(id) {
+    if (!temBackend()) return false;
+    id = g.Armazem.normalizarId(id);
+    if (!id || g.Armazem.EQUIPA.indexOf(id) !== -1) return false;
+    g.Armazem.apagarPerfil(id);
+    try { var r = JSON.parse(ler("dt_rostos")) || {}; delete r[id]; g.localStorage.setItem("dt_rostos", JSON.stringify(r)); } catch (e) { }
+    escrever("visao-iris-" + id, null); escrever("visao-dia-" + id, null);
+    if (ler("visao-real") === id) escrever("visao-real", null);
+    return true;
+  }
+  // Limpeza única: o perfil "AUTRO1" foi criado por engano num teste.
+  if (temBackend() && !ler("visao-limpo-autro1")) {
+    try { if (g.Armazem.perfis().some(function (p) { return p.id === "AUTRO1"; })) removerPerfil("AUTRO1"); } catch (e) { }
+    escrever("visao-limpo-autro1", "1");
+  }
+
   g.Visao = {
-    temBackend: temBackend, real: real, irisDe: irisDe, guardarIris: guardarIris, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
-    selo: function () { return real() ? "Dados reais · só neste aparelho" : "Dados simulados"; },
+    temBackend: temBackend, real: real, removerPerfil: removerPerfil, irisDe: irisDe, guardarIris: guardarIris, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
+    selo: function () { return real() ? "Real data · this device only" : "Simulated data"; },
     anterior: anterior, guardarTeste: guardarTeste, resumoHoje: resumoHoje, linhaTempo: linhaTempo, alertas: alertas,
-    fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara,
+    fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara, en: en,
     _zonasDe: zonasDe, _avaliarRegisto: avaliarRegisto
   };
 })(typeof window !== "undefined" ? window : globalThis);

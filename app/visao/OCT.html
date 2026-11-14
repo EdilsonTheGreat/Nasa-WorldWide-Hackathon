@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="pt">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OCT · Visão</title>
-<link href="fonte.css" rel="stylesheet">
-<link href="iris.css" rel="stylesheet">
+<title>OCT · Vision</title>
+<link href="fonte.css?v=20261114c" rel="stylesheet">
+<link href="iris.css?v=20261114c" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,13 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js"></script>
-<script src="../../motor/regras.js"></script>
-<script src="../../motor/motor.js"></script>
-<script src="../../motor/modelo.js"></script>
-<script src="../armazenamento.js"></script>
-<script src="ligacao.js"></script>
-<script src="runtime.js"></script>
+<script src="../dados.js?v=20261114c"></script>
+<script src="../../motor/regras.js?v=20261114c"></script>
+<script src="../../motor/motor.js?v=20261114c"></script>
+<script src="../../motor/modelo.js?v=20261114c"></script>
+<script src="../armazenamento.js?v=20261114c"></script>
+<script src="ligacao.js?v=20261114c"></script>
+<script src="runtime.js?v=20261114c"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -34,7 +34,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
 <svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Visão</span>
+<span style="font-size: 22px; font-weight: 500; letter-spacing: -0.3px; color: var(--tx)">Vision</span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -43,30 +43,30 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ claro }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
 {{ temaLabel }}</button>
 <a href="Perfil.html" style="display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 14px 0 4px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2); font-size: 13px; font-weight: 600; color: var(--tx); text-decoration: none">
-<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ eu.ini }}</span>{{ eu.nome }}<span style="font-weight: 500; color: var(--tx3)">· Dia {{ eu.dia }}</span></a>
+<span aria-hidden="true" style="width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ eu.ini }}</span>{{ eu.nome }}<span style="font-weight: 500; color: var(--tx3)">· Day {{ eu.dia }}</span></a>
 </div>
 </div>
 
 <header style="position: absolute; left: 40px; right: 40px; top: 84px; display: flex; align-items: flex-end; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 14px; color: var(--tx2)">Mede no aparelho de OCT de bordo e regista aqui o resultado</span>
+<span style="font-size: 14px; color: var(--tx2)">Measure on the on-board OCT device and record the result here</span>
 <h1 style="margin: 0; font-size: 32px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">OCT</h1>
 </div>
-<nav aria-label="Tipo de avaliação" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
-<a href="TesteRapido.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">Testes rápidos</a>
+<nav aria-label="Check type" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
+<a href="TesteRapido.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">Quick tests</a>
 <span aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--acc-tx); background: var(--acc)">OCT</span>
-<a href="Tendencia.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">Histórico</a>
+<a href="Tendencia.html" style="display: flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 18px; font-size: 14px; font-weight: 700; color: var(--tx2); text-decoration: none">History</a>
 </nav>
 </header>
 
 <div style="position: absolute; left: 40px; top: 152px; width: 1114px; height: 44px; display: flex; align-items: center; justify-content: space-between">
-<div role="tablist" aria-label="Modo do OCT" style="display: flex; gap: 4px; padding: 4px; border-radius: 22px; background: var(--chip); border: 1px solid var(--line2)">
+<div role="tablist" aria-label="OCT mode" style="display: flex; gap: 4px; padding: 4px; border-radius: 22px; background: var(--chip); border: 1px solid var(--line2)">
 <sc-for list="{{ modos }}" as="m" hint-placeholder-count="2">
 <button type="button" role="tab" aria-selected="{{ m.on }}" onClick="{{ m.pick }}" style="height: 34px; padding: 0 16px; border: 0; border-radius: 17px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; color: {{ m.fg }}; background: {{ m.bg }}">{{ m.t }}</button>
 </sc-for>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
-<span style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--teal-text); background: var(--teal-soft); border: 1px solid var(--teal-line); border-radius: 999px; padding: 6px 12px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 4px; background: var(--teal)"></span>Opcional, mas recomendado</span>
+<span style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--teal-text); background: var(--teal-soft); border: 1px solid var(--teal-line); border-radius: 999px; padding: 6px 12px"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 4px; background: var(--teal)"></span>Optional, but recommended</span>
 <span style="font-size: 13px; color: var(--tx2)">{{ eu.proximo }}</span>
 </div>
 </div>
@@ -74,16 +74,16 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ registar }}" hint-placeholder-val="{{ true }}">
 <section aria-labelledby="reg-titulo" style="position: absolute; left: 40px; top: 208px; width: 700px; height: 520px; box-sizing: border-box; padding: 22px 24px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 3px">
-<h2 id="reg-titulo" style="margin: 0; font-size: 22px; font-weight: 400; letter-spacing: -0.3px; color: var(--tx)">Registar o resultado do aparelho</h2>
-<span style="font-size: 14px; color: var(--tx2)">Hoje · dia {{ eu.dia }}. Escreve os valores tal como aparecem no ecrã do OCT.</span>
+<h2 id="reg-titulo" style="margin: 0; font-size: 22px; font-weight: 400; letter-spacing: -0.3px; color: var(--tx)">Record the device result</h2>
+<span style="font-size: 14px; color: var(--tx2)">Today · day {{ eu.dia }}. Type the values exactly as shown on the OCT screen.</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
 <sc-for list="{{ campos }}" as="c" hint-placeholder-count="2">
 <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2)">
 <label for="{{ c.id }}" style="font-size: 13px; font-weight: 700; color: var(--tx)">{{ c.label }}</label>
-<span style="font-size: 12px; color: var(--tx3)">Espessura da retina à volta do nervo óptico</span>
+<span style="font-size: 12px; color: var(--tx3)">Retinal thickness around the optic nerve</span>
 <div style="display: flex; align-items: center; gap: 8px">
-<input id="{{ c.id }}" type="number" inputmode="numeric" placeholder="Ex.: {{ c.exemplo }}" value="{{ c.valor }}" onChange="{{ c.onChange }}" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid {{ c.borda }}; border-radius: 14px; padding: 0 16px; font-family: inherit; font-size: 22px; color: var(--tx); background: var(--input)">
+<input id="{{ c.id }}" type="number" inputmode="numeric" placeholder="E.g.: {{ c.exemplo }}" value="{{ c.valor }}" onChange="{{ c.onChange }}" style="flex-grow: 1; min-width: 0; height: 52px; box-sizing: border-box; border: 1px solid {{ c.borda }}; border-radius: 14px; padding: 0 16px; font-family: inherit; font-size: 22px; color: var(--tx); background: var(--input)">
 <span style="font-size: 15px; font-weight: 600; color: var(--tx2)">µm</span>
 </div>
 <span style="min-height: 18px; font-size: 12px; color: {{ c.msgCor }}">{{ c.msg }}</span>
@@ -92,38 +92,38 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </div>
 <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
 <div style="display: flex; flex-direction: column; gap: 6px">
-<label for="sinal" style="font-size: 13px; font-weight: 700; color: var(--tx)">Qualidade do sinal (de 1 a 10)</label>
-<input id="sinal" type="number" inputmode="numeric" placeholder="Como aparece no aparelho" value="{{ sinal.valor }}" onChange="{{ sinal.onChange }}" style="height: 46px; box-sizing: border-box; border: 1px solid {{ sinal.borda }}; border-radius: 14px; padding: 0 16px; font-family: inherit; font-size: 17px; color: var(--tx); background: var(--input)">
+<label for="sinal" style="font-size: 13px; font-weight: 700; color: var(--tx)">Signal quality (1 to 10)</label>
+<input id="sinal" type="number" inputmode="numeric" placeholder="As shown on the device" value="{{ sinal.valor }}" onChange="{{ sinal.onChange }}" style="height: 46px; box-sizing: border-box; border: 1px solid {{ sinal.borda }}; border-radius: 14px; padding: 0 16px; font-family: inherit; font-size: 17px; color: var(--tx); background: var(--input)">
 <span style="min-height: 18px; font-size: 12px; color: {{ sinal.msgCor }}">{{ sinal.msg }}</span>
 </div>
 <div style="display: flex; flex-direction: column; gap: 6px">
-<span style="font-size: 13px; font-weight: 700; color: var(--tx)">Imagem do exame (opcional)</span>
+<span style="font-size: 13px; font-weight: 700; color: var(--tx)">Exam image (optional)</span>
 <button type="button" onClick="{{ toggleAnexo }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 46px; border: 1px solid var(--teal-line); border-radius: 14px; background: var(--teal-soft); color: var(--teal-text); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M20 12.5 12.6 20a5 5 0 0 1-7.1-7.1l8-8a3.5 3.5 0 0 1 5 5l-8 8a2 2 0 0 1-2.8-2.8L15 7.8"></path></svg>{{ anexoLabel }}</button>
-<span style="min-height: 18px; font-size: 12px; color: var(--tx3)">Ajuda a equipa médica a confirmar o valor.</span>
+<span style="min-height: 18px; font-size: 12px; color: var(--tx3)">Helps the medical team confirm the value.</span>
 </div>
 </div>
 <div style="flex-grow: 1"></div>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
 <span style="font-size: 13px; color: var(--tx3)">{{ rodapeReg }}</span>
-<button type="button" onClick="{{ guardar }}" disabled="{{ guardarOff }}" style="height: 50px; padding: 0 28px; border: 0; border-radius: 25px; background: var(--acc); color: var(--acc-tx); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; opacity: {{ guardarOp }}; box-shadow: 0 6px 24px var(--acc-glow)">Guardar e comparar</button>
+<button type="button" onClick="{{ guardar }}" disabled="{{ guardarOff }}" style="height: 50px; padding: 0 28px; border: 0; border-radius: 25px; background: var(--acc); color: var(--acc-tx); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; opacity: {{ guardarOp }}; box-shadow: 0 6px 24px var(--acc-glow)">Save and compare</button>
 </div>
 </section>
 
 <aside style="position: absolute; left: 756px; top: 208px; width: 398px; display: flex; flex-direction: column; gap: 14px">
 <section aria-labelledby="como-titulo" style="padding: 18px 22px 10px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column">
-<h2 id="como-titulo" style="margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--tx)">Como funciona</h2>
+<h2 id="como-titulo" style="margin: 0 0 6px; font-size: 15px; font-weight: 600; color: var(--tx)">How it works</h2>
 <sc-for list="{{ passos }}" as="p" hint-placeholder-count="4">
 <div style="display: flex; gap: 12px; align-items: center; min-height: 48px; border-bottom: {{ p.regra }}"><span aria-hidden="true" style="width: 24px; height: 24px; flex: none; border-radius: 12px; background: var(--acc-soft); color: var(--acc-text); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ p.n }}</span><span style="font-size: 14px; line-height: 1.4; color: var(--tx-soft)">{{ p.t }}</span></div>
 </sc-for>
 </section>
 <section aria-labelledby="ult-titulo" style="padding: 18px 22px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px">
-<div style="display: flex; align-items: baseline; justify-content: space-between"><h2 id="ult-titulo" style="margin: 0; font-size: 15px; font-weight: 600; color: var(--tx)">Último registo</h2><span style="font-size: 13px; color: var(--tx3)">{{ ultimo.nome }}</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between"><h2 id="ult-titulo" style="margin: 0; font-size: 15px; font-weight: 600; color: var(--tx)">Last record</h2><span style="font-size: 13px; color: var(--tx3)">{{ ultimo.nome }}</span></div>
 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
-<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: var(--tx3)">Olho esquerdo</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.oe }} µm</span></span>
-<span style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line2)"><span style="font-size: 12px; color: var(--tx3)">Olho direito</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.od }} µm</span></span>
-<span style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line2)"><span style="font-size: 12px; color: var(--tx3)">Sinal</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.sinal }}</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: var(--tx3)">Left eye</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.oe }} µm</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line2)"><span style="font-size: 12px; color: var(--tx3)">Right eye</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.od }} µm</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px; padding-left: 14px; border-left: 1px solid var(--line2)"><span style="font-size: 12px; color: var(--tx3)">Signal</span><span style="font-size: 20px; font-weight: 400; color: var(--tx)">{{ ultimo.sinal }}</span></span>
 </div>
-<button type="button" onClick="{{ irComparar }}" style="margin-top: 6px; height: 44px; border: 1px solid var(--line); border-radius: 22px; background: transparent; color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Ver histórico completo</button>
+<button type="button" onClick="{{ irComparar }}" style="margin-top: 6px; height: 44px; border: 1px solid var(--line); border-radius: 22px; background: transparent; color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">See full history</button>
 </section>
 </aside>
 </sc-if>
@@ -131,10 +131,10 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ comparar }}" hint-placeholder-val="{{ false }}">
 <section aria-labelledby="hist-titulo" style="position: absolute; left: 40px; top: 208px; width: 700px; height: 520px; box-sizing: border-box; padding: 18px 22px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px">
 <div style="display: flex; align-items: center; justify-content: space-between">
-<h2 id="hist-titulo" style="margin: 0; font-size: 16px; font-weight: 600; color: var(--tx)">Espessura da retina em cada exame</h2>
+<h2 id="hist-titulo" style="margin: 0; font-size: 16px; font-weight: 600; color: var(--tx)">Retinal thickness at each exam</h2>
 <span style="display: flex; gap: 14px; font-size: 12px; color: var(--tx2)">
-<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--acc-text)"></span>Olho esquerdo</span>
-<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--teal)"></span>Olho direito</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--acc-text)"></span>Left eye</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--teal)"></span>Right eye</span>
 </span>
 </div>
 <svg role="img" aria-label="{{ grafico.label }}" width="656" height="190" viewBox="0 0 656 190" style="display: block">
@@ -151,9 +151,9 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <text x="{{ r.x }}" y="184" style="font-size: 11px; font-weight: {{ r.peso }}; fill: {{ r.cor }}; text-anchor: middle">{{ r.t }}</text>
 </sc-for>
 </svg>
-<div role="table" aria-label="Histórico de exames OCT" style="display: flex; flex-direction: column">
+<div role="table" aria-label="OCT exam history" style="display: flex; flex-direction: column">
 <div role="row" style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 0.8fr; gap: 8px; padding: 0 10px; min-height: 26px; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">
-<span role="columnheader">EXAME</span><span role="columnheader">OLHO ESQ.</span><span role="columnheader">FACE À BASE</span><span role="columnheader">OLHO DIR.</span><span role="columnheader">SINAL</span>
+<span role="columnheader">EXAM</span><span role="columnheader">LEFT EYE</span><span role="columnheader">VS BASELINE</span><span role="columnheader">RIGHT EYE</span><span role="columnheader">SIGNAL</span>
 </div>
 <sc-for list="{{ tabela }}" as="t" hint-placeholder-count="6">
 <div role="row" style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 0.8fr; gap: 8px; padding: 0 10px; min-height: 30px; align-items: center; border-radius: 10px; background: {{ t.fundo }}; font-size: 13px; color: var(--tx)">
@@ -168,7 +168,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <section style="padding: 16px 20px; border-radius: 24px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid {{ o.borda }}; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; align-items: baseline; justify-content: space-between"><h2 style="margin: 0; font-size: 15px; font-weight: 600; color: var(--tx)">{{ o.nome }}</h2><span style="font-size: 12px; color: var(--tx3)">{{ o.quando }}</span></div>
 <span style="font-size: 34px; font-weight: 300; letter-spacing: -1px; color: var(--tx)">{{ o.valor }}<span style="font-size: 16px; font-weight: 500; color: var(--tx2)"> µm</span></span>
-<div style="display: flex; justify-content: space-between; min-height: 28px; align-items: center; border-top: 1px solid var(--line2)"><span style="font-size: 13px; color: var(--tx3)">Face à base pré-voo</span><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ o.dBase }}</span></div>
+<div style="display: flex; justify-content: space-between; min-height: 28px; align-items: center; border-top: 1px solid var(--line2)"><span style="font-size: 13px; color: var(--tx3)">Vs pre-flight baseline</span><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ o.dBase }}</span></div>
 <div style="display: flex; justify-content: space-between; min-height: 28px; align-items: center; border-top: 1px solid var(--line2)"><span style="font-size: 13px; color: var(--tx3)">{{ o.antLabel }}</span><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ o.dAnt }}</span></div>
 </section>
 </sc-for>
@@ -177,16 +177,16 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span aria-hidden="true" style="width: 9px; height: 9px; flex: none; border-radius: 5px; background: {{ estado.dot }}"></span>
 <span style="font-size: 13px; line-height: 1.4; color: var(--tx)">{{ estado.txt }}</span>
 </div>
-<span style="font-size: 12px; line-height: 1.4; color: var(--tx3)">A app só compara os valores com o teu histórico. A interpretação é da equipa médica. Valores simulados.</span>
+<span style="font-size: 12px; line-height: 1.4; color: var(--tx3)">The app only compares values with your history. Interpretation is up to the medical team. Simulated values.</span>
 </aside>
 </sc-if>
 
 <div aria-hidden="true" style="position: absolute; left: -1500px; right: -1500px; top: 712px; bottom: -1500px; pointer-events: none; background: linear-gradient(180deg, transparent 0, var(--bg) 90px)"></div>
-<nav aria-label="Secções da app" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
-<a href="Hoje.html" aria-label="Hoje" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
-<a href="TesteRapido.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg>Avaliações</a>
-<a href="SANS.html" aria-label="Monitorização SANS" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
-<a href="Alerta.html" aria-label="Alertas" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></a>
+<nav aria-label="App sections" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
+<a href="Hoje.html" aria-label="Today" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></a>
+<a href="TesteRapido.html" aria-current="page" style="display: flex; align-items: center; gap: 8px; height: 52px; box-sizing: border-box; padding: 0 22px; border-radius: 26px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 15px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 24px var(--acc-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"></path></svg>Checks</a>
+<a href="SANS.html" aria-label="SANS monitoring" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></a>
+<a href="Alerta.html" aria-label="Alerts" style="width: 56px; height: 52px; border-radius: 26px; display: flex; align-items: center; justify-content: center; color: var(--tx2); text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></a>
 </nav>
 
 <sc-if value="{{ gate }}" hint-placeholder-val="{{ false }}">
@@ -195,21 +195,21 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="display: flex; align-items: flex-start; gap: 14px">
 <span aria-hidden="true" style="width: 48px; height: 48px; flex: none; border-radius: 24px; background: var(--ylw-soft); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" style="fill: none; stroke: var(--ylw-tx); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M3 12h3l2-5 4 10 2-5h7"></path></svg></span>
 <div style="display: flex; flex-direction: column; gap: 3px">
-<span style="font-size: 12px; font-weight: 700; color: var(--ylw-tx)">Obrigatório antes de qualquer teste</span>
-<h2 id="gate-titulo" style="margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -0.4px; color: var(--tx)">Movimento da nave detectado</h2>
-<span style="font-size: 14px; color: var(--tx2)">Hoje · 10:42–10:43 UTC · 52 s</span>
+<span style="font-size: 12px; font-weight: 700; color: var(--ylw-tx)">Required before any test</span>
+<h2 id="gate-titulo" style="margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -0.4px; color: var(--tx)">Spacecraft motion detected</h2>
+<span style="font-size: 14px; color: var(--tx2)">Today · 10:42–10:43 UTC · 52 s</span>
 </div>
 </div>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--tx-soft)">{{ gateTexto }}</p>
-<span id="gate-pergunta" style="font-size: 17px; font-weight: 600; color: var(--tx)">Sentiste a estação a mexer ou a vibrar nesse período?</span>
+<span id="gate-pergunta" style="font-size: 17px; font-weight: 600; color: var(--tx)">Did you feel the station move or vibrate during that time?</span>
 <div role="group" aria-labelledby="gate-pergunta" style="display: flex; gap: 10px">
 <sc-for list="{{ gateOps }}" as="o" hint-placeholder-count="3">
 <button type="button" onClick="{{ o.pick }}" style="flex: 1; height: 52px; border-radius: 26px; border: 1px solid var(--line); background: transparent; color: var(--tx); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{ o.t }}</button>
 </sc-for>
 </div>
 <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 4px">
-<a href="Perfil.html" onClick="{{ abrirEvento }}" style="font-size: 14px; font-weight: 700; color: var(--acc-text)">Ver detalhes e gráfico no perfil</a>
-<a href="Hoje.html" style="font-size: 14px; font-weight: 600; color: var(--tx2); text-decoration: none">Voltar ao início</a>
+<a href="Perfil.html" onClick="{{ abrirEvento }}" style="font-size: 14px; font-weight: 700; color: var(--acc-text)">See details and chart in profile</a>
+<a href="Hoje.html" style="font-size: 14px; font-weight: 600; color: var(--tx2); text-decoration: none">Back to start</a>
 </div>
 </section>
 </sc-if>
@@ -250,27 +250,27 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const eus = {
-      A: { nome: 'Marta Silveira', ini: 'MS', dia: 60, proximo: 'Próximo recomendado: dia 90' },
-      B: { nome: 'Daniel Cossa', ini: 'DC', dia: 90, proximo: 'Próximo recomendado: dia 100' },
-      C: { nome: 'Sofia Lindqvist', ini: 'SL', dia: 84, proximo: 'Recomendado repetir hoje' }
+      A: { nome: 'Marta Silveira', ini: 'MS', dia: 60, proximo: 'Next recommended: day 90' },
+      B: { nome: 'Daniel Cossa', ini: 'DC', dia: 90, proximo: 'Next recommended: day 100' },
+      C: { nome: 'Sofia Lindqvist', ini: 'SL', dia: 84, proximo: 'Repeat today recommended' }
     };
     const euBase = eus[s.perfil] || eus.B;
     // Perfil real: não há OCT a bordo. O ecrã mostra o exemplo simulado, identificado como tal.
-    const eu = window.Visao && window.Visao.real() ? Object.assign({}, euBase, { nome: 'Exemplo simulado · ' + euBase.nome }) : euBase;
+    const eu = window.Visao && window.Visao.real() ? Object.assign({}, euBase, { nome: 'Simulated example · ' + euBase.nome }) : euBase;
     const fmt = (x, d) => x.toFixed(d).replace('.', ',');
     const sn = (x) => (x > 0 ? '+' : (x < 0 ? '−' : '±'));
 
     // Histórico simulado: [dia, % OE, % OD, sinal, interpretação]
     const H = {
-      A: { bOE: 358, bOD: 365, ex: [[10, 1.8, 1.0, 8, 'Revisto'], [30, 4.2, 2.5, 8, 'Revisto'], [60, 6.9, 5.2, 9, 'Revisto']] },
-      B: { bOE: 362, bOD: 360, ex: [[10, 4.0, 3.0, 8, 'Revisto'], [30, 9.5, 6.5, 8, 'Revisto'], [60, 14.0, 9.0, 8, 'Revisto'], [90, 17.0, 12.1, 7, 'Por rever']] },
-      C: { bOE: 401, bOD: 398, ex: [[10, 6.0, 4.0, 8, 'Revisto'], [30, 18.0, 10.0, 8, 'Revisto'], [60, 35.0, 18.0, 8, 'Revisto'], [84, 52.9, 24.6, 8, 'Revisão prioritária']] }
+      A: { bOE: 358, bOD: 365, ex: [[10, 1.8, 1.0, 8, 'Reviewed'], [30, 4.2, 2.5, 8, 'Reviewed'], [60, 6.9, 5.2, 9, 'Reviewed']] },
+      B: { bOE: 362, bOD: 360, ex: [[10, 4.0, 3.0, 8, 'Reviewed'], [30, 9.5, 6.5, 8, 'Reviewed'], [60, 14.0, 9.0, 8, 'Reviewed'], [90, 17.0, 12.1, 7, 'To review']] },
+      C: { bOE: 401, bOD: 398, ex: [[10, 6.0, 4.0, 8, 'Reviewed'], [30, 18.0, 10.0, 8, 'Reviewed'], [60, 35.0, 18.0, 8, 'Reviewed'], [84, 52.9, 24.6, 8, 'Priority review']] }
     };
     const h = H[s.perfil] || H.B;
-    const hist = [{ nome: 'Base pré-voo', curto: 'Pré-voo', oe: h.bOE, od: h.bOD, sinal: 9, interp: 'Revisto', novo: false }]
-      .concat(h.ex.map((e) => ({ nome: 'Dia ' + e[0], curto: 'D' + e[0], oe: Math.round(h.bOE * (1 + e[1] / 100)), od: Math.round(h.bOD * (1 + e[2] / 100)), pOE: e[1], pOD: e[2], sinal: e[3], interp: e[4], novo: false })));
-    if (s.novo) hist.push({ nome: 'Novo · dia ' + eu.dia, curto: 'Novo', oe: s.novo.oe, od: s.novo.od, sinal: s.novo.sinal, interp: 'Enviado para revisão', novo: true });
-    const sinalTxt = (x) => (typeof x === 'number' ? x + '/10' : 'não indicado');
+    const hist = [{ nome: 'Pre-flight baseline', curto: 'Pre-flight', oe: h.bOE, od: h.bOD, sinal: 9, interp: 'Reviewed', novo: false }]
+      .concat(h.ex.map((e) => ({ nome: 'Day ' + e[0], curto: 'D' + e[0], oe: Math.round(h.bOE * (1 + e[1] / 100)), od: Math.round(h.bOD * (1 + e[2] / 100)), pOE: e[1], pOD: e[2], sinal: e[3], interp: e[4], novo: false })));
+    if (s.novo) hist.push({ nome: 'New · day ' + eu.dia, curto: 'New', oe: s.novo.oe, od: s.novo.od, sinal: s.novo.sinal, interp: 'Sent for review', novo: true });
+    const sinalTxt = (x) => (typeof x === 'number' ? x + '/10' : 'not given');
     const ult = hist[hist.length - 1];
     const ant = hist[hist.length - 2];
 
@@ -278,27 +278,27 @@ class Component extends DCLogic {
     const valido = (v) => v !== '' && !isNaN(Number(v)) && Number(v) >= 200 && Number(v) <= 800;
     const campo = (id, label, chave, exemplo) => {
       const v = s[chave];
-      let msg = 'Valor do aparelho, em micrómetros'; let msgCor = 'var(--tx3)'; let borda = 'var(--line)';
-      if (v !== '' && !valido(v)) { msg = 'Valor pouco provável. Confirma no aparelho.'; msgCor = 'var(--bad-tx)'; borda = 'var(--bad-tx)'; }
-      else if (v !== '') { msg = 'Valor aceite'; msgCor = 'var(--ok-tx)'; borda = 'var(--ok-line)'; }
+      let msg = 'Device value, in micrometres'; let msgCor = 'var(--tx3)'; let borda = 'var(--line)';
+      if (v !== '' && !valido(v)) { msg = 'Unlikely value. Check it on the device.'; msgCor = 'var(--bad-tx)'; borda = 'var(--bad-tx)'; }
+      else if (v !== '') { msg = 'Value accepted'; msgCor = 'var(--ok-tx)'; borda = 'var(--ok-line)'; }
       return { id: id, label: label, valor: v, exemplo: exemplo, msg: msg, msgCor: msgCor, borda: borda,
         onChange: (e) => { const u = {}; u[chave] = e.target.value; this.setState(u); } };
     };
-    const campos = [campo('oct-oe', 'Olho esquerdo', 'oe', String(ult.oe)), campo('oct-od', 'Olho direito', 'od', String(ult.od))];
+    const campos = [campo('oct-oe', 'Left eye', 'oe', String(ult.oe)), campo('oct-od', 'Right eye', 'od', String(ult.od))];
     const sv = s.sinal; const sN = Number(sv);
-    let sMsg = 'Opcional'; let sCor = 'var(--tx3)'; let sBorda = 'var(--line)';
+    let sMsg = 'Optional'; let sCor = 'var(--tx3)'; let sBorda = 'var(--line)';
     const sinalOk = sv === '' || (Number.isInteger(sN) && sN >= 1 && sN <= 10);
-    if (sv !== '' && !sinalOk) { sMsg = 'Escreve um número de 1 a 10.'; sCor = 'var(--bad-tx)'; sBorda = 'var(--bad-tx)'; }
-    else if (sv !== '' && sN < 6) { sMsg = 'Sinal fraco: se puderes, repete a medição.'; sCor = 'var(--ylw-tx)'; sBorda = 'var(--line)'; }
-    else if (sv !== '') { sMsg = 'Valor aceite'; sCor = 'var(--ok-tx)'; sBorda = 'var(--ok-line)'; }
+    if (sv !== '' && !sinalOk) { sMsg = 'Enter a number from 1 to 10.'; sCor = 'var(--bad-tx)'; sBorda = 'var(--bad-tx)'; }
+    else if (sv !== '' && sN < 6) { sMsg = 'Weak signal: repeat the measurement if you can.'; sCor = 'var(--ylw-tx)'; sBorda = 'var(--line)'; }
+    else if (sv !== '') { sMsg = 'Value accepted'; sCor = 'var(--ok-tx)'; sBorda = 'var(--ok-line)'; }
     const podeGuardar = valido(s.oe) && valido(s.od) && sinalOk;
-    let rodapeReg = 'Escreve os dois olhos para comparar com o teu histórico.';
-    if (podeGuardar) rodapeReg = 'Pronto. A app compara com o teu histórico.';
+    let rodapeReg = 'Enter both eyes to compare with your history.';
+    if (podeGuardar) rodapeReg = 'Done. The app compares it with your history.';
     const passos = [
-      'Faz o exame no aparelho de OCT de bordo, como no treino.',
-      'Lê no ecrã do aparelho a espessura de cada olho.',
-      'Escreve aqui os valores e, se puderes, anexa a imagem.',
-      'A app compara com o teu histórico e envia para a equipa médica.'
+      'Do the exam on the on-board OCT device, as in training.',
+      'Read each eye\'s thickness on the device screen.',
+      'Type the values here and, if you can, attach the image.',
+      'The app compares it with your history and sends it to the medical team.'
     ].map((t, i, a) => ({ n: i + 1, t: t, regra: i < a.length - 1 ? '1px solid var(--line2)' : '0' }));
 
     // ---------- Comparar ----------
@@ -320,28 +320,28 @@ class Component extends DCLogic {
       linhaOE: hist.map((e, i) => PX(i).toFixed(1) + ',' + PY(e.oe).toFixed(1)).join(' '),
       linhaOD: hist.map((e, i) => PX(i).toFixed(1) + ',' + PY(e.od).toFixed(1)).join(' '),
       rotulos: hist.map((e, i) => ({ x: PX(i).toFixed(1), t: e.curto, peso: e.novo || i === n - 1 ? 700 : 500, cor: e.novo ? 'var(--acc-text)' : 'var(--tx3)' })),
-      label: 'Espessura da retina por exame, de ' + hist[0].nome + ' a ' + ult.nome + '. Olho esquerdo ' + ult.oe + ' µm, olho direito ' + ult.od + ' µm.'
+      label: 'Retinal thickness per exam, from ' + hist[0].nome + ' a ' + ult.nome + '. Left eye ' + ult.oe + ' µm, right eye ' + ult.od + ' µm.'
     };
     // % do registo do aparelho quando existe; para valores novos, calculado a partir dos µm
     const dTxt = (a, b, p) => { const d = a - b; const pc = typeof p === 'number' ? p : d / b * 100; return sn(d) + Math.abs(d) + ' µm · ' + sn(pc) + fmt(Math.abs(pc), 1) + '%'; };
     const tabela = hist.map((e) => ({
       nome: e.nome, oe: e.oe + ' µm', od: e.od + ' µm', sinal: sinalTxt(e.sinal),
-      dBase: e.nome === 'Base pré-voo' ? '—' : dTxt(e.oe, hist[0].oe, e.pOE).split(' · ')[1],
+      dBase: e.nome === 'Pre-flight baseline' ? '—' : dTxt(e.oe, hist[0].oe, e.pOE).split(' · ')[1],
       peso: e.novo ? 700 : 500,
       fundo: e.novo ? 'var(--acc-soft)' : 'transparent'
     }));
-    const olhosComp = [['Olho esquerdo', 'oe'], ['Olho direito', 'od']].map((o) => ({
+    const olhosComp = [['Left eye', 'oe'], ['Right eye', 'od']].map((o) => ({
       nome: o[0], quando: ult.nome, valor: ult[o[1]],
       dBase: dTxt(ult[o[1]], hist[0][o[1]], o[1] === 'oe' ? ult.pOE : ult.pOD),
-      antLabel: 'Face ao exame anterior (' + ant.nome.toLowerCase().replace('base pré-voo', 'base') + ')',
+      antLabel: 'Vs previous exam (' + ant.nome.toLowerCase().replace('pre-flight baseline', 'base') + ')',
       dAnt: dTxt(ult[o[1]], ant[o[1]]),
       borda: ult.novo ? 'var(--acc-line)' : 'var(--line2)'
     }));
     const estado = ult.novo
-      ? { txt: 'Novo registo guardado e enviado para revisão da equipa médica.', fundo: 'var(--acc-soft)', linha: 'var(--acc-line)', dot: 'var(--acc-text)' }
-      : { txt: 'Último exame (' + ult.nome.toLowerCase() + ') · ' + ult.interp + '.', fundo: 'var(--chip)', linha: 'var(--line2)', dot: ult.interp === 'Revisto' ? 'var(--ok)' : (ult.interp === 'Por rever' ? 'var(--warn)' : 'var(--bad)') };
+      ? { txt: 'New record saved and sent for medical review.', fundo: 'var(--acc-soft)', linha: 'var(--acc-line)', dot: 'var(--acc-text)' }
+      : { txt: 'Last exam (' + ult.nome.toLowerCase() + ') · ' + ult.interp + '.', fundo: 'var(--chip)', linha: 'var(--line2)', dot: ult.interp === 'Reviewed' ? 'var(--ok)' : (ult.interp === 'To review' ? 'var(--warn)' : 'var(--bad)') };
 
-    const modos = [['registar', 'Registar resultado'], ['comparar', 'Comparar com o histórico']].map((m) => ({
+    const modos = [['registar', 'Record result'], ['comparar', 'Compare with history']].map((m) => ({
       t: m[1], on: s.modo === m[0],
       bg: s.modo === m[0] ? 'var(--acc)' : 'transparent', fg: s.modo === m[0] ? 'var(--acc-tx)' : 'var(--tx2)',
       pick: () => this.setState({ modo: m[0] })
@@ -349,9 +349,9 @@ class Component extends DCLogic {
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
-      selo: 'Dados simulados',
+      selo: 'Simulated data',
       claro: claro, escuro: !claro,
-      temaLabel: claro ? 'Modo escuro' : 'Modo claro',
+      temaLabel: claro ? 'Dark mode' : 'Light mode',
       toggleTema: () => {
         const nt = this.state.tema === 'escuro' ? 'claro' : 'escuro';
         this.setState({ tema: nt });
@@ -360,9 +360,9 @@ class Component extends DCLogic {
       eu: eu,
       gate: s.modo === 'registar' && !s.resp,
       gateTexto: s.perfil === 'B'
-        ? 'A estação registou movimento invulgar e coincidiu com o teu teste de acuidade das 10:42. A tua resposta ajuda a perceber se o resultado foi afectado.'
-        : 'A estação registou movimento invulgar. A tua resposta ajuda a app a interpretar os exames de hoje.',
-      gateOps: [['sim', 'Sim'], ['nao', 'Não'], ['naosei', 'Não sei']].map((o) => ({
+        ? 'The station recorded unusual motion that overlapped your 10:42 acuity test. Your answer helps tell whether the result was affected.'
+        : 'The station recorded unusual motion. Your answer helps the app interpret today\'s exams.',
+      gateOps: [['sim', 'Yes'], ['nao', 'No'], ['naosei', 'Not sure']].map((o) => ({
         t: o[1],
         pick: () => {
           const perfil = this.state.perfil;
@@ -376,7 +376,7 @@ class Component extends DCLogic {
       irComparar: () => this.setState({ modo: 'comparar' }),
       campos: campos,
       sinal: { valor: sv, msg: sMsg, msgCor: sCor, borda: sBorda, onChange: (e) => this.setState({ sinal: e.target.value }) },
-      anexoLabel: s.anexo ? 'Imagem anexada' : 'Anexar imagem',
+      anexoLabel: s.anexo ? 'Image attached' : 'Attach image',
       toggleAnexo: () => this.setState((st) => ({ anexo: !st.anexo })),
       rodapeReg: rodapeReg,
       guardarOff: !podeGuardar,

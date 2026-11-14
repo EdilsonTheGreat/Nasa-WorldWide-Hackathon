@@ -61,16 +61,16 @@
 
   function classificar(cm) {
     var o = estado.opcoes;
-    if (cm < o.minCm) return { estado: "perto", cm: cm, mensagem: "Afasta-te um pouco do ecrã (" + Math.round(cm) + " cm; ideal " + o.minCm + "–" + o.maxCm + " cm)." };
-    if (cm > o.maxCm) return { estado: "longe", cm: cm, mensagem: "Aproxima-te do ecrã (" + Math.round(cm) + " cm; ideal " + o.minCm + "–" + o.maxCm + " cm)." };
-    return { estado: "ok", cm: cm, mensagem: "Distância certa (" + Math.round(cm) + " cm). Podes fazer o teste." };
+    if (cm < o.minCm) return { estado: "perto", cm: cm, mensagem: "Move back a little from the screen (" + Math.round(cm) + " cm; ideal " + o.minCm + "–" + o.maxCm + " cm)." };
+    if (cm > o.maxCm) return { estado: "longe", cm: cm, mensagem: "Move closer to the screen (" + Math.round(cm) + " cm; ideal " + o.minCm + "–" + o.maxCm + " cm)." };
+    return { estado: "ok", cm: cm, mensagem: "Distance OK (" + Math.round(cm) + " cm). You can do the test." };
   }
 
   function aoResultado(res) {
     var det = res && res.detections && res.detections[0];
     if (!det || !det.landmarks || det.landmarks.length < 2) {
       estado.historico = [];
-      emitir({ estado: "sem_cara", cm: null, mensagem: "Não vejo a tua cara. Olha para o ecrã com boa luz." });
+      emitir({ estado: "sem_cara", cm: null, mensagem: "I can't see your face. Look at the screen in good light." });
       return;
     }
     var w = estado.video.videoWidth, h = estado.video.videoHeight;
@@ -82,7 +82,7 @@
     var proporcao = caixaPx > 0 ? ipdPx / caixaPx : 0;
     if (ipdPx < 1 || proporcao < 0.25 || proporcao > 0.65) {
       estado.historico = [];
-      emitir({ estado: "sem_cara", cm: null, mensagem: "Não vejo a tua cara. Olha para o ecrã com boa luz." });
+      emitir({ estado: "sem_cara", cm: null, mensagem: "I can't see your face. Look at the screen in good light." });
       return;
     }
     estado.ultimoIpdPx = ipdPx;
@@ -112,7 +112,7 @@
     estado.video = video;
 
     if (!global.FaceDetection || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      var r0 = { estado: "indisponivel", cm: null, mensagem: "Câmara indisponível neste browser. Segura o ecrã a cerca de 40 cm." };
+      var r0 = { estado: "indisponivel", cm: null, mensagem: "Camera unavailable in this browser. Hold the screen about 40 cm away." };
       emitir(r0);
       return Promise.resolve(r0);
     }
@@ -138,7 +138,7 @@
       })
       .catch(function (e) {
         var r = { estado: "indisponivel", cm: null, erro: String(e && e.message || e),
-                  mensagem: "Não foi possível usar a câmara. Segura o ecrã a cerca de 40 cm." };
+                  mensagem: "Could not use the camera. Hold the screen about 40 cm away." };
         emitir(r);
         return r;
       });

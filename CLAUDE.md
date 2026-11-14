@@ -40,3 +40,9 @@ Ciclo: **teste → comparação → semáforo → acção**.
 ## Git
 - Fazer `git pull` antes de começar. Commits pequenos, mensagens em português a dizer **o quê e porquê**.
 - Não fazer commit de ficheiros do IDE (`.idea/`) nem de `__pycache__/`.
+
+## Língua da interface (14 Nov)
+- A interface (`app/visao/`) está em **inglês** (pedido do Lukanga, para o júri internacional). Código, comentários e documentos continuam em português.
+- O motor (`motor/`, do Edilson) continua a escrever os motivos em português; `app/visao/ligacao.js` traduz esses textos na função `en()`. Se mudares um texto do motor, acrescenta a tradução em `EN` (ligacao.js).
+- Olhos: LE = left eye (OE), RE = right eye (OD).
+- Abrir a app: `abrir_app.command` / `abrir_app.bat` usam `servidor.py` (sem cache, para o browser não mostrar versões antigas).

@@ -1,9 +1,10 @@
 #!/bin/bash
-# Mac: duplo clique para abrir a app SEM internet.
-# Cria um pequeno servidor local (http://localhost:8000) porque o browser
-# não deixa usar a câmara nem carregar o modelo a partir de file://.
+# Mac: double-click to open the app WITHOUT internet.
+# Starts a small local server (http://localhost:8000): the browser does not allow
+# the camera or loading the models from file://. servidor.py also stops the browser
+# from keeping old copies of the files.
 cd "$(dirname "$0")"
 PORTA=8000
-echo "A abrir a app em http://localhost:$PORTA/app/ (fecha esta janela para parar)"
+echo "Opening the app at http://localhost:$PORTA/app/visao/Main.html (close this window to stop)"
 ( sleep 1; open "http://localhost:$PORTA/app/visao/Main.html" ) &
-python3 -m http.server $PORTA
+python3 servidor.py $PORTA
