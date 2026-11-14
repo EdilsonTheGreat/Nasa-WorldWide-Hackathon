@@ -74,7 +74,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="position: absolute; left: {{ e.x }}px; top: 360px; transform: translateX(-50%); font-size: 11px; font-weight: {{ e.peso }}; color: {{ e.cor }}; white-space: nowrap">{{ e.t }}</span>
 </sc-for>
 <span aria-hidden="true" style="position: absolute; left: {{ hojeX }}px; top: 46px; width: 0; height: 308px; border-left: 1px dashed var(--acc-line)"></span>
-<span style="position: absolute; left: {{ hojeX }}px; top: 44px; transform: translate(-50%, -100%); font-size: 11px; font-weight: 700; color: var(--acc-text); white-space: nowrap">Hoje</span>
+<span style="position: absolute; left: {{ hojeX }}px; top: 50px; transform: translate(-50%, 0); z-index: 1; padding: 2px 8px; border-radius: 9px; background: var(--acc); font-size: 11px; font-weight: 700; color: var(--acc-tx); white-space: nowrap">Hoje</span>
 <sc-for list="{{ lanes }}" as="ln" hint-placeholder-count="5">
 <div style="position: absolute; left: 0; top: {{ ln.y }}px; width: 1070px; height: 58px; display: flex; align-items: center">
 <span style="position: absolute; left: 0; top: 0; width: 130px; height: 58px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: var(--tx2)">{{ ln.nome }}</span>

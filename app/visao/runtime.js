@@ -261,6 +261,7 @@
       }
       // bloco normal: ocupa a largura toda, altura conforme o conteúdo
       s.width = '100%'; s.maxWidth = '100%'; s.height = 'auto'; s.minHeight = '0'; s.boxSizing = 'border-box';
+      s.maxHeight = 'none'; s.overflowY = 'visible';   // limites de altura são do modo largo, não da coluna
       b.classList.add('fluido');
       // decorações largas em posição fixa (ex.: linha da barra de progresso) deixam de fazer sentido
       Array.prototype.forEach.call(b.querySelectorAll('[aria-hidden="true"]'), function (x) {

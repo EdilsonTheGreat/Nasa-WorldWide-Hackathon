@@ -15,3 +15,7 @@
 .tema-claro.iris-cinzento{--glow1:rgba(169,175,184,0.40);--glow2:rgba(122,133,148,0.30)}
 .tema-escuro.iris-ambar{--glow1:rgba(224,160,48,0.40);--glow2:rgba(198,120,24,0.30)}
 .tema-claro.iris-ambar{--glow1:rgba(224,160,48,0.40);--glow2:rgba(198,120,24,0.30)}
+
+/* As imagens da íris têm o halo cortado a direito perto das bordas; no modo claro via-se como uma barra.
+   Esta máscara esbate a imagem em círculo antes do corte (vale para todas as íris, nos dois temas). */
+img[src*="iris_"]{-webkit-mask-image:radial-gradient(closest-side,#000 60%,rgba(0,0,0,0) 80%);mask-image:radial-gradient(closest-side,#000 60%,rgba(0,0,0,0) 80%)}

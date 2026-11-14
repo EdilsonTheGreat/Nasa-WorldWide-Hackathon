@@ -52,7 +52,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--tx3); border: 1px solid var(--line2); border-radius: 999px; padding: 5px 12px">Deep Thinkers · NASA Space Apps 2026</span>
 </div>
 
-<section aria-labelledby="entrar-titulo" style="position: absolute; left: 624px; top: 84px; width: 530px; box-sizing: border-box; padding: 26px 28px; border-radius: 30px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 14px">
+<section aria-labelledby="entrar-titulo" style="position: absolute; left: 624px; top: 92px; width: 530px; box-sizing: border-box; padding: 22px 26px; max-height: 718px; overflow-y: auto; border-radius: 30px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 14px">
 <div style="display: flex; flex-direction: column; gap: 6px">
 <h1 id="entrar-titulo" style="margin: 0; font-size: 30px; font-weight: 400; letter-spacing: -0.5px; color: var(--tx)">Quem está a entrar?</h1>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--tx2)">Escolhe o teu perfil. Cada perfil só abre com a identidade do próprio astronauta.</p>
@@ -64,11 +64,11 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </sc-for>
 </div>
 
-<div role="radiogroup" aria-label="Perfis da tripulação" style="display: grid; grid-template-columns: {{ colunas }}; gap: 10px">
+<div role="radiogroup" aria-label="Perfis da tripulação" style="display: grid; grid-template-columns: {{ colunas }}; gap: {{ linhaGap }}px; max-height: 236px; overflow-y: auto; margin-right: -8px; padding-right: 8px">
 <sc-for list="{{ perfis }}" as="pf" hint-placeholder-count="3">
-<button type="button" role="radio" aria-checked="{{ pf.on }}" onClick="{{ pf.pick }}" style="display: flex; align-items: center; gap: 14px; height: 64px; min-width: 0; box-sizing: border-box; padding: 0 14px 0 12px; border-radius: 20px; border: 1px solid {{ pf.borda }}; background: {{ pf.fundo }}; font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
-<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ pf.ini }}</span>
-<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.nome }}</span><span style="font-size: 13px; color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.papel }}</span></span>
+<button type="button" role="radio" aria-checked="{{ pf.on }}" onClick="{{ pf.pick }}" style="display: flex; align-items: center; gap: 12px; height: {{ linhaAlt }}px; min-width: 0; box-sizing: border-box; padding: 0 14px 0 10px; border-radius: 18px; border: 1px solid {{ pf.borda }}; background: {{ pf.fundo }}; font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
+<span style="position: relative; flex: none; display: flex"><span aria-hidden="true" style="width: 38px; height: 38px; border-radius: 19px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ pf.ini }}</span><sc-if value="{{ pf.rosto }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="rosto registado" title="Rosto registado" style="position: absolute; right: -3px; bottom: -3px; width: 13px; height: 13px; box-sizing: border-box; border-radius: 7px; background: var(--ok); border: 2px solid var(--bg)"></span></sc-if></span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 15.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.nome }}</span><span style="font-size: 12.5px; color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.papel }}</span></span>
 <span aria-hidden="true" style="width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 11px; border: 2px solid {{ pf.radioBorda }}; background: {{ pf.radioFundo }}; display: flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{ pf.radioPonto }}"></span></span>
 </button>
 </sc-for>
@@ -111,7 +111,8 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="padding-top: 12px; font-size: 14px; font-weight: 700; color: var(--bad-tx)">Não foi possível confirmar pelo rosto</span>
 <span style="font-size: 13px; line-height: 1.45; color: var(--tx2)">{{ erro }}</span>
 <div style="display: flex; gap: 10px">
-<button type="button" onClick="{{ voltar }}" style="padding: 0 22px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Voltar</button>
+<button type="button" onClick="{{ voltar }}" style="padding: 0 18px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Voltar</button>
+<button type="button" onClick="{{ faceId }}" style="padding: 0 18px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Tentar outra vez</button>
 <button type="button" onClick="{{ semRosto }}" style="flex-grow: 1; height: 50px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">Entrar sem câmara</button>
 </div>
 </sc-if>
@@ -149,7 +150,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 
 <div style="display: flex; gap: 10px; align-items: flex-start">
 <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="flex: none; margin-top: 2px; fill: none; stroke: var(--tx3); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-<span style="font-size: 13px; line-height: 1.45; color: var(--tx3)">Os dados de saúde só abrem com a identidade de cada astronauta. {{ rodape }}</span>
+<span style="font-size: 13px; line-height: 1.45; color: var(--tx3)">{{ rodape }}</span>
 </div>
 </section>
 
@@ -215,7 +216,7 @@ class Component extends DCLogic {
     const s = this.state;
     if (s.grupo === 'equipa') {
       const d = parseInt(s.dia, 10);
-      const id = window.Visao.entrar(s.selEq, d >= 0 ? d : undefined);
+      const id = window.Visao.entrar(s.selEq, d >= 0 ? d : undefined, como === 'rosto' ? 'rosto' : 'lista');
       const nome = window.Visao.nomeDe(id).split(' ')[0];
       this.setState({ fase: 'ok', senha: '', erro: '', okTxt: (como === 'rosto' ? 'Rosto reconhecido. ' : '') + 'Olá, ' + nome + '. Dia de missão ' + window.Visao.eu().dia + '.' });
       // Entrada pelo rosto: segue logo para o ecrã Hoje, sem mais toques.
@@ -266,7 +267,8 @@ class Component extends DCLogic {
     try { rostos = Object.keys(JSON.parse(window.localStorage.getItem('dt_rostos')) || {}); } catch (e) {}
     const reais = this.temBack() ? window.Armazem.perfis().slice(0, 8).map((p) => ({
       id: p.id, nome: window.Visao.nomeDe(p.id), curto: window.Visao.nomeDe(p.id).split(' ')[0], ini: window.Visao.iniciais(p.id),
-      papel: (p.testes ? p.testes + (p.testes === 1 ? ' teste' : ' testes') + ' · dia ' + p.ultimo_dia : 'Sem testes') + (rostos.indexOf(p.id) !== -1 ? ' · rosto' : '')
+      rosto: rostos.indexOf(p.id) !== -1,
+      papel: p.testes ? p.testes + (p.testes === 1 ? ' teste' : ' testes') + ' · dia ' + p.ultimo_dia : 'Sem testes'
     })) : [];
     const lista = equipa ? reais : demo;
     const selId = equipa ? s.selEq : s.sel;
@@ -274,7 +276,7 @@ class Component extends DCLogic {
     const perfis = lista.map((x) => {
       const on = x.id === atual.id;
       return {
-        nome: x.nome, ini: x.ini, papel: x.papel, on: on,
+        nome: x.nome, ini: x.ini, papel: x.papel, on: on, rosto: !!x.rosto,
         fundo: on ? 'var(--acc-soft)' : 'transparent',
         borda: on ? 'var(--acc-line)' : 'var(--line2)',
         radioBorda: on ? 'var(--acc-text)' : 'var(--line)',
@@ -310,6 +312,8 @@ class Component extends DCLogic {
       irisFundo: iris,
       irisImg: 'assets/' + (iris === 'original' ? 'iris_glow' : 'iris_' + iris) + '.webp',
       colunas: equipa ? '1fr 1fr' : '1fr',
+      linhaAlt: equipa ? 52 : 64,
+      linhaGap: equipa ? 8 : 10,
       perfis: perfis,
       curto: atual.curto,
       f: { metodoDemo: s.fase === 'metodo' && !equipa, metodoEquipa: s.fase === 'metodo' && equipa, consent: s.fase === 'consent', falhou: s.fase === 'falhou',
@@ -317,8 +321,8 @@ class Component extends DCLogic {
       faceTxt: s.faceTxt || 'A verificar o rosto de ' + atual.curto + '…',
       okTxt: s.okTxt,
       rodape: equipa
-        ? 'Os testes ficam guardados só neste aparelho. O rosto é opcional: guarda-se apenas um descritor numérico, nunca fotografias, e só com o acordo da própria pessoa.'
-        : 'Ninguém da tripulação vê o teu perfil sem a tua autorização. Perfis fictícios para demonstração.',
+        ? 'Testes guardados só neste aparelho. Rosto opcional: guarda-se só um descritor numérico, nunca fotografias. Ponto verde = rosto registado.'
+        : 'Os dados de saúde só abrem com a identidade de cada astronauta. Ninguém da tripulação vê o teu perfil sem a tua autorização. Perfis fictícios para demonstração.',
       faceId: () => {
         if (equipa) { this.entrarPeloRosto(); return; }
         this.setState({ fase: 'face', faceTxt: '' });

@@ -129,7 +129,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <a href="Alerta.html" style="display: flex; align-items: center; gap: 14px; min-height: 62px; text-decoration: none; color: var(--tx)">
 <span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: var(--bad-soft); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: var(--bad-tx); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></span>
 <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1"><span style="font-size: 16px; font-weight: 500">Alertas</span><span style="font-size: 13px; color: var(--tx3)">{{ alertasTxt }}</span></span>
-<sc-if value="{{ vermelho }}" hint-placeholder-val="{{ false }}"><span style="min-width: 22px; height: 22px; border-radius: 11px; background: var(--badge-bad-bg); color: var(--badge-bad-tx); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 6px; box-sizing: border-box">1</span></sc-if>
+<sc-if value="{{ vermelho }}" hint-placeholder-val="{{ false }}"><span style="min-width: 22px; height: 22px; border-radius: 11px; background: var(--badge-bad-bg); color: var(--badge-bad-tx); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 6px; box-sizing: border-box">{{ nAlertas }}</span></sc-if>
 </a>
 </section>
 </div>
@@ -241,7 +241,8 @@ class Component extends DCLogic {
       dias: dias,
       irisOn: irisOn,
       rec: R ? R.rec : recs[nivel],
-      vermelho: nivel === 2,
+      vermelho: R ? R.nAlertas > 0 : nivel === 2,
+      nAlertas: R ? R.nAlertas : 1,
       naoVermelho: nivel !== 2,
       olhoEsq: R ? R.olhoEsq : Object.assign({ valor: '+' + fmt(p.esq), uni: '%' }, estados[p.nEsq]),
       olhoDir: R ? R.olhoDir : Object.assign({ valor: '+' + fmt(p.dir), uni: '%' }, estados[p.nDir]),

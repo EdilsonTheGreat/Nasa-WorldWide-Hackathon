@@ -48,11 +48,12 @@
   function irisDe(id) { return ler("visao-iris-" + id) || IRIS_DEMO[id] || "original"; }
   function guardarIris(id, iris) { if (id) escrever("visao-iris-" + id, iris); escrever("visao-iris", iris); }
 
-  function entrar(id, dia) {
+  function entrar(id, dia, como) {
     id = g.Armazem.criarPerfil(id);
     if (!id) return null;
     escrever("visao-real", id);
     escrever("visao-iris", irisDe(id));
+    escrever("visao-entrada", como === "rosto" ? "rosto" : "lista");
     escrever("visao-dia-" + id, dia >= 0 ? dia : diaSugerido(id));
     return id;
   }
@@ -70,6 +71,13 @@
   var OLHO = { od: "olho direito", oe: "olho esquerdo" };
   var SIGLA = { od: "OD", oe: "OE" };
 
+  // "1 linha(s)" -> "1 linha"; "2 linha(s)" -> "2 linhas"
+  function plural(t) { return String(t).replace(/(\d+) linha\(s\)/g, function (m, n) { return n === "1" ? "1 linha" : n + " linhas"; }); }
+
+  function porOlho(r) { return r.acuidade_oe !== null && r.acuidade_oe !== undefined && r.acuidade_od !== null && r.acuidade_od !== undefined; }
+  // Base para comparar: o 1.º teste feito nesta interface (com resultado de cada olho).
+  function baseDe(regs) { for (var i = 0; i < regs.length; i++) if (porOlho(regs[i])) return regs[i]; return regs[0]; }
+
   function rapidos(id) {
     return g.Armazem.registosDe(id).filter(function (r) { return r.acuidade_linha !== null && r.acuidade_linha !== undefined; });
   }
@@ -80,7 +88,8 @@
     ["od", "oe"].forEach(function (e) {
       var am = M.corAmsler(primeiro ? [] : (base["amsler_" + e] || []), reg["amsler_" + e] || [], R);
       sinais.push({ tipo: "amsler", olho: e, cor: am.cor, motivo: am.motivo.replace(/\.$/, "") + " · " + OLHO[e] + "." });
-      if (!primeiro) {
+      // acuidade só se compara quando os dois testes têm o resultado de cada olho
+      if (!primeiro && porOlho(base) && porOlho(reg)) {
         var ac = M.corAcuidade(base["acuidade_" + e], reg["acuidade_" + e], reg["melhora_" + e], R);
         sinais.push({ tipo: "acuidade", olho: e, cor: ac.cor, perda: ac.perda, motivo: ac.motivo.replace(/\.$/, "") + " · " + OLHO[e] + "." });
       }
@@ -99,7 +108,7 @@
     if (nivel === 0 && reg.prontidao && reg.prontidao !== "verde") nivel = 1;      // condições duvidosas: repetir
     return {
       primeiro: primeiro, cor: cor, corOlho: corOlho, nivel: nivel, nSint: nSint,
-      motivos: sinais.filter(function (s) { return s.cor === "amarelo" || s.cor === "vermelho"; }).map(function (s) { return s.motivo; }),
+      motivos: sinais.filter(function (s) { return s.cor === "amarelo" || s.cor === "vermelho"; }).map(function (s) { return plural(s.motivo); }),
       sinais: sinais
     };
   }
@@ -108,7 +117,7 @@
   // Cabeçalho: quem sou eu.
   function eu() {
     var id = real(); if (!id) return null;
-    var regs = rapidos(id), d = diaDe(id), base = regs[0];
+    var regs = rapidos(id), d = diaDe(id), base = baseDe(regs);
     return {
       id: id, nome: nomeDe(id), curto: nomeDe(id).split(" ")[0], ini: iniciais(id), dia: d,
       ola: "Olá, " + nomeDe(id).split(" ")[0] + ".",
@@ -121,7 +130,7 @@
   function anterior() {
     var id = real(); if (!id) return null;
     var d = diaDe(id);
-    var base = rapidos(id).filter(function (r) { return r.dia < d; })[0];
+    var base = rapidos(id).filter(function (r) { return r.dia < d && porOlho(r); })[0];
     if (!base) return { primeiro: true, ac: { esq: 0, dir: 0 }, am: { dir: [], esq: [] } };
     return {
       primeiro: false, dia: base.dia,
@@ -165,7 +174,7 @@
       alerta_clinico: t.q[3] === 2
     });
     if (!reg) return { erro: "Não foi possível guardar neste aparelho." };
-    var regs = rapidos(id), av = avaliarRegisto(regs[0], reg);
+    var regs = rapidos(id), av = avaliarRegisto(baseDe(regs), reg);
     var modelo = g.Modelo ? g.Modelo.treinar(g.Armazem.registosDe(id), g.FAIXAS, d) : null;
     return {
       registo: reg, nivel: av.nivel, cor: av.cor, primeiro: av.primeiro, motivos: av.motivos, ressalvas: ressalvas,
@@ -181,9 +190,17 @@
     var regs = rapidos(id);
     if (!regs.length) return null;
     var u = regs[regs.length - 1];
-    return { regs: regs, reg: u, av: avaliarRegisto(regs[0], u) };
+    return { regs: regs, reg: u, av: avaliarRegisto(baseDe(regs), u) };
   }
-  function acTxt(r, e) { var v = r["acuidade_" + e]; return v === null || v === undefined ? "–" : v + "/5"; }
+  // Testes antigos (ecrã app/camara) só guardaram a linha geral: mostra essa, em vez de "–".
+  function acTxt(r, e) {
+    var v = r["acuidade_" + e];
+    if (v === null || v === undefined) {
+      if (r.acuidade_linha !== null && r.acuidade_linha !== undefined) return r.acuidade_linha + "/" + (r.escala_acuidade || 10);
+      return "–";
+    }
+    return v + "/5";
+  }
   function amTxt(r) {
     var n = (r.celulas_od || []).length + (r.celulas_oe || []).length;
     if (!n) return "Sem zonas";
@@ -217,13 +234,13 @@
     if (av.nSint && !av.motivos.length) texto = "Indicaste sintomas no último teste. A equipa médica vai rever.";
     var nAl = alertas().filter(function (a) { return a[1] >= 2; }).length;
     return {
-      p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: prox, acu: "OE " + acTxt(r, "oe") + " · OD " + acTxt(r, "od"), amsler: amTxt(r), sans: "Linha temporal dos teus testes", limTxt: "" },
+      p: { nome: me.nome, curto: me.curto, ini: me.ini, dia: me.dia, prox: prox, acu: (r.acuidade_oe === null || r.acuidade_oe === undefined) ? "Ambos " + acTxt(r, "oe") : "OE " + acTxt(r, "oe") + " · OD " + acTxt(r, "od"), amsler: amTxt(r), sans: "Linha temporal dos teus testes", limTxt: "" },
       nivel: nivel3, rec: { titulo: titulos[nivel3], texto: texto },
       olhoEsq: Object.assign({ valor: acTxt(r, "oe"), uni: "" }, E[IDX[av.corOlho.oe]]),
       olhoDir: Object.assign({ valor: acTxt(r, "od"), uni: "" }, E[IDX[av.corOlho.od]]),
       olhosSub: "Último teste rápido · dia " + r.dia,
-      olhosNota: "Linhas lidas por olho e estado face à tua base (dia " + u.regs[0].dia + "). Sem OCT a bordo: decisão do motor de regras com os testes rápidos.",
-      alertas: nAl ? nAl + " para revisão" : "Nenhum activo"
+      olhosNota: "Linhas lidas por olho e estado face à tua base (dia " + baseDe(u.regs).dia + "). Sem OCT a bordo: decisão do motor de regras com os testes rápidos.",
+      alertas: nAl ? nAl + " para revisão" : "Nenhum activo", nAlertas: nAl
     };
   }
 
@@ -233,7 +250,7 @@
     var regs = rapidos(me.id), T = { oct: [], acu: [], ams: [], sin: [], mov: [] };
     var N = { verde: 0, amarelo: 2, vermelho: 3, a_calibrar: 0 };
     regs.forEach(function (r) {
-      var av = avaliarRegisto(regs[0], r);
+      var av = avaliarRegisto(baseDe(regs), r);
       var pior = function (tipo) { return N[g.Motor.piorCor(av.sinais.filter(function (s) { return s.tipo === tipo; }).map(function (s) { return s.cor; }))]; };
       T.acu.push([r.dia, av.primeiro ? 0 : pior("acuidade"), "OE " + acTxt(r, "oe") + " · OD " + acTxt(r, "od") + (av.primeiro ? " · base" : "")]);
       T.ams.push([r.dia, pior("amsler"), amTxt(r) + " · OD " + (r.celulas_od || []).length + " · OE " + (r.celulas_oe || []).length + (av.primeiro ? " · base" : "")]);
@@ -250,10 +267,10 @@
     var me = eu(); if (!me) return null;
     var regs = rapidos(me.id), L = [];
     regs.slice().reverse().forEach(function (r) {
-      var av = avaliarRegisto(regs[0], r);
+      var av = avaliarRegisto(baseDe(regs), r);
       var fiab = r.sem_camara ? "Distância não medida pela câmara." : "Distância média " + r.distancia_cm + " cm" + (r.fora_distancia_pct ? " · fora do intervalo em " + r.fora_distancia_pct + "% das medições." : ".");
       if ((r.ressalvas || []).length) fiab += " " + r.ressalvas.join(" ");
-      var fontes = "Teste rápido na tela · motor de regras (limites provisórios) · base do dia " + regs[0].dia;
+      var fontes = "Teste rápido na tela · motor de regras (limites provisórios) · base do dia " + baseDe(regs).dia;
       if (av.nivel >= 2) {
         (av.motivos.length ? av.motivos : ["Sintomas indicados no questionário."]).forEach(function (m, i) {
           var verm = av.nivel === 3 && /centro|não melhora/.test(m);
@@ -278,13 +295,14 @@
   // Ecrã Perfil.
   function fichaPerfil() {
     var me = eu(); if (!me) return null;
-    var regs = rapidos(me.id), base = regs[0], u = regs[regs.length - 1];
+    var regs = rapidos(me.id), base = baseDe(regs), u = regs[regs.length - 1];
     var av = u ? avaliarRegisto(base, u) : null;
     var rosto = g.Rosto ? g.Rosto.registados().indexOf(me.id) !== -1 : (function () { try { return !!(JSON.parse(ler("dt_rostos")) || {})[me.id]; } catch (e) { return false; } })();
     var COR = { verde: "Verde · rotina", amarelo: "Laranja · revisão", vermelho: "Vermelho · prioridade" };
     var dist = regs.filter(function (r) { return r.distancia_cm; }).map(function (r) { return r.distancia_cm; });
     return {
       nome: me.nome, curto: me.curto, ini: me.ini, papel: "Equipa Deep Thinkers", dia: me.dia,
+      entrada: ler("visao-entrada") === "rosto" ? "rosto" : "lista",
       grupos: [
         { titulo: "SESSÃO", linhas: [["Perfil", me.id], ["Dia de missão", String(me.dia)], ["Rosto registado", rosto ? "Sim · só o descritor numérico" : "Não"], ["Dados", "Guardados só neste aparelho"]] },
         { titulo: "TESTES RÁPIDOS", linhas: [["Testes guardados", String(regs.length)], ["Base", base ? "Dia " + base.dia + " · OE " + acTxt(base, "oe") + " · OD " + acTxt(base, "od") : "Por fazer"],

@@ -81,18 +81,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <button type="button" onClick="{{ d.toggleVisto }}" aria-pressed="{{ d.visto }}" style="height: 32px; padding: 0 14px; border: 1px solid var(--line); border-radius: 16px; background: transparent; color: var(--tx2); font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer">{{ d.vistoBtn }}</button>
 </div>
 <h2 id="det-titulo" style="margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -0.4px; line-height: 1.2; color: var(--tx)">{{ d.titulo }}</h2>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="flex: 1 1 auto; min-height: 0; overflow-y: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: min-content; align-content: start; gap: 10px">
 <sc-for list="{{ d.campos }}" as="c" hint-placeholder-count="6">
-<div style="box-sizing: border-box; min-height: 82px; padding: 10px 14px; border-radius: 16px; background: var(--chip); border: 1px solid var(--line2); display: flex; flex-direction: column; gap: 3px">
+<div style="box-sizing: border-box; min-height: 72px; padding: 10px 14px; border-radius: 16px; background: var(--chip); border: 1px solid var(--line2); display: flex; flex-direction: column; gap: 3px">
 <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">{{ c.k }}</span>
 <span style="font-size: 14px; line-height: 1.4; color: var(--tx)">{{ c.v }}</span>
 </div>
 </sc-for>
 </div>
-<div style="flex-grow: 1"></div>
 <sc-if value="{{ d.comPacote }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; flex-direction: column; gap: 8px">
-<span style="font-size: 12px; color: var(--tx3)">Pacote pronto: tendência, OCT dos dias 10–84, imagem do OCT, mapa de Amsler e respostas</span>
+<span style="font-size: 12px; color: var(--tx3)">{{ pacoteTxt }}</span>
 <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
 <button type="button" onClick="{{ send }}" style="height: 50px; border: 0; border-radius: 25px; background: var(--bad-btn); color: var(--bad-btn-tx); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 28px var(--bad-btn-glow)">Enviar ao médico de voo</button>
 </sc-if>
@@ -228,6 +227,7 @@ class Component extends DCLogic {
       ],
       links: selA.links.map((k) => Object.assign({ go: () => { try { if (L[k].evento) window.localStorage.setItem('visao-abrir', 'eventos'); if (L[k].oct) window.localStorage.setItem('visao-oct-modo', 'comparar'); } catch (e) {} } }, L[k])),
       comPacote: selA.pacote,
+      pacoteTxt: euReal ? 'Pacote pronto: os teus testes rápidos, mapas de Amsler e respostas (guardados neste aparelho).' : 'Pacote pronto: tendência, OCT dos dias 10–84, imagem do OCT, mapa de Amsler e respostas',
       visto: visto,
       vistoBtn: visto ? 'Visto ✓' : 'Marcar como visto',
       toggleVisto: () => this.setState((st) => { const v = Object.assign({}, st.vistos); v[selA.id] = !v[selA.id]; return { vistos: v }; })

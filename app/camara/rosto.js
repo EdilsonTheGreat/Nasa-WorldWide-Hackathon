@@ -29,8 +29,8 @@
   var LIMIAR = 0.5;          // distância máxima para aceitar (menor = mais exigente)
   var MARGEM = 0.05;         // o 1.º candidato tem de ser claramente melhor do que o 2.º
   var AMOSTRAS = 5;          // imagens usadas no registo
-  var TENTATIVAS = 25;       // imagens analisadas antes de desistir (registo)
-  var TENTATIVAS_ENTRAR = 14; // imagens analisadas antes de desistir (entrada)
+  var TEMPO_REGISTO = 10000; // ms a procurar a cara antes de desistir (registo)
+  var TEMPO_ENTRAR = 6000;   // ms a procurar a cara antes de desistir (entrada); entra logo que a reconhece
   var CERTO = 0.46;          // distância a que uma só imagem chega para entrar (sem esperar por mais)
   var PAUSA = 30;            // ms entre imagens
   var pasta = "camara/vendor/faceapi/";
@@ -92,11 +92,10 @@
   }
 
   // chega(lista) = true pára logo (ex.: a 1.ª imagem já identifica a pessoa com folga).
-  function recolher(video, quantas, maxTentativas, chega) {
-    var lista = [], i = 0;
+  function recolher(video, quantas, maxMs, chega) {
+    var lista = [], fim = Date.now() + (maxMs || TEMPO_REGISTO);
     function passo() {
-      if (lista.length >= quantas || i >= (maxTentativas || TENTATIVAS) || (chega && lista.length && chega(lista))) return Promise.resolve(lista);
-      i++;
+      if (lista.length >= quantas || Date.now() > fim || (chega && lista.length && chega(lista))) return Promise.resolve(lista);
       return descritor(video).then(function (d) { if (d) lista.push(Array.from(d)); return esperar(PAUSA); }).then(passo);
     }
     return passo();
@@ -137,7 +136,7 @@
 
   function registar(video, id) {
     return comCamara(video, function () {
-      return recolher(video, AMOSTRAS).then(function (lista) {
+      return recolher(video, AMOSTRAS, TEMPO_REGISTO).then(function (lista) {
         if (lista.length < 3) return { ok: false, amostras: lista.length, mensagem: "Não consegui ver bem a tua cara. Olha de frente para a câmara, com boa luz e sozinho(a) na imagem." };
         var r = ler(); r[id] = media(lista);
         if (!escrever(r)) return { ok: false, amostras: lista.length, mensagem: "Não foi possível guardar neste aparelho." };
@@ -152,7 +151,7 @@
       if (!Object.keys(rostos).length) return { ok: false, id: null, mensagem: "Ainda ninguém registou a cara neste aparelho." };
       // Rápido: se uma imagem já der um perfil com distância <= CERTO, entra logo; senão junta até 3 imagens.
       var certo = function (lista) { var c = comparar(lista[lista.length - 1], rostos, CERTO); return !!c.id; };
-      return recolher(video, 3, TENTATIVAS_ENTRAR, certo).then(function (lista) {
+      return recolher(video, 3, TEMPO_ENTRAR, certo).then(function (lista) {
         if (!lista.length) return { ok: false, id: null, mensagem: "Não vejo uma cara. Olha de frente para a câmara, com boa luz." };
         var c = comparar(media(lista), rostos);
         if (c.id) return { ok: true, id: c.id, distancia: c.distancia, mensagem: "Olá, " + c.id + "." };
