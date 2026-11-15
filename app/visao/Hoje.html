@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Today · IRIS</title>
-<link href="fonte.css?v=20261115b" rel="stylesheet">
-<link href="iris.css?v=20261115b" rel="stylesheet">
+<link href="fonte.css?v=20261115d" rel="stylesheet">
+<link href="iris.css?v=20261115d" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115b"></script>
-<script src="../../motor/regras.js?v=20261115b"></script>
-<script src="../../motor/motor.js?v=20261115b"></script>
-<script src="../../motor/modelo.js?v=20261115b"></script>
-<script src="../armazenamento.js?v=20261115b"></script>
-<script src="ligacao.js?v=20261115b"></script>
-<script src="runtime.js?v=20261115b"></script>
+<script src="../dados.js?v=20261115d"></script>
+<script src="../../motor/regras.js?v=20261115d"></script>
+<script src="../../motor/motor.js?v=20261115d"></script>
+<script src="../../motor/modelo.js?v=20261115d"></script>
+<script src="../armazenamento.js?v=20261115d"></script>
+<script src="ligacao.js?v=20261115d"></script>
+<script src="i18n.js?v=20261115d"></script>
+<script src="runtime.js?v=20261115d"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -72,7 +73,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>5 min</span>
 <span style="display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M4 12h16M12 4v16"></path></svg>Prep and 2 tests</span>
 </span>
-<a href="TesteRapido.html" style="margin-top: 6px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 24px; border-radius: 23px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 600; text-decoration: none; box-shadow: 0 8px 30px var(--cta-glow)">
+<a href="{{ inicioLink }}" style="margin-top: 6px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 24px; border-radius: 23px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 600; text-decoration: none; box-shadow: 0 8px 30px var(--cta-glow)">
 <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: currentColor"><path d="M7 4.5v15l13-7.5z"></path></svg>Start</a>
 </sc-if>
 <sc-if value="{{ vermelho }}" hint-placeholder-val="{{ false }}">
@@ -207,9 +208,10 @@ class Component extends DCLogic {
     const dias = [];
     for (let k = -2; k <= 2; k++) {
       const hoje = k === 0;
+      const d = p.dia + k;   // antes do lançamento: L−2, L−1 (dias antes do voo)
       dias.push({
-        n: p.dia + k,
-        label: hoje ? 'Today' : 'Day',
+        n: d < 0 ? 'L' + d : (d === 0 && !hoje ? 'L' : d),
+        label: hoje ? 'Today' : (d <= 0 ? 'Pre-flight' : 'Day'),
         bg: hoje ? 'var(--acc)' : 'transparent',
         border: hoje ? 'var(--acc-line)' : 'var(--line)',
         glow: hoje ? '0 0 28px var(--acc-glow)' : 'none',
@@ -241,6 +243,7 @@ class Component extends DCLogic {
       dias: dias,
       irisOn: irisOn,
       rec: R ? R.rec : recs[nivel],
+      inicioLink: R && R.semRegisto ? 'Registo.html' : 'TesteRapido.html',
       vermelho: R ? R.nAlertas > 0 : nivel === 2,
       nAlertas: R ? R.nAlertas : 1,
       naoVermelho: nivel !== 2,

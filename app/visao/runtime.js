@@ -101,6 +101,7 @@
   }
   window.DC_encaixarFixos = function () { if (raiz) encaixarFixos(); };
 
+  window.DC_redesenhar = function () { desenhar(); ajustar(); };
   function desenhar() {
     guardarFixos();
     var activo = document.activeElement;
@@ -108,6 +109,8 @@
     var vals = instancia.renderVals();
     var frag = document.createDocumentFragment();
     for (var i = 0; i < modelo.childNodes.length; i++) expandir(modelo.childNodes[i], vals, frag);
+    // Língua (PT/EN) e dia 0 = pré-voo: traduz o texto desenhado antes de o pôr no ecrã (i18n.js).
+    if (window.I18N) window.I18N.aplicar(frag);
     if (manter) {
       // Mantém o mesmo campo que está a ser escrito, para não perder o cursor.
       var novo = frag.querySelector('#' + CSS.escape(manter.id));

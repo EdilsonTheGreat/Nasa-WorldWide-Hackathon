@@ -25,11 +25,11 @@
   var CAMPOS = ["oct_um", "amsler_zonas", "amsler_od", "amsler_oe", "amsler_centro", "acuidade_linha",
                 "acuidade_com_oculos", "melhora_com_oculos", "perg_focar", "perg_contraste",
                 "perg_dor_cabeca", "perg_visao_dupla", "distancia_cm", "sem_camara",
-                "pre_exame", "prontidao", "ressalvas", "alerta_clinico",
+                "pre_exame", "prontidao", "ressalvas", "alerta_clinico", "alteracao_visual",
                 // campos da interface Visão (app/visao): acuidade em 5 linhas por olho e grelha de Amsler 12x12
                 "escala_acuidade", "acuidade_oe", "acuidade_od", "acuidade_oe_oculos", "acuidade_od_oculos",
                 "melhora_oe", "melhora_od", "celulas_od", "celulas_oe", "evento_nave", "fora_distancia_pct", "luz_media", "luz_nivel",
-                "acertos_oe", "acertos_od"];
+                "acertos_oe", "acertos_od", "oct_oe", "oct_od", "oct_sinal"];
 
   function ler() { try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch (e) { return []; } }
   function escrever(lista) {

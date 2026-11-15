@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IRIS · Deep Thinkers · prototype screens</title>
-<link href="fonte.css?v=20261115b" rel="stylesheet">
-<link href="iris.css?v=20261115b" rel="stylesheet">
+<link href="fonte.css?v=20261115d" rel="stylesheet">
+<link href="iris.css?v=20261115d" rel="stylesheet">
 <style>
 :root{--bg:#0D0C0A;--card:rgba(255,255,255,0.06);--line:rgba(255,255,255,0.10);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--acc:#CFE3F3;--acc-tx:#0D0C0A}
 *{box-sizing:border-box}
@@ -59,7 +59,8 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 Marta = routine · Daniel = review advised · Sofia = clinical priority. Everything is simulated, with no link to NASA systems, and the app does not diagnose SANS.
 </div>
 </main>
-<script src="voz.js?v=20261115b"></script>
+<script src="i18n.js?v=20261115d"></script>
+<script src="voz.js?v=20261115d"></script>
 <script>
 // Reconhecimento de voz no aparelho: o pacote de português descarrega-se UMA vez, com internet.
 document.getElementById('preparar-voz').addEventListener('click', function () {
@@ -79,6 +80,26 @@ document.getElementById('repor').addEventListener('click', function () {
     document.getElementById('estado').textContent = 'This browser does not allow local data: each page always starts from scratch.';
   }
 });
+</script>
+<script>
+// Língua: traduz a página e põe o botão PT/EN no título (esta página não usa o runtime).
+(function () {
+  var original = null;
+  function aplicar() {
+    if (!window.I18N) return;
+    if (original === null) original = document.body.innerHTML;
+    else document.body.innerHTML = original;
+    window.I18N.aplicar(document.body);
+    var h = document.querySelector('h1'); if (!h || document.querySelector('.dt-lingua')) return;
+    var pt = window.I18N.lingua() === 'pt', b = document.createElement('button');
+    b.type = 'button'; b.className = 'dt-lingua'; b.textContent = pt ? 'PT | en' : 'pt | EN';
+    b.setAttribute('aria-label', pt ? 'Mudar para inglês' : 'Switch to Portuguese');
+    b.style.cssText = 'margin-left:14px;vertical-align:middle;height:32px;padding:0 12px;border-radius:16px;border:1px solid rgba(127,127,127,.4);background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:700;cursor:pointer';
+    b.addEventListener('click', function () { window.I18N.mudar(pt ? 'en' : 'pt'); location.reload(); });
+    h.appendChild(b);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicar); else aplicar();
+})();
 </script>
 </body>
 </html>

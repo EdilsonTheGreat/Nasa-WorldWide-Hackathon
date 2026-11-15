@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trend · IRIS</title>
-<link href="fonte.css?v=20261115b" rel="stylesheet">
-<link href="iris.css?v=20261115b" rel="stylesheet">
+<link href="fonte.css?v=20261115d" rel="stylesheet">
+<link href="iris.css?v=20261115d" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115b"></script>
-<script src="../../motor/regras.js?v=20261115b"></script>
-<script src="../../motor/motor.js?v=20261115b"></script>
-<script src="../../motor/modelo.js?v=20261115b"></script>
-<script src="../armazenamento.js?v=20261115b"></script>
-<script src="ligacao.js?v=20261115b"></script>
-<script src="runtime.js?v=20261115b"></script>
+<script src="../dados.js?v=20261115d"></script>
+<script src="../../motor/regras.js?v=20261115d"></script>
+<script src="../../motor/motor.js?v=20261115d"></script>
+<script src="../../motor/modelo.js?v=20261115d"></script>
+<script src="../armazenamento.js?v=20261115d"></script>
+<script src="ligacao.js?v=20261115d"></script>
+<script src="i18n.js?v=20261115d"></script>
+<script src="runtime.js?v=20261115d"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -49,7 +50,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 
 <header style="position: absolute; left: 40px; right: 40px; top: 88px; display: flex; align-items: flex-end; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 2px">
-<span style="font-size: 14px; color: var(--tx2)">OCT · retina around the optic nerve, vs your pre-flight baseline</span>
+<span style="font-size: 14px; color: var(--tx2)">{{ subtitulo }}</span>
 <h1 style="margin: 0; font-size: 34px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">History</h1>
 </div>
 <nav aria-label="Check type" style="display: flex; gap: 4px; padding: 4px; border-radius: 24px; background: var(--chip); border: 1px solid var(--line2)">
@@ -59,6 +60,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </nav>
 </header>
 
+<sc-if value="{{ demo }}" hint-placeholder-val="{{ true }}">
 <section aria-labelledby="grafico-titulo" style="position: absolute; left: 40px; top: 172px; width: 714px; height: 548px; box-sizing: border-box; padding: 22px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
 <h2 id="grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Retinal thickness · left eye</h2>
@@ -156,6 +158,63 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <a href="TesteRapido.html" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 24px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 600; text-decoration: none">Do quick tests</a>
 </sc-if>
 </div>
+
+</sc-if>
+
+<sc-if value="{{ real }}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="r-grafico-titulo" style="position: absolute; left: 40px; top: 172px; width: 714px; height: 548px; box-sizing: border-box; padding: 22px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+<h2 id="r-grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Near acuity · lines read per eye</h2>
+<span style="font-size: 13px; color: var(--tx3)">{{ rh.nTxt }}</span>
+</div>
+<svg role="img" aria-label="{{ rh.label }}" width="670" height="398" viewBox="0 0 640 380" style="display: block">
+<sc-for list="{{ rh.grelha }}" as="g" hint-placeholder-count="6">
+<line x1="52" y1="{{ g.y }}" x2="624" y2="{{ g.y }}" style="stroke: var(--line2); stroke-width: 1"></line>
+<text x="44" y="{{ g.ty }}" style="font-size: 12px; fill: var(--tx3); text-anchor: end">{{ g.t }}</text>
+</sc-for>
+<sc-for list="{{ rh.eixoX }}" as="x" hint-placeholder-count="5">
+<text x="{{ x.x }}" y="350" style="font-size: 12px; fill: var(--tx3); text-anchor: middle">{{ x.t }}</text>
+</sc-for>
+<text x="338" y="374" style="font-size: 12px; fill: var(--tx3); text-anchor: middle">Mission day</text>
+<polyline points="{{ rh.linhaOD }}" style="fill: none; stroke: var(--teal); stroke-width: 2; stroke-linejoin: round"></polyline>
+<polyline points="{{ rh.linhaOE }}" style="fill: none; stroke: var(--acc-text); stroke-width: 2.5; stroke-linejoin: round"></polyline>
+<sc-for list="{{ rh.pontos }}" as="p" hint-placeholder-count="6">
+<circle cx="{{ p.x }}" cy="{{ p.y }}" r="{{ p.r }}" style="fill: {{ p.fill }}; stroke: {{ p.cor }}; stroke-width: 2.5"></circle>
+</sc-for>
+<sc-if value="{{ rh.vazio }}" hint-placeholder-val="{{ false }}">
+<text x="338" y="180" style="font-size: 15px; fill: var(--tx2); text-anchor: middle">No tests yet. Your first test is your baseline.</text>
+</sc-if>
+</svg>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--acc-text)"></span>Left eye</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--teal)"></span>Right eye</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; border: 2px solid var(--warn)"></span>Ring colour = result of that test</span>
+<span style="margin-left: auto; font-size: 12px; color: var(--tx3)">Only your own tests · stored on this device</span>
+</div>
+</section>
+
+<div style="position: absolute; left: 774px; top: 172px; width: 380px; height: 548px; display: flex; flex-direction: column; gap: 12px">
+<section aria-label="Your history" style="padding: 18px 22px; border-radius: 28px; background: radial-gradient(110% 90% at 50% 0%, {{ rh.glow }}, rgba(0,0,0,0) 70%), var(--card); border: 1px solid var(--line2); display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">YOUR HISTORY</span>
+<span style="display: flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 400; color: {{ rh.cor }}"><span aria-hidden="true" style="width: 11px; height: 11px; flex: none; border-radius: 6px; background: {{ rh.dot }}"></span>{{ rh.titulo }}</span>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: var(--tx2)">{{ rh.texto }}</p>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: var(--tx3)">{{ rh.octTxt }}</p>
+</section>
+<section aria-labelledby="r-lista" style="flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 14px 20px 6px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2)">
+<h2 id="r-lista" style="margin: 0 0 4px; font-size: 15px; font-weight: 600; color: var(--tx)">Your tests</h2>
+<sc-for list="{{ rh.lista }}" as="t" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--line2)">
+<span aria-hidden="true" style="width: 9px; height: 9px; flex: none; margin-top: 5px; border-radius: 5px; background: {{ t.dot }}"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+<span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 14px; font-weight: 700; color: var(--tx)">{{ t.rotulo }}</span><span style="font-size: 13px; font-weight: 700; color: {{ t.corTx }}">{{ t.res }}</span></span>
+<span style="font-size: 12.5px; color: var(--tx2)">{{ t.det }}</span>
+</span>
+</div>
+</sc-for>
+</section>
+<a href="TesteRapido.html" style="display: flex; align-items: center; justify-content: center; flex: none; height: 48px; border-radius: 24px; background: var(--cta); color: var(--cta-tx); font-size: 15px; font-weight: 700; text-decoration: none">Do quick tests</a>
+</div>
+</sc-if>
 
 <div aria-hidden="true" style="position: absolute; left: -1500px; right: -1500px; top: 712px; bottom: -1500px; pointer-events: none; background: linear-gradient(180deg, transparent 0, var(--bg) 90px)"></div>
 <nav aria-label="App sections" style="position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 36px; background: var(--nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--line2); box-shadow: var(--nav-shadow)">
@@ -261,12 +320,48 @@ class Component extends DCLogic {
     const a97 = G(p97(day));
     const chips = { A: 'Marta Silveira · Day 60', B: 'Daniel Cossa · Day 90', C: 'Sofia Lindqvist · Day 84' };
     const euReal = window.Visao ? window.Visao.eu() : null;
-    if (euReal) Object.keys(chips).forEach((k) => { chips[k] = 'Simulated example · ' + chips[k]; });
+    // Perfil real: só o histórico do próprio astronauta; os exemplos simulados ficam no modo demonstração.
+    const H = euReal ? window.Visao.historico() : null;
+    let rh = null;
+    if (H) {
+      const T = H.testes;
+      const maxD = Math.max(30, H.dia, T.length ? T[T.length - 1].dia : 0);
+      const RX = (d) => 52 + d / maxD * 572, RY = (v) => 330 - (v || 0) / 5 * 290;
+      const CN = ['var(--ok)', 'var(--ylw)', 'var(--warn)', 'var(--bad)'];
+      const CT = ['var(--ok-tx)', 'var(--ylw-tx)', 'var(--warn-tx)', 'var(--bad-tx)'];
+      const NOME = ['Green', 'Yellow', 'Orange', 'Red'];
+      const comOlhos = T.filter((t) => t.oe !== null && t.oe !== undefined);
+      const pontos = [];
+      comOlhos.forEach((t) => {
+        pontos.push({ x: RX(t.dia).toFixed(1), y: RY(t.od).toFixed(1), r: 4, cor: CN[t.nivel], fill: 'var(--bg)' });
+        pontos.push({ x: RX(t.dia).toFixed(1), y: RY(t.oe).toFixed(1), r: 6, cor: CN[t.nivel], fill: 'var(--bg)' });
+      });
+      const ult = T[T.length - 1];
+      const nOct = H.oct.length, o0 = H.oct[0], oU = H.oct[nOct - 1];
+      const pc = (a, b) => (a >= b ? '+' : '−') + Math.abs((a - b) / b * 100).toFixed(1) + '%';
+      rh = {
+        nTxt: T.length + (T.length === 1 ? ' test' : ' tests'),
+        label: 'Lines read per eye in ' + T.length + ' tests of ' + H.nome + '.',
+        grelha: [0, 1, 2, 3, 4, 5].map((k) => ({ y: RY(k).toFixed(1), ty: (RY(k) + 4).toFixed(1), t: k + '/5' })),
+        eixoX: [0, 0.25, 0.5, 0.75, 1].map((f) => { const d = Math.round(maxD * f); return { x: RX(d).toFixed(1), t: d === 0 ? 'Pre-flight' : String(d) }; }),
+        linhaOE: comOlhos.map((t) => RX(t.dia).toFixed(1) + ',' + RY(t.oe).toFixed(1)).join(' '),
+        linhaOD: comOlhos.map((t) => RX(t.dia).toFixed(1) + ',' + RY(t.od).toFixed(1)).join(' '),
+        pontos: pontos, vazio: T.length === 0,
+        titulo: ult ? NOME[ult.nivel] + ' · ' + ult.rotulo : 'No tests yet',
+        cor: ult ? CT[ult.nivel] : 'var(--tx2)', dot: ult ? CN[ult.nivel] : 'var(--tx3)', glow: ult ? ['var(--ok-glow)', 'var(--ylw-glow)', 'var(--warn-glow)', 'var(--bad-glow)'][ult.nivel] : 'transparent',
+        texto: !T.length ? 'Do your pre-flight registration and first test: it becomes your baseline.'
+          : 'Baseline: ' + T[0].rotulo.toLowerCase() + (T[0].dia === 0 ? ' (on Earth)' : '') + '. ' + T.length + (T.length === 1 ? ' test' : ' tests') + ' so far.',
+        octTxt: nOct ? 'OCT: ' + nOct + (nOct === 1 ? ' exam' : ' exams') + (nOct > 1 ? ' · last ' + (oU.dia === 0 ? 'pre-flight' : 'day ' + oU.dia) + ': LE ' + pc(oU.oe, o0.oe) + ' · RE ' + pc(oU.od, o0.od) + ' vs first OCT' : ' · ' + oU.oe + ' / ' + oU.od + ' µm (baseline)') : 'OCT: none recorded yet.',
+        lista: T.slice().reverse().map((t) => ({ rotulo: t.rotulo, dot: CN[t.nivel], corTx: CT[t.nivel], res: t.primeiro ? 'Baseline' : NOME[t.nivel],
+          det: t.acTxt + ' · Amsler: ' + t.amTxt.toLowerCase() + (t.prontidao !== 'verde' ? ' · readiness ' + ({ amarelo: 'with caveats', vermelho: 'not reliable' })[t.prontidao] : '') }))
+      };
+    }
+    // Privacidade: mesmo na demonstração, só o histórico da pessoa com sessão aberta.
     const tabs = [
       { id: 'A', label: 'A · Marta' },
       { id: 'B', label: 'B · Daniel' },
       { id: 'C', label: 'C · Sofia' }
-    ].map((t) => ({
+    ].filter((t) => t.id === s.who).map((t) => ({
       label: t.label,
       on: s.who === t.id,
       bg: s.who === t.id ? 'var(--acc)' : 'transparent',
@@ -276,7 +371,7 @@ class Component extends DCLogic {
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
-      selo: 'Simulated data',
+      selo: window.Visao ? window.Visao.selo() : 'Simulated data',
       claro: claro,
       escuro: !claro,
       temaLabel: claro ? 'Dark mode' : 'Light mode',
@@ -285,7 +380,9 @@ class Component extends DCLogic {
         this.setState({ tema: nt });
         try { window.localStorage.setItem('visao-tema', nt); } catch (e) {}
       },
-      chip: chips[s.who],
+      chip: euReal ? euReal.nome + ' · ' + (window.Visao.diaTxt ? window.Visao.diaTxt(euReal.dia) : 'Day ' + euReal.dia) : chips[s.who],
+      real: !!rh, demo: !rh, rh: rh || {},
+      subtitulo: rh ? 'Your own tests only · compared with your pre-flight baseline' : 'OCT · retina around the optic nerve, vs your pre-flight baseline',
       tabs: tabs,
       greenPts: greenPts,
       amberPts: amberPts,

@@ -28,24 +28,32 @@
   "use strict";
   var CHAVE = "visao-voz";              // "1" speak, "0" silent
   var CHAVE_ONLINE = "visao-voz-online"; // "1" = online recognition allowed on this device
-  var IDIOMAS = ["en-US", "en-GB"];
+  // Língua da app (botão PT/EN, i18n.js): voz e reconhecimento seguem-na.
+  function emPT() { return !!(g.I18N && g.I18N.lingua() === "pt"); }
+  var IDIOMAS_EN = ["en-US", "en-GB"], IDIOMAS_PT = ["pt-PT", "pt-BR"];
+  var IDIOMAS = IDIOMAS_EN;
+  function idiomas() { IDIOMAS = emPT() ? IDIOMAS_PT : IDIOMAS_EN; return IDIOMAS; }
   var voz = null, aFalar = false;
 
   function ler(k) { try { return g.localStorage.getItem(k); } catch (e) { return null; } }
   function escrever(k, v) { try { g.localStorage.setItem(k, v); } catch (e) { } }
   var sintese = g.speechSynthesis || null;
 
-  function escolherVoz() {
+  function escolherVoz(pt) {
     if (!sintese) return null;
     var vs = sintese.getVoices() || [];
     function procura(f) { for (var i = 0; i < vs.length; i++) if (f(vs[i])) return vs[i]; return null; }
+    if (pt) return procura(function (v) { return /^pt[-_]PT/i.test(v.lang) && v.localService; }) ||
+                   procura(function (v) { return /^pt/i.test(v.lang) && v.localService; }) ||
+                   procura(function (v) { return /^pt/i.test(v.lang); });
     return procura(function (v) { return /^en[-_](GB|US)/i.test(v.lang) && v.localService; }) ||
            procura(function (v) { return /^en/i.test(v.lang) && v.localService; }) ||
            procura(function (v) { return /^en/i.test(v.lang); });
   }
+  var vozPT = null;
   if (sintese) {
-    voz = escolherVoz();
-    if (typeof sintese.addEventListener === "function") sintese.addEventListener("voiceschanged", function () { voz = escolherVoz(); });
+    voz = escolherVoz(false); vozPT = escolherVoz(true);
+    if (typeof sintese.addEventListener === "function") sintese.addEventListener("voiceschanged", function () { voz = escolherVoz(false); vozPT = escolherVoz(true); });
   }
 
   function ligada() { return ler(CHAVE) !== "0"; }
@@ -57,8 +65,12 @@
     if (semInterromper && (aFalar || sintese.speaking)) return false;
     try {
       sintese.cancel();
+      // Em português: o texto (escrito em inglês na app) passa pelo dicionário e usa a voz portuguesa do sistema.
+      var pt = emPT();
+      if (pt && g.I18N) texto = g.I18N.t(texto);
       var u = new g.SpeechSynthesisUtterance(texto);
-      if (voz) { u.voice = voz; u.lang = voz.lang; } else { u.lang = "en-US"; }
+      var vz = pt ? vozPT : voz;
+      if (vz) { u.voice = vz; u.lang = vz.lang; } else { u.lang = pt ? "pt-PT" : "en-US"; }
       u.rate = 0.95;
       aFalar = true; pausarOuvir();
       u.onend = u.onerror = function () { aFalar = false; retomarOuvir(); };
@@ -78,7 +90,8 @@
   function pararClip() { filaId++; if (clipAtual) { try { clipAtual.pause(); } catch (e) { } clipAtual = null; } }
   function falarClip(clips, texto, semInterromper) {
     if (!ligada()) return false;
-    if (!clips || !clips.length || !g.Audio) return falar(texto, semInterromper);
+    // Os MP3 gravados são em inglês: em português usa a voz do sistema.
+    if (!clips || !clips.length || !g.Audio || emPT()) return falar(texto, semInterromper);
     if (semInterromper && (aFalar || (sintese && sintese.speaking))) return false;
     pararClip();
     try { if (sintese) sintese.cancel(); } catch (e) { }
@@ -115,7 +128,7 @@
 
   // Looks for an English language pack already installed on the device.
   function idiomaLocal() {
-    var i = 0;
+    var i = 0; idiomas();
     function tenta() {
       if (i >= IDIOMAS.length) return Promise.resolve({ idioma: null });
       var lg = IDIOMAS[i++];
@@ -139,7 +152,7 @@
     rec.onerror = function (ev) {
       if (ev.error === "not-allowed" || ev.error === "service-not-allowed") { mic.querido = false; estado("erro", "The browser did not allow the microphone. Use the buttons."); }
       else if (ev.error === "network") { mic.querido = false; estado("erro", "Speech recognition needs internet in this browser and there is none. Use the buttons."); }
-      else if (ev.error === "language-not-supported") { mic.querido = false; estado("erro", "English speech recognition is not available here. Use the buttons."); }
+      else if (ev.error === "language-not-supported") { mic.querido = false; estado("erro", emPT() ? "O reconhecimento de voz em português não está disponível aqui. Usa os botões." : "English speech recognition is not available here. Use the buttons."); }
     };
     rec.onend = function () {
       // Browsers stop after some silence: keep listening while the microphone is on.
@@ -169,7 +182,7 @@
         estado("precisa_online", "This browser recognises speech through its online service (Apple or Google): your voice leaves the device and it needs internet. Tap “Allow online voice” to use it, or use the buttons.");
         return;
       }
-      mic.local = false; mic.idioma = IDIOMAS[0];
+      mic.local = false; mic.idioma = idiomas()[0];
       arrancar();
       return;
     }
@@ -177,7 +190,7 @@
     idiomaLocal().then(function (r) {
       if (!mic.querido) return;
       if (r.idioma) { mic.local = true; mic.idioma = r.idioma; arrancar(); return; }
-      if (onlinePermitido()) { mic.local = false; mic.idioma = IDIOMAS[0]; arrancar(); return; }
+      if (onlinePermitido()) { mic.local = false; mic.idioma = idiomas()[0]; arrancar(); return; }
       mic.querido = false;
       estado(r.descarregavel ? "sem_pacote" : "precisa_online", r.descarregavel
         ? "The English speech pack is not on this device yet. Download it once, with internet, before the mission (“Prepare voice” on the start page), or tap “Allow online voice”."
@@ -197,7 +210,7 @@
     if (!suportaLocal() || typeof R.install !== "function") return Promise.resolve({ ok: false, mensagem: "This browser cannot recognise speech on the device. In the test you can allow the online voice instead." });
     return idiomaLocal().then(function (r) {
       if (r.idioma) return { ok: true, mensagem: "Speech recognition ready (" + r.idioma + "), no internet needed." };
-      var lg = IDIOMAS[0];
+      var lg = idiomas()[0];
       return Promise.resolve(R.install({ langs: [lg], processLocally: true })).then(function (ok) {
         return ok ? { ok: true, mensagem: "Voice pack downloaded (" + lg + "). It now works offline." } : { ok: false, mensagem: "Could not download the voice pack." };
       });
@@ -214,15 +227,21 @@
     H: ["h", "aitch", "haitch", "eitch"], K: ["k", "kay", "kei"], N: ["n", "en", "enn"], R: ["r", "ar", "are", "arr"],
     S: ["s", "ess", "es"], V: ["v", "vee", "vi"]
   };
-  var MAPA = {};
+  // Português (pt-PT): "cê", "dê", "é", "efe", "agá", "cá", "ele", "ene", "ó", "pê", "erre", "esse", "tê", "vê", "zê"
+  var NOMES_PT = {
+    C: ["c", "ce", "se"], D: ["d", "de"], E: ["e", "eh"], F: ["f", "efe"], H: ["h", "aga"], K: ["k", "ca", "capa", "kapa"], L: ["l", "ele"],
+    N: ["n", "ene"], O: ["o", "oh"], P: ["p", "pe"], R: ["r", "erre"], S: ["s", "esse"], T: ["t", "te"], V: ["v", "ve"], Z: ["z", "ze"]
+  };
+  var MAPA = {}, MAPA_PT = {};
   Object.keys(NOMES).forEach(function (L) { NOMES[L].forEach(function (n) { MAPA[n] = L; }); });
+  Object.keys(NOMES_PT).forEach(function (L) { NOMES_PT[L].forEach(function (n) { MAPA_PT[n] = L; }); });
   var COMANDOS = [
     ["nao_consigo", /\b(can'?t read|cannot read|can'?t see|cannot see|i can'?t|no idea|nao consigo|nao vejo)\b/],
-    ["tudo_direito", /\b(all straight|all looks straight|looks straight|everything straight|all good|tudo direito)\b/],
-    ["seguinte", /\b(next|continue|go on|proceed|seguinte)\b/],
+    ["tudo_direito", /\b(all straight|all looks straight|looks straight|everything straight|all good|tudo direito|vejo tudo direito|esta tudo direito)\b/],
+    ["seguinte", /\b(next|continue|go on|proceed|seguinte|proximo|continuar|avancar)\b/],
     ["apagar", /\b(delete|undo|erase|back ?space|wrong|apagar)\b/],
-    ["repetir", /\b(repeat|again|say again|repetir)\b/],
-    ["concluir", /\b(done|finish|finished|concluir)\b/]
+    ["repetir", /\b(repeat|again|say again|repetir|outra vez|de novo)\b/],
+    ["concluir", /\b(done|finish|finished|concluir|terminar|terminei|pronto)\b/]
   ];
   // Returns letters and commands in the order they were said (letters first: "F P next").
   function interpretar(texto, permitidas) {
@@ -237,7 +256,7 @@
       if (!tok) return;
       tok = tok.replace(/^letter$/, "");
       if (!tok) return;
-      var L = MAPA[tok];
+      var L = (emPT() ? MAPA_PT : MAPA)[tok];
       if (L && ok.indexOf(L) !== -1) { letras.push({ tipo: "letra", v: L }); return; }
       // "TOZ" said together: split, if every character is a test letter
       if (tok.length >= 2 && tok.length <= 5 && tok.split("").every(function (ch) { return ok.indexOf(ch.toUpperCase()) !== -1; })) {

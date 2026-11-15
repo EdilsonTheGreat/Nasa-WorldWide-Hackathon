@@ -56,3 +56,11 @@ Ciclo: **teste → comparação → semáforo → acção**.
   testes (acuidade, Amsler, sintomas, OCT) e dados da missão (microgravidade, luz, movimento da nave, distância), e o porquê.
 - A cor vem só dos testes rápidos (motor). Os dados da missão confirmam se a medição é fiável e dão contexto.
 - A luz é medida pela câmara (brilho médio de uma imagem 32x24, 1 vez por segundo). Nada é gravado além dos números.
+
+## 15 Nov
+- Dia 0 = pré-registo na Terra (`Registo.html`), mostrado como "Pre-flight / Pré-voo" (regra em `i18n.js`).
+- Antes do teste: questionário pré-exame de 9 perguntas (REGRAS.prontidao do Edilson), 3 por ecrã. Não voltar às 4 perguntas antigas.
+- Privacidade: um perfil real só vê os seus próprios dados (histórico, OCT, alertas). Nada de dados de outras pessoas nos ecrãs.
+- Língua: a app é escrita em inglês; o português vem de `i18n.js` (botão PT/EN). Texto novo na interface → acrescentar a tradução no MAPA de `i18n.js`.
+- Teste de ponta a ponta: percurso completo em EN e PT (ferramentas fora do repositório: fluxo.py + e2e2.py).
+

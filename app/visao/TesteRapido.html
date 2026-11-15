@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261115b" rel="stylesheet">
-<link href="iris.css?v=20261115b" rel="stylesheet">
+<link href="fonte.css?v=20261115d" rel="stylesheet">
+<link href="iris.css?v=20261115d" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -20,16 +20,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115b"></script>
-<script src="../../motor/regras.js?v=20261115b"></script>
-<script src="../../motor/motor.js?v=20261115b"></script>
-<script src="../../motor/modelo.js?v=20261115b"></script>
-<script src="../armazenamento.js?v=20261115b"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115b"></script>
-<script src="../camara/distancia.js?v=20261115b"></script>
-<script src="ligacao.js?v=20261115b"></script>
-<script src="voz.js?v=20261115b"></script>
-<script src="runtime.js?v=20261115b"></script>
+<script src="../dados.js?v=20261115d"></script>
+<script src="../../motor/regras.js?v=20261115d"></script>
+<script src="../../motor/motor.js?v=20261115d"></script>
+<script src="../../motor/modelo.js?v=20261115d"></script>
+<script src="../armazenamento.js?v=20261115d"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115d"></script>
+<script src="../camara/distancia.js?v=20261115d"></script>
+<script src="ligacao.js?v=20261115d"></script>
+<script src="voz.js?v=20261115d"></script>
+<script src="i18n.js?v=20261115d"></script>
+<script src="runtime.js?v=20261115d"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -85,44 +86,66 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </nav>
 
 <sc-if value="{{ p1 }}" hint-placeholder-val="{{ true }}">
-<section aria-labelledby="ola-titulo" style="position: absolute; left: 40px; top: 228px; width: 440px; height: 432px; box-sizing: border-box; padding: 22px 24px; border-radius: 26px; background: radial-gradient(100% 60% at 0% 0%, var(--acc-soft), rgba(0,0,0,0) 60%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px">
-<h2 id="ola-titulo" style="margin: 0; font-size: 26px; font-weight: 400; letter-spacing: -0.4px; color: var(--tx)">{{ ola }}</h2>
-<p style="margin: 0 0 6px; font-size: 15px; line-height: 1.5; color: var(--tx2)">Let's do the quick vision test. It takes about 5 minutes.</p>
+<section aria-labelledby="ola-titulo" style="position: absolute; left: 40px; top: 228px; width: 300px; height: 432px; box-sizing: border-box; padding: 20px 20px; border-radius: 26px; background: radial-gradient(100% 60% at 0% 0%, {{ pr.glow }}, rgba(0,0,0,0) 60%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid {{ pr.linha }}; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px; overflow-y: auto">
+<h2 id="ola-titulo" style="margin: 0; font-size: 24px; font-weight: 400; letter-spacing: -0.4px; color: var(--tx)">{{ ola }}</h2>
+<sc-if value="{{ pr.pronto }}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">READINESS FOR THE TEST</span>
+<span role="status" style="display: flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 400; color: {{ pr.cor }}"><span aria-hidden="true" style="width: 11px; height: 11px; flex: none; border-radius: 6px; background: {{ pr.dot }}; box-shadow: 0 0 14px {{ pr.dot }}"></span>{{ pr.titulo }}</span>
+<p style="margin: 0; font-size: 14px; line-height: 1.45; color: var(--tx-soft)">{{ pr.texto }}</p>
+<sc-for list="{{ pr.ressalvas }}" as="r" hint-placeholder-count="2">
+<div style="display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; line-height: 1.4; color: var(--tx)"><span aria-hidden="true" style="width: 6px; height: 6px; flex: none; border-radius: 3px; background: {{ pr.dot }}; transform: translateY(-2px)"></span>{{ r }}</div>
+</sc-for>
+<sc-if value="{{ pr.alerta }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 14px; background: var(--bad-soft); border: 1px solid var(--bad-line); font-size: 13.5px; line-height: 1.4; font-weight: 600; color: var(--bad-tx)">{{ pr.textoAlerta }}</div>
+</sc-if>
+<sc-if value="{{ pr.vermelho }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ responderDeNovo }}" style="height: 40px; margin-top: 4px; border: 1px solid var(--line); border-radius: 20px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Answer again</button>
+</sc-if>
+</sc-if>
+<sc-if value="{{ pr.dicas }}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0 0 2px; font-size: 14px; line-height: 1.45; color: var(--tx2)">Let's do the quick vision test. It takes about 5 minutes. First, get ready:</p>
 <sc-for list="{{ preparar }}" as="k" hint-placeholder-count="4">
-<div style="display: flex; align-items: center; gap: 14px; min-height: 64px; border-top: 1px solid var(--line2)">
-<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: var(--acc-soft); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ k.icone }}"></path></svg></span>
-<span style="font-size: 15px; line-height: 1.4; color: var(--tx-soft)">{{ k.t }}</span>
+<div style="display: flex; align-items: center; gap: 12px; min-height: 56px; border-top: 1px solid var(--line2)">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 17px; background: var(--acc-soft); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ k.icone }}"></path></svg></span>
+<span style="font-size: 13.5px; line-height: 1.4; color: var(--tx-soft)">{{ k.t }}</span>
 </div>
 </sc-for>
+</sc-if>
 </section>
 
-<section aria-labelledby="perg-titulo" style="position: absolute; left: 496px; top: 228px; width: 658px; height: 432px; box-sizing: border-box; padding: 18px 22px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 6px">
-<div style="display: flex; align-items: center; gap: 10px; min-height: 44px">
-<div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1">
-<h2 id="perg-titulo" style="margin: 0; font-size: 16px; font-weight: 600; color: var(--tx)">Four quick questions about the last few days</h2>
-<span style="font-size: 13px; color: var(--tx3)">Answer No, Mild or Marked.</span>
+<section aria-labelledby="perg-titulo" style="position: absolute; left: 356px; top: 228px; width: 798px; height: 432px; box-sizing: border-box; padding: 16px 22px 14px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; gap: 10px; min-height: 42px">
+<div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+<h2 id="perg-titulo" style="margin: 0; font-size: 17px; font-weight: 600; color: var(--tx)">Pre-exam questionnaire</h2>
+<span style="font-size: 13px; color: var(--tx3)">{{ qPagTxt }} · answer for how you feel right now</span>
 </div>
-<span style="font-size: 12px; font-weight: 700; color: var(--tx2); background: var(--chip); border-radius: 999px; padding: 5px 10px">{{ faltamTxt }}</span>
-<button type="button" onClick="{{ tudoNao }}" style="height: 34px; padding: 0 14px; border: 1px solid var(--ok-line); border-radius: 17px; background: var(--ok-soft); color: var(--ok-tx); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">No to all</button>
+<div aria-hidden="true" style="display: flex; gap: 6px">
+<sc-for list="{{ qPontos }}" as="d" hint-placeholder-count="3">
+<span style="width: {{ d.w }}px; height: 8px; border-radius: 4px; background: {{ d.cor }}"></span>
+</sc-for>
 </div>
-<sc-for list="{{ perguntas }}" as="q" hint-placeholder-count="4">
-<div role="group" aria-label="{{ q.t }}" style="display: flex; align-items: center; gap: 12px; min-height: 66px; border-top: 1px solid var(--line2)">
-<span aria-hidden="true" style="width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 6px; border: 2px solid {{ q.caixaBorda }}; background: {{ q.caixaFundo }}; color: var(--acc-tx); font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{ q.visto }}</span>
-<span style="flex-grow: 1; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--tx)">{{ q.t }}</span>
-<div style="display: flex; gap: 6px">
+<button type="button" onClick="{{ tudoNormal }}" style="height: 34px; padding: 0 14px; border: 1px solid var(--ok-line); border-radius: 17px; background: var(--ok-soft); color: var(--ok-tx); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">All normal</button>
+</div>
+<sc-for list="{{ qPag }}" as="q" hint-placeholder-count="3">
+<div role="group" aria-label="{{ q.t }}" style="display: flex; flex-direction: column; gap: 6px; padding: 8px 0 6px; border-top: 1px solid var(--line2)">
+<div style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 12px; font-weight: 700; color: var(--acc-text)">{{ q.n }}</span><span style="font-size: 14.5px; font-weight: 600; line-height: 1.3; color: var(--tx)">{{ q.t }}</span><span style="font-size: 12px; color: var(--tx3)">{{ q.sub }}</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
 <sc-for list="{{ q.ops }}" as="op" hint-placeholder-count="3">
-<button type="button" onClick="{{ op.pick }}" aria-pressed="{{ op.on }}" style="min-width: 80px; height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid {{ op.borda }}; background: {{ op.fundo }}; color: {{ op.cor }}; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ op.t }}</button>
+<button type="button" onClick="{{ op.pick }}" aria-pressed="{{ op.on }}" style="min-height: 36px; padding: 5px 10px; border-radius: 12px; border: 1px solid {{ op.borda }}; background: {{ op.fundo }}; color: {{ op.cor }}; font-family: inherit; font-size: 12.5px; font-weight: 600; line-height: 1.25; text-align: left; cursor: pointer">{{ op.t }}</button>
 </sc-for>
 </div>
 </div>
 </sc-for>
 <div style="flex-grow: 1"></div>
-<sc-if value="{{ triagem.on }}" hint-placeholder-val="{{ false }}">
-<div role="status" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 14px; background: var(--warn-soft); border: 1px solid var(--warn-line)">
-<span aria-hidden="true" style="width: 9px; height: 9px; flex: none; border-radius: 5px; background: var(--warn)"></span>
-<span style="font-size: 13px; line-height: 1.4; color: var(--tx)">{{ triagem.txt }}</span>
-</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<sc-if value="{{ qTemAnterior }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ qAnterior }}" style="height: 36px; padding: 0 16px; border: 1px solid var(--line); border-radius: 18px; background: transparent; color: var(--tx); font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer">‹ Previous questions</button>
 </sc-if>
+<span style="flex-grow: 1"></span>
+<sc-if value="{{ qTemSeguinte }}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{ qSeguinte }}" aria-disabled="{{ qSeguinteOff }}" style="height: 36px; padding: 0 18px; border: 0; border-radius: 18px; background: {{ qSeguinteFundo }}; color: {{ qSeguinteCor }}; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer">Next questions ›</button>
+</sc-if>
+</div>
 </section>
 </sc-if>
 
@@ -511,6 +534,27 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </template>
 <script>
 // Teste de acuidade: 5 linhas de letras Sloan, cada vez mais pequenas.
+// Questionário pré-exame (VISION GUARD, 9 perguntas; regras em motor/regras.js → REGRAS.prontidao).
+// Os valores (v) são os mesmos do motor; aqui só ficam os textos curtos em inglês para os botões.
+const QUEST = [
+  { id: 'nave', t: 'Is the spacecraft stable right now?', ops: [[0, 'Yes, no vibration or manoeuvre'], [1, 'Slight vibration, but I can keep my head and eyes steady'], [2, 'Strong vibration or manoeuvre, hard to stay still']] },
+  { id: 'luz', t: 'Can you see the screen clearly with this lighting?', ops: [[0, 'Yes, steady light and no glare'], [1, 'Small changes or glare, but I can see'], [2, 'The light or glare makes the screen hard to see']] },
+  { id: 'estado', t: 'How do you feel right now?', ops: [[0, 'Well, no relevant discomfort'], [1, 'Slightly tired or uncomfortable'], [2, 'Nausea, dizziness or a moderate headache'], [3, 'Strong symptoms, hard to concentrate']] },
+  { id: 'alteracao_visual', multi: true, t: 'Any new change in your vision since the last check?', sub: 'tick all that apply', ops: [[0, 'No'], [1, 'Blurred vision or trouble focusing'], [2, 'Distorted lines or dark spots'], [3, 'Double vision or brief loss of vision'], [4, 'Sudden loss or major worsening of vision']] },
+  { id: 'sono', t: 'How did you sleep before this check?', ops: [[0, 'Well, I feel rested'], [1, 'Less than usual, a bit tired'], [2, 'Very poorly, not enough rest']] },
+  { id: 'superficie', t: 'Any discomfort on the surface of your eyes?', ops: [[0, 'No'], [1, 'Dryness'], [2, 'Burning, irritation or watering'], [3, 'Vision fluctuates and improves after blinking']] },
+  { id: 'exercicio', t: 'Intense exercise or a spacewalk (EVA) recently?', ops: [[0, 'No'], [1, 'Yes, exercise'], [2, 'Yes, a spacewalk (EVA)']] },
+  { id: 'medicacao', t: 'Did you start or change any medication recently?', ops: [[0, 'No'], [1, 'Yes'], [2, 'Not sure']] },
+  { id: 'correcao', t: 'Are you wearing your usual vision correction, if you have one?', ops: [[0, 'Yes, and it is comfortable'], [1, 'No'], [2, "I don't need correction"]] }
+];
+const ALT_CURTO = { 1: 'blurred vision', 2: 'distorted lines or dark spots', 3: 'double vision or brief loss of vision', 4: 'sudden loss or major worsening' };
+// Prontidão (motor do Edilson); os motivos vêm em português e passam por Visao.en.
+function prontidaoDe(qv) {
+  const r = window.Motor && window.REGRAS ? window.Motor.prontidao(qv, window.REGRAS) : { estado: 'verde', ressalvas: [], alerta_clinico: false };
+  const en = window.Visao && window.Visao.en ? window.Visao.en : (x) => x;
+  return { estado: r.estado, ressalvas: r.ressalvas.map((m) => en(m)), alerta: !!r.alerta_clinico };
+}
+
 // Linhas de letras: sorteadas de novo em cada teste, para cada olho e para a leitura com óculos de reserva
 // (assim ninguém decora as letras). Linha n tem n letras diferentes, todas do teclado deste teste.
 function sortearLinhas(teclas) {
@@ -550,7 +594,7 @@ class Component extends DCLogic {
     this.state = {
       tema: 'escuro', perfil: 'B', resp: null, passo: 1, max: 1, ajuda: false, relatorio: false, real: null, back: null, dist: null,
       intro: { 2: true, 3: true }, voz: window.Voz ? window.Voz.ligada() : false, mic: { estado: 'desligado', mensagem: '' },
-      q: [null, null, null, null],
+      qv: {}, qpag: 0,
       ac: this.acInicial(),
       am: this.amInicial()
     };
@@ -804,7 +848,7 @@ class Component extends DCLogic {
   guardarNoBackend() {
     if (!window.Visao || !window.Visao.real()) return;
     const st = this.state;
-    const back = window.Visao.guardarTeste({ q: st.q, res: st.ac.res, marks: st.am.marks, resp: st.resp, acertos: st.ac.acertos });
+    const back = window.Visao.guardarTeste({ qv: st.qv, res: st.ac.res, marks: st.am.marks, resp: st.resp, acertos: st.ac.acertos });
     this.setState({ back: back });
   }
   setAc(fn) {
@@ -852,7 +896,7 @@ class Component extends DCLogic {
     const outroOlho = { esq: 'right eye', dir: 'left eye' };
 
     // ---------- Evento da nave (obrigatório) ----------
-    const pendente = !s.resp;
+    const pendente = false;   // a pergunta 1 do questionário substitui a janela do evento da nave
     const respTxt = { sim: 'Yes, I felt it', nao: 'Didn\'t feel it', naosei: 'I\'m not sure' };
     const gateOps = [['sim', 'Yes'], ['nao', 'No'], ['naosei', 'Not sure']].map((o) => ({
       t: o[1],
@@ -874,32 +918,48 @@ class Component extends DCLogic {
       { t: 'Wear the glasses you read with. If you don\'t use any, take them off.', icone: 'M3.5 14a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0M13.5 14a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0M10.5 14h3M3.5 14 5 8M20.5 14 19 8' },
       { t: 'Set the cabin light as for reading. Avoid glare on the screen.', icone: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z' }
     ];
-    const QS = ['Do you have trouble focusing?', 'Do you see contrast worse, for example grey letters on a light background?', 'Do you have headaches?', 'Do you see double?'];
-    const QCURTO = ['focusing', 'contrast', 'headaches', 'double vision'];
-    const OPS = ['No', 'Mild', 'Marked'];
-    const TONS = [
-      { fundo: 'var(--ok-soft)', borda: 'var(--ok-line)', cor: 'var(--ok-tx)' },
-      { fundo: 'var(--acc-soft)', borda: 'var(--acc-line)', cor: 'var(--acc-text)' },
-      { fundo: 'var(--warn-soft)', borda: 'var(--warn-line)', cor: 'var(--warn-tx)' }
-    ];
-    const perguntas = QS.map((t, qi) => {
-      const r = s.q[qi];
-      return {
-        t: t, visto: r === null ? '' : '✓',
-        caixaBorda: r === null ? 'var(--line)' : 'var(--acc)',
-        caixaFundo: r === null ? 'transparent' : 'var(--acc)',
-        ops: OPS.map((txt, oi) => {
-          const on = r === oi;
-          return { t: txt, on: on,
-            fundo: on ? TONS[oi].fundo : 'transparent', borda: on ? TONS[oi].borda : 'var(--line)', cor: on ? TONS[oi].cor : 'var(--tx2)',
-            pick: () => this.setState((st) => { const q = st.q.slice(); q[qi] = oi; return { q: q }; }) };
-        })
-      };
+    const qv = s.qv;
+    const respondida = (q) => q.multi ? Array.isArray(qv[q.id]) : (qv[q.id] !== undefined && qv[q.id] !== null);
+    const faltam = QUEST.filter((q) => !respondida(q)).length;
+    const pagIni = s.qpag * 3, pagQs = QUEST.slice(pagIni, pagIni + 3);
+    const pagCompleta = pagQs.every(respondida);
+    const qPag = pagQs.map((q, k) => ({
+      n: String(pagIni + k + 1), t: q.t, sub: q.sub || '',
+      ops: q.ops.map((o) => {
+        const v = o[0];
+        const on = q.multi ? (Array.isArray(qv[q.id]) && (v === 0 ? qv[q.id].length === 0 : qv[q.id].indexOf(v) !== -1)) : qv[q.id] === v;
+        const tom = q.multi ? (v === 0 ? 0 : (v >= 3 ? 2 : 1)) : (v === 0 ? 0 : (q.id === 'correcao' && v === 2 ? 0 : 1));
+        const T = [{ fundo: 'var(--ok-soft)', borda: 'var(--ok-line)', cor: 'var(--ok-tx)' }, { fundo: 'var(--acc-soft)', borda: 'var(--acc-line)', cor: 'var(--acc-text)' }, { fundo: 'var(--warn-soft)', borda: 'var(--warn-line)', cor: 'var(--warn-tx)' }][tom];
+        return { t: o[1], on: on, fundo: on ? T.fundo : 'transparent', borda: on ? T.borda : 'var(--line)', cor: on ? T.cor : 'var(--tx2)',
+          pick: () => this.setState((st) => {
+            const n = Object.assign({}, st.qv);
+            if (q.multi) {
+              let a = Array.isArray(n[q.id]) ? n[q.id].slice() : [];
+              if (v === 0) a = [];
+              else if (a.indexOf(v) !== -1) a = a.filter((x) => x !== v);
+              else a = a.concat([v]).sort();
+              n[q.id] = a;
+            } else n[q.id] = v;
+            const extra = q.id === 'nave' ? { resp: v === 0 ? 'nao' : 'sim' } : {};
+            return Object.assign({ qv: n }, extra);
+          }) };
+      })
+    }));
+    const PR = prontidaoDe(qv);
+    const PRV = {
+      verde: { titulo: 'Ready', texto: 'You can do the test.', cor: 'var(--ok-tx)', dot: 'var(--ok)', glow: 'var(--ok-glow)', linha: 'var(--ok-line)' },
+      amarelo: { titulo: 'Ready with caveats', texto: 'You can do the test. These caveats are saved with the result:', cor: 'var(--ylw-tx)', dot: 'var(--ylw)', glow: 'var(--ylw-glow)', linha: 'var(--ylw-line)' },
+      vermelho: { titulo: 'Not reliable right now', texto: 'The measurement would not be reliable. Fix the condition and answer again:', cor: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
+    }[PR.estado];
+    const pr = Object.assign({}, PRV, {
+      pronto: faltam === 0, dicas: faltam > 0, vermelho: faltam === 0 && PR.estado === 'vermelho',
+      ressalvas: faltam === 0 ? PR.ressalvas : [], alerta: PR.alerta,
+      textoAlerta: 'New and important change in vision: tell the flight surgeon now, even if you do not do the test now.'
     });
-    const faltam = s.q.filter((x) => x === null).length;
-    const marcados = s.q.filter((x) => x === 2).length;
-    const ligeiros = s.q.filter((x) => x === 1).length;
-    const triagem = { on: marcados > 0, txt: '“Marked” answer: it is logged for medical review. If the change was sudden or strong, tell the flight surgeon now.' };
+    if (faltam > 0) Object.assign(pr, { glow: 'var(--acc-soft)', linha: 'var(--line2)' });
+    const altSel = Array.isArray(qv.alteracao_visual) ? qv.alteracao_visual : [];
+    const marcados = altSel.filter((v) => v >= 3).length;
+    const ligeiros = altSel.filter((v) => v < 3).length;
 
     // ---------- 2. Acuidade ----------
     const LINHAS = this.linhas();
@@ -1001,7 +1061,7 @@ class Component extends DCLogic {
     // ---------- 4. Resultado ----------
     const piorOlho = (e) => ac.res[e].sem !== null && ac.res[e].sem < ant.ac[e];
     const nAc = piorOlho('esq') || piorOlho('dir') ? 2 : 0;
-    const nSint = marcados > 0 || ligeiros >= 2 ? 2 : 0;
+    const nSint = marcados > 0 ? 3 : (ligeiros > 0 ? 2 : 0);
     const centralNova = comp.dir.novas.some(central) || comp.esq.novas.some(central);
     const back = s.back && !s.back.erro ? s.back : null;
     const nivel = back ? Math.max(back.nivel, nSint) : Math.max(nAc, nSint, nAms);
@@ -1018,30 +1078,30 @@ class Component extends DCLogic {
       if (back.motivos.length) hero.texto = back.motivos.join(' ');
       else if (nivel === 0) hero.texto = back.primeiro ? 'First test saved as your baseline. Later tests are compared with it.' : 'Acuity, Amsler grid and symptoms same as your baseline.';
       else if (nivel === 1) hero.texto = back.ressalvas.join(' ') + ' Repeat when you can.';
-      else if (nSint) hero.texto = 'You reported symptoms. The medical team will review them.';
-      if (back.alerta_clinico) hero.texto += ' You marked double vision: tell the flight surgeon now.';
+      else if (nSint) hero.texto = 'You reported a new change in your vision. The medical team will review it.';
+      if (back.alerta_clinico) hero.texto += ' You reported a new and important change in vision: tell the flight surgeon now.';
       // Modelo pessoal (aprende com os teus testes): avisa quando o teste de hoje foge do teu habitual.
       if (back.modelo && back.modelo.avisos.length) hero.texto += ' Personal model: ' + back.modelo.avisos.join(' ');
     }
     const usouReserva = ac.res.esq.com !== null || ac.res.dir.com !== null;
     const reservaTxt = ['esq', 'dir'].filter((e) => ac.res[e].com !== null).map((e) => sigla[e] + ' with spare: ' + curto(ac.res[e].com)).join(' · ');
-    const listaSint = s.q.map((x, i) => (x > 0 ? QCURTO[i] + ' (' + OPS[x].toLowerCase() + ')' : null)).filter((x) => x);
+    const listaSint = altSel.map((v) => ALT_CURTO[v]);
     const aconteceu = [
       { teste: 'Near acuity', valor: 'LE ' + curto(ac.res.esq.sem) + ' · RE ' + curto(ac.res.dir.sem),
         sub: 'Score: LE ' + ac.acertos.esq.sem[0] + '/' + ac.acertos.esq.sem[1] + ' · RE ' + ac.acertos.dir.sem[0] + '/' + ac.acertos.dir.sem[1] + ' · ' + (reservaTxt ? reservaTxt + ' · ' : '') + (primeiroTeste ? 'First test: becomes your baseline' : (antReal ? 'Baseline (day ' + antReal.dia + ')' : 'Last test') + ': LE ' + curto(ant.ac.esq) + ' · RE ' + curto(ant.ac.dir)),
         dot: ac.res.esq.sem === null && ac.res.dir.sem === null ? 'var(--tx3)' : cores[nAc] },
-      { teste: 'Symptoms in the last few days', valor: listaSint.length === 0 ? 'None' : (marcados > 0 ? marcados + ' marked' : ligeiros + ' mild'),
-        sub: listaSint.length === 0 ? 'You answered No to all four questions' : listaSint.join(', '), dot: cores[nSint] }
+      { teste: 'New changes in vision', valor: listaSint.length === 0 ? 'None' : listaSint.length + ' reported',
+        sub: listaSint.length === 0 ? 'Pre-exam questionnaire: no new change' : listaSint.join(', '), dot: cores[nSint] }
     ];
     const dR = back ? back.distancia : (window.Visao ? window.Visao.camara.resumo() : { n: 0 });
     const distTxt = dR.n > 0 ? 'Average ' + dR.media + ' cm · ' + (100 - dR.foraPct) + '% of the time in range' : (window.Visao ? 'Not measured by the camera' : 'Correct in both tests');
     const distDot = dR.n > 0 ? (dR.foraPct >= 40 ? 'var(--ylw)' : 'var(--ok)') : (window.Visao ? 'var(--tx3)' : 'var(--ok)');
     const condRes = [
-      { k: euReal ? 'Spacecraft motion' : 'Spacecraft event', v: s.resp ? (euReal ? '' : '10:42–10:43 UTC · ') + respTxt[s.resp] : 'Not answered', dot: s.resp ? (euReal && s.resp !== 'nao' ? 'var(--ylw)' : 'var(--ok)') : 'var(--ylw)' },
-      { k: 'Glasses', v: usouReserva ? 'Reading glasses; spare ones in the 2nd acuity test' : 'Everyday reading glasses', dot: 'var(--ok)' },
+      { k: 'Readiness', v: PRV.titulo + (PR.ressalvas.length ? ' · ' + PR.ressalvas.length + (PR.ressalvas.length === 1 ? ' caveat' : ' caveats') : ''), dot: PRV.dot },
+      { k: 'Spacecraft', v: qv.nave === undefined ? 'Not answered' : ['Stable', 'Slight vibration', 'Strong vibration'][qv.nave], dot: qv.nave === 0 ? 'var(--ok)' : 'var(--ylw)' },
+      { k: 'Glasses', v: (qv.correcao === 1 ? 'Without usual correction' : (qv.correcao === 2 ? 'No correction needed' : 'Usual correction')) + (usouReserva ? '; spare ones in the 2nd acuity test' : ''), dot: qv.correcao === 1 ? 'var(--ylw)' : 'var(--ok)' },
       { k: 'Distance', v: distTxt, dot: distDot },
       { k: 'Lighting', v: dR.luz && dR.luz.n > 0 ? ({ boa: 'Good', fraca: 'Too dark', forte: 'Too bright or glare' })[dR.luz.nivel] + ' · camera' : 'Not measured', dot: dR.luz && dR.luz.n > 0 ? (dR.luz.nivel === 'boa' ? 'var(--ok)' : 'var(--ylw)') : 'var(--tx3)' },
-      { k: 'Camera', v: dR.n > 0 ? 'Only measured distance · nothing recorded' : (window.Visao ? (window.Visao.camara.ultimo().estado === 'sem_cara' ? 'On, but it did not see your face' : 'Not used in this test') : 'Only measured distance · nothing recorded'), dot: 'var(--acc-text)' }
     ];
     const ACC = [
       ['Keep the normal schedule.', 'Next quick test in 7 days.', 'OCT recommended per protocol.'],
@@ -1072,36 +1132,36 @@ class Component extends DCLogic {
       { k: 'OCT (retina)', v: oct ? (oct.delta >= 0 ? '+' : '') + oct.delta + '% · day ' + oct.dia : 'Not on board',
         sub: oct ? 'vs first OCT · expected up to +' + oct.p90 + '% (P90)' : 'The colour comes from the quick tests', dot: oct ? ['var(--ok)', 'var(--ylw)', 'var(--bad)'][oct.level] || 'var(--ok)' : 'var(--tx3)' }
     ];
-    const movTxt = { sim: 'Felt', nao: 'None', naosei: 'Not sure' };
     const relMissao = [
-      { k: 'Microgravity', v: 'Day ' + mg.dia + ' in orbit', sub: mg.p50 !== undefined ? 'Expected retina change by now: +' + mg.p50 + '% (P50), up to +' + mg.p90 + '% (P90) · ' + mg.fonte : 'Time in microgravity', dot: 'var(--acc-text)' },
+      { k: 'Microgravity', v: mg.dia === 0 ? 'Pre-flight · on Earth' : 'Day ' + mg.dia + ' in orbit', sub: mg.p50 !== undefined ? 'Expected retina change by now: +' + mg.p50 + '% (P50), up to +' + mg.p90 + '% (P90) · ' + mg.fonte : 'Time in microgravity', dot: 'var(--acc-text)' },
       { k: 'Light exposure', v: temLuz ? LUZ[luz.nivel] : 'Not measured', sub: temLuz ? 'Brightness ' + luz.media + '% · ' + (100 - luz.foraPct) + '% of readings good · camera' : 'Needs the camera during the tests', dot: temLuz ? (luzMa ? 'var(--ylw)' : 'var(--ok)') : 'var(--tx3)' },
-      { k: 'Spacecraft motion', v: s.resp ? movTxt[s.resp] : 'Not answered', sub: 'Your answer before the tests', dot: s.resp === 'nao' ? 'var(--ok)' : 'var(--ylw)' },
+      { k: 'Pre-exam questionnaire', v: PRV.titulo, sub: PR.ressalvas.length ? PR.ressalvas.join(' ') : '9 answers before the tests · no caveats', dot: PRV.dot },
+      { k: 'Spacecraft', v: qv.nave === undefined ? 'Not answered' : ['Stable', 'Slight vibration', 'Strong vibration'][qv.nave], sub: 'Your answer before the tests', dot: qv.nave === 0 ? 'var(--ok)' : 'var(--ylw)' },
       { k: 'Viewing distance', v: dR.n > 0 ? 'Average ' + dR.media + ' cm' : 'Not measured', sub: dR.n > 0 ? (100 - dR.foraPct) + '% of the time in range · camera' : 'Hold the screen at 40 cm (acuity), 33 cm (grid)', dot: distDot }
     ];
     const CORN = ['Green', 'Yellow', 'Orange', 'Red'];
-    const usados = ['near acuity', 'Amsler grid', 'symptoms'].concat(oct ? ['OCT'] : []);
-    const dadosM = ['microgravity (day ' + mg.dia + ')'].concat(temLuz ? ['light exposure'] : [], s.resp ? ['spacecraft motion'] : [], dR.n > 0 ? ['viewing distance'] : []);
+    const usados = ['near acuity', 'Amsler grid', 'vision changes'].concat(oct ? ['OCT'] : []);
+    const dadosM = [mg.dia === 0 ? 'pre-flight conditions (on Earth)' : 'microgravity (day ' + mg.dia + ')'].concat(temLuz ? ['light exposure'] : [], faltam === 0 ? ['the pre-exam questionnaire'] : [], dR.n > 0 ? ['viewing distance'] : []);
     const lista = (a) => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
     const relFrase = 'IRIS concluded ' + CORN[nivel] + ' (' + hero.nivel.toLowerCase() + ') based on ' + usados.length + ' tests (' + lista(usados) + ') and mission data on ' + lista(dadosM) + '.';
     // Porquê: testes, condições e contexto da microgravidade
     const problemas = [];
-    if (s.resp === 'sim') problemas.push('you felt the spacecraft move');
-    if (s.resp === 'naosei') problemas.push('spacecraft motion is unconfirmed');
+    if (PR.ressalvas.length) problemas.push('the pre-exam questionnaire noted: ' + PR.ressalvas.map((r) => r.replace(/\.$/, '').toLowerCase()).join('; '));
     if (dR.n > 0 && dR.foraPct >= 40) problemas.push('the distance was out of range ' + dR.foraPct + '% of the time');
     if (luzMa && luz.foraPct >= 40) problemas.push(luz.nivel === 'fraca' ? 'the lighting was too dark' : 'there was too much light or glare');
     const bons = [];
     if (temLuz && !luzMa) bons.push('good lighting');
-    if (s.resp === 'nao') bons.push('no spacecraft motion');
+    if (faltam === 0 && !PR.ressalvas.length) bons.push('ready on the pre-exam questionnaire');
     if (dR.n > 0 && dR.foraPct < 40) bons.push('distance in range');
     const porque = [];
     if (back && back.motivos.length) porque.push({ k: 'Tests', t: 'What changed: ' + back.motivos.join(' ') });
     else if (!back && (amNovas.length || acMuda.length)) porque.push({ k: 'Tests', t: 'What changed: ' + acMuda.concat(amNovas.map((x) => 'Amsler ' + x)).join('; ') + '.' });
     else porque.push({ k: 'Tests', t: primeiroTeste ? 'This is your first test, so it becomes your baseline. Later tests are compared with it.' : 'Acuity and the Amsler grid are the same as your baseline.' });
-    if (nSint) porque.push({ k: 'Symptoms', t: 'You reported symptoms (' + listaSint.join(', ') + '). Symptoms alone raise the result to orange.' });
+    if (nSint) porque.push({ k: 'Vision changes', t: 'You reported a new change in your vision (' + listaSint.join(', ') + '). ' + (nSint === 3 ? 'This is a clinical alert: tell the flight surgeon now.' : 'A new change alone raises the result to orange.') });
     if (problemas.length) porque.push({ k: 'Conditions', t: 'The measurement may have been affected: ' + lista(problemas) + '. ' + (nivel === 1 ? 'That is why the result is yellow: repeat the tests in better conditions.' : 'Repeat the tests to confirm the change.') });
     else porque.push({ k: 'Conditions', t: bons.length ? 'The test conditions were good (' + lista(bons) + '), so the result is reliable.' : 'The conditions were not measured by the camera, so they could not be checked.' });
-    if (mg.p50 !== undefined) porque.push({ k: 'Microgravity', t: 'Day ' + mg.dia + ' in microgravity: in the reference population the retina around the optic nerve has thickened about +' + mg.p50 + '% by now (9 in 10 stay below +' + mg.p90 + '%). ' + (nivel >= 2 ? 'A change in the quick tests at this stage should be checked with OCT when available.' : 'The quick tests found no visual change today.') });
+    if (mg.dia === 0) porque.push({ k: 'Pre-flight', t: 'Recorded on Earth before launch, without microgravity. This is the reference for every test in flight.' });
+    else if (mg.p50 !== undefined) porque.push({ k: 'Microgravity', t: 'Day ' + mg.dia + ' in microgravity: in the reference population the retina around the optic nerve has thickened about +' + mg.p50 + '% by now (9 in 10 stay below +' + mg.p90 + '%). ' + (nivel >= 2 ? 'A change in the quick tests at this stage should be checked with OCT when available.' : 'The quick tests found no visual change today.') });
     if (oct) porque.push({ k: 'OCT', t: 'Latest OCT (day ' + oct.dia + '): ' + (oct.delta >= 0 ? '+' : '') + oct.delta + '% vs the first OCT, ' + (oct.level === 0 ? 'within the expected range.' : 'above the expected range: ' + oct.motivo) });
     const relMeta = eu.nome + ' · Day ' + eu.dia + ' · ' + (this._hora || new Date()).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' · ' + (euReal ? 'Real data' : 'Simulated example');
     const REV = [
@@ -1112,7 +1172,7 @@ class Component extends DCLogic {
     ];
 
     // ---------- Passos ----------
-    const bloq1 = pendente || faltam > 0;
+    const bloq1 = faltam > 0 || PR.estado === 'vermelho';
     const bloq2 = ac.fase !== 'feito';
     const bloq3 = !(am.feito.dir && am.feito.esq);
     const bloqueio = [false, bloq1, bloq1 || bloq2, bloq1 || bloq2 || bloq3];
@@ -1140,8 +1200,8 @@ class Component extends DCLogic {
     });
     const seguintes = ['Start · Acuity', 'Next · Amsler grid', 'See result'];
     let rodape1 = 'About 5 minutes in total';
-    if (pendente) rodape1 = 'First answer the spacecraft event';
-    else if (faltam > 0) rodape1 = 'Answer ' + faltam + (faltam === 1 ? ' question' : ' questions') + ' to start';
+    if (faltam > 0) rodape1 = 'Answer ' + faltam + (faltam === 1 ? ' question' : ' questions') + ' to start';
+    else if (PR.estado === 'vermelho') rodape1 = 'Not reliable right now: fix the condition first';
     const rodapes = [rodape1, '', '', 'Done · day ' + eu.dia + (back ? ' · saved on this device' : '')];
     const subtitulos = ['Checks · about 5 minutes', 'Checks · test 1 of 2 · about 1 minute per eye', 'Checks · test 2 of 2 · about 1 minute per eye', 'Checks · result'];
     const alvoCm = s.passo === 2 ? '40' : '33';
@@ -1174,7 +1234,7 @@ class Component extends DCLogic {
     // ---------- Ajuda ----------
     const ajudas = [
       { titulo: 'Before you start', meta: 'About 5 minutes in total',
-        passos: ['If there is an unanswered spacecraft-motion event, the app asks for your answer first. It is required.', 'Get ready: feet secured, screen on velcro at eye level, reading glasses and light as for reading.', 'Answer the four questions with No, Mild or Marked.', 'Then start with acuity.'],
+        passos: ['Answer the pre-exam questionnaire: 9 questions, 3 per screen. If the measurement would not be reliable (strong vibration, bad lighting, strong symptoms), fix the condition first.', 'Get ready: feet secured, screen on velcro at eye level, reading glasses and light as for reading.', 'A new and important change in vision is a clinical alert: tell the flight surgeon, even if you do not do the test.', 'Then start with acuity.'],
         recs: ['Think only about the last few days.', 'There are no right or wrong answers.', 'Answers only go to the medical team.'],
         cuidado: 'A sudden or strong change in vision does not wait for the test: tell the flight surgeon now.' },
       { titulo: 'Near visual acuity', meta: 'About 1 minute per eye · test 1 of 2',
@@ -1230,7 +1290,7 @@ class Component extends DCLogic {
       gateTexto: gateTexto,
       amslerFace: euReal ? 'Amsler grid · vs your baseline' : 'Amsler grid · vs previous test',
       gateTitulo: euReal ? 'Spacecraft motion' : 'Spacecraft motion detected',
-      gateQuando: euReal ? 'Day ' + eu.dia + ' · before you start' : 'Today · 10:42–10:43 UTC · 52 s',
+      gateQuando: euReal ? (window.Visao ? window.Visao.diaTxt(eu.dia) : 'Day ' + eu.dia) + ' · before you start' : 'Today · 10:42–10:43 UTC · 52 s',
       gatePergunta: euReal ? 'Did you feel the station move or vibrate?' : 'Did you feel the station move or vibrate during that time?',
       gateOps: gateOps,
       abrirEvento: () => { try { window.localStorage.setItem('visao-abrir', 'eventos'); } catch (e) {} },
@@ -1257,10 +1317,19 @@ class Component extends DCLogic {
       // 1
       ola: eu.ola,
       preparar: preparar,
-      perguntas: perguntas,
-      faltamTxt: faltam === 0 ? 'All answered' : faltam + ' not answered',
-      tudoNao: () => this.setState({ q: [0, 0, 0, 0] }),
-      triagem: triagem,
+      pr: pr, qPag: qPag,
+      qPagTxt: 'Questions ' + (pagIni + 1) + '–' + (pagIni + 3) + ' of 9',
+      qPontos: [0, 1, 2].map((k) => ({ w: k === s.qpag ? 22 : 8, cor: k === s.qpag ? 'var(--acc-text)' : (QUEST.slice(k * 3, k * 3 + 3).every(respondida) ? 'var(--acc)' : 'var(--line)') })),
+      qTemAnterior: s.qpag > 0, qTemSeguinte: s.qpag < 2,
+      qSeguinteOff: !pagCompleta, qSeguinteFundo: pagCompleta ? 'var(--acc)' : 'var(--chip)', qSeguinteCor: pagCompleta ? 'var(--acc-tx)' : 'var(--tx3)',
+      qAnterior: () => this.setState((st) => ({ qpag: Math.max(0, st.qpag - 1) })),
+      qSeguinte: () => { if (pagCompleta) this.setState((st) => ({ qpag: Math.min(2, st.qpag + 1) })); },
+      tudoNormal: () => this.setState((st) => {
+        const n = Object.assign({}, st.qv);
+        QUEST.slice(st.qpag * 3, st.qpag * 3 + 3).forEach((q) => { n[q.id] = q.multi ? [] : 0; });
+        return { qv: n, resp: n.nave === undefined ? st.resp : (n.nave === 0 ? 'nao' : 'sim') };
+      }),
+      responderDeNovo: () => this.setState({ qv: {}, qpag: 0, resp: this.state.real ? null : this.state.resp }),
       // 2
       acOlhos: acOlhos,
       acOlhoTxt: nomeOlho[ac.eye] + ' · cover the ' + outroOlho[ac.eye],
@@ -1304,7 +1373,7 @@ class Component extends DCLogic {
       accoes: accoes,
       revisao: REV[nivel],
       comAlerta: nivel >= 2,
-      refazer: () => { if (window.Visao) { window.Visao.camara.parar(); window.Visao.camara.limpar(); } this.setState({ passo: 1, max: 1, q: [null, null, null, null], ac: this.acInicial(), am: this.amInicial(), back: null, dist: null, intro: { 2: true, 3: true }, resp: this.state.real ? null : this.state.resp }); },
+      refazer: () => { if (window.Visao) { window.Visao.camara.parar(); window.Visao.camara.limpar(); } this.setState({ passo: 1, max: 1, qv: {}, qpag: 0, ac: this.acInicial(), am: this.amInicial(), back: null, dist: null, intro: { 2: true, 3: true }, resp: this.state.real ? null : this.state.resp }); },
       noInicio: s.passo === 1,
       opAnterior: s.passo === 1 ? 0.4 : 1,
       anterior: () => { if (this.state.passo > 1) this.irPara(this.state.passo - 1); },

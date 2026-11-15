@@ -114,3 +114,19 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Luz fraca ou forte em 40% ou mais das leituras entra nas ressalvas (resultado amarelo se os testes estiverem iguais).
 - Registos novos: `luz_media` (0–100) e `luz_nivel` (boa | fraca | forte).
 - Modo coluna: a barra de navegação voltou a ficar fixa em baixo (o runtime procurava o rótulo em português).
+
+## 15 Nov: pré-registo, questionário, privacidade, alertas vistos, PT/EN
+- **Pré-registo (dia 0, na Terra):** `Registo.html`. Ficha da missão (destino, lançamento, duração), dos olhos (correcção, óculos de reserva,
+  doença conhecida) e OCT de base opcional; depois os testes de base. Guardado em `visao-registo-<ID>` (`Visao.registoDe/guardarRegisto`).
+  A 1.ª entrada de um perfil sem pré-registo vai para este ecrã. O dia 0 aparece sempre como "Pre-flight / Pré-voo".
+- **Questionário pré-exame (VISION GUARD):** as 9 perguntas de `REGRAS.prontidao`, 3 por ecrã, com prontidão verde/amarela/vermelha
+  (`Motor.prontidao`). Vermelho bloqueia o teste; perda súbita ou visão dupla = alerta clínico. Guardado em `pre_exame` e `alteracao_visual`.
+  Alteração visual nova → laranja; importante (3, 4) → vermelho.
+- **Privacidade do histórico:** perfil real só vê os seus dados. Histórico (Tendencia) e OCT mostram só os testes/exames da própria pessoa
+  (`Visao.historico`, `Visao.octDe/guardarOCT`); a lista de entrada já não mostra testes de outras pessoas; na demonstração, só a persona com sessão.
+- **Alertas vistos:** "Mark as seen" guarda por perfil (`visao-vistos-<ID>`), o botão dá lugar a "Seen ✓"; "Mark all as seen"; o Hoje só conta os por ver.
+- **Letras e teclado sorteados** em cada teste (9 de 15 letras: Sloan C D H K N O R S V Z + E F L P T).
+- **PT ↔ EN:** botão ao lado do tema em todos os ecrãs. `i18n.js` traduz o texto desenhado (dicionário + regras para textos com números);
+  a voz em PT usa a voz portuguesa do sistema (os MP3 são em inglês) e o reconhecimento em pt-PT com os nomes das letras em português.
+  Para mudar traduções: editar o dicionário em `i18n.js` (MAPA) ou as REGRAS no fim do ficheiro.
+

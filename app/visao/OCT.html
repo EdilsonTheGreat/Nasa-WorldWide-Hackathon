@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OCT · IRIS</title>
-<link href="fonte.css?v=20261115b" rel="stylesheet">
-<link href="iris.css?v=20261115b" rel="stylesheet">
+<link href="fonte.css?v=20261115d" rel="stylesheet">
+<link href="iris.css?v=20261115d" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -18,13 +18,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115b"></script>
-<script src="../../motor/regras.js?v=20261115b"></script>
-<script src="../../motor/motor.js?v=20261115b"></script>
-<script src="../../motor/modelo.js?v=20261115b"></script>
-<script src="../armazenamento.js?v=20261115b"></script>
-<script src="ligacao.js?v=20261115b"></script>
-<script src="runtime.js?v=20261115b"></script>
+<script src="../dados.js?v=20261115d"></script>
+<script src="../../motor/regras.js?v=20261115d"></script>
+<script src="../../motor/motor.js?v=20261115d"></script>
+<script src="../../motor/modelo.js?v=20261115d"></script>
+<script src="../armazenamento.js?v=20261115d"></script>
+<script src="ligacao.js?v=20261115d"></script>
+<script src="i18n.js?v=20261115d"></script>
+<script src="runtime.js?v=20261115d"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -255,8 +256,9 @@ class Component extends DCLogic {
       C: { nome: 'Sofia Lindqvist', ini: 'SL', dia: 84, proximo: 'Repeat today recommended' }
     };
     const euBase = eus[s.perfil] || eus.B;
-    // Perfil real: não há OCT a bordo. O ecrã mostra o exemplo simulado, identificado como tal.
-    const eu = window.Visao && window.Visao.real() ? Object.assign({}, euBase, { nome: 'Simulated example · ' + euBase.nome }) : euBase;
+    // Perfil real: só os OCT do próprio astronauta (privacidade); nada dos perfis de demonstração.
+    const euR = window.Visao && window.Visao.real() ? window.Visao.eu() : null;
+    const eu = euR ? { nome: euR.nome, ini: euR.ini, dia: euR.dia, proximo: 'When the medical team asks' } : euBase;
     const fmt = (x, d) => x.toFixed(d).replace('.', ',');
     const sn = (x) => (x > 0 ? '+' : (x < 0 ? '−' : '±'));
 
@@ -267,12 +269,22 @@ class Component extends DCLogic {
       C: { bOE: 401, bOD: 398, ex: [[10, 6.0, 4.0, 8, 'Reviewed'], [30, 18.0, 10.0, 8, 'Reviewed'], [60, 35.0, 18.0, 8, 'Reviewed'], [84, 52.9, 24.6, 8, 'Priority review']] }
     };
     const h = H[s.perfil] || H.B;
-    const hist = [{ nome: 'Pre-flight baseline', curto: 'Pre-flight', oe: h.bOE, od: h.bOD, sinal: 9, interp: 'Reviewed', novo: false }]
-      .concat(h.ex.map((e) => ({ nome: 'Day ' + e[0], curto: 'D' + e[0], oe: Math.round(h.bOE * (1 + e[1] / 100)), od: Math.round(h.bOD * (1 + e[2] / 100)), pOE: e[1], pOD: e[2], sinal: e[3], interp: e[4], novo: false })));
-    if (s.novo) hist.push({ nome: 'New · day ' + eu.dia, curto: 'New', oe: s.novo.oe, od: s.novo.od, sinal: s.novo.sinal, interp: 'Sent for review', novo: true });
+    let hist;
+    if (euR) {
+      const R = window.Visao.octDe();
+      hist = R.map((e, i) => ({ nome: e.dia === 0 ? 'Pre-flight baseline' : (i === 0 ? 'Baseline · day ' + e.dia : 'Day ' + e.dia), curto: e.dia === 0 ? 'Pre-flight' : 'D' + e.dia,
+        oe: e.oe, od: e.od, sinal: e.sinal === null || e.sinal === undefined ? '—' : e.sinal, interp: i === 0 ? 'Baseline' : 'Sent for review',
+        novo: !!s.novo && i === R.length - 1 }));
+    } else {
+      hist = [{ nome: 'Pre-flight baseline', curto: 'Pre-flight', oe: h.bOE, od: h.bOD, sinal: 9, interp: 'Reviewed', novo: false }]
+        .concat(h.ex.map((e) => ({ nome: 'Day ' + e[0], curto: 'D' + e[0], oe: Math.round(h.bOE * (1 + e[1] / 100)), od: Math.round(h.bOD * (1 + e[2] / 100)), pOE: e[1], pOD: e[2], sinal: e[3], interp: e[4], novo: false })));
+      if (s.novo) hist.push({ nome: 'New · day ' + eu.dia, curto: 'New', oe: s.novo.oe, od: s.novo.od, sinal: s.novo.sinal, interp: 'Sent for review', novo: true });
+    }
+    const semOct = hist.length === 0;
+    if (semOct) hist.push({ nome: 'No OCT yet', curto: '—', oe: 0, od: 0, sinal: '—', interp: 'No exams', novo: false, vazio: true });
     const sinalTxt = (x) => (typeof x === 'number' ? x + '/10' : 'not given');
     const ult = hist[hist.length - 1];
-    const ant = hist[hist.length - 2];
+    const ant = hist[hist.length - 2] || ult;
 
     // ---------- Registar ----------
     const valido = (v) => v !== '' && !isNaN(Number(v)) && Number(v) >= 200 && Number(v) <= 800;
@@ -284,7 +296,7 @@ class Component extends DCLogic {
       return { id: id, label: label, valor: v, exemplo: exemplo, msg: msg, msgCor: msgCor, borda: borda,
         onChange: (e) => { const u = {}; u[chave] = e.target.value; this.setState(u); } };
     };
-    const campos = [campo('oct-oe', 'Left eye', 'oe', String(ult.oe)), campo('oct-od', 'Right eye', 'od', String(ult.od))];
+    const campos = [campo('oct-oe', 'Left eye', 'oe', semOct ? '360' : String(ult.oe)), campo('oct-od', 'Right eye', 'od', semOct ? '360' : String(ult.od))];
     const sv = s.sinal; const sN = Number(sv);
     let sMsg = 'Optional'; let sCor = 'var(--tx3)'; let sBorda = 'var(--line)';
     const sinalOk = sv === '' || (Number.isInteger(sN) && sN >= 1 && sN <= 10);
@@ -302,7 +314,7 @@ class Component extends DCLogic {
     ].map((t, i, a) => ({ n: i + 1, t: t, regra: i < a.length - 1 ? '1px solid var(--line2)' : '0' }));
 
     // ---------- Comparar ----------
-    const vals = hist.reduce((acc, e) => acc.concat([e.oe, e.od]), []);
+    const vals = semOct ? [340, 380] : hist.reduce((acc, e) => acc.concat([e.oe, e.od]), []);
     const vMin = Math.floor((Math.min.apply(null, vals) - 10) / 20) * 20;
     const passo = Math.ceil((Math.max.apply(null, vals) + 10 - vMin) / 3 / 20) * 20;
     const vMax = vMin + 3 * passo;
@@ -320,7 +332,7 @@ class Component extends DCLogic {
       linhaOE: hist.map((e, i) => PX(i).toFixed(1) + ',' + PY(e.oe).toFixed(1)).join(' '),
       linhaOD: hist.map((e, i) => PX(i).toFixed(1) + ',' + PY(e.od).toFixed(1)).join(' '),
       rotulos: hist.map((e, i) => ({ x: PX(i).toFixed(1), t: e.curto, peso: e.novo || i === n - 1 ? 700 : 500, cor: e.novo ? 'var(--acc-text)' : 'var(--tx3)' })),
-      label: 'Retinal thickness per exam, from ' + hist[0].nome + ' a ' + ult.nome + '. Left eye ' + ult.oe + ' µm, right eye ' + ult.od + ' µm.'
+      label: 'Retinal thickness per exam, from ' + hist[0].nome + ' to ' + ult.nome + '. Left eye ' + ult.oe + ' µm, right eye ' + ult.od + ' µm.'
     };
     // % do registo do aparelho quando existe; para valores novos, calculado a partir dos µm
     const dTxt = (a, b, p) => { const d = a - b; const pc = typeof p === 'number' ? p : d / b * 100; return sn(d) + Math.abs(d) + ' µm · ' + sn(pc) + fmt(Math.abs(pc), 1) + '%'; };
@@ -337,7 +349,9 @@ class Component extends DCLogic {
       dAnt: dTxt(ult[o[1]], ant[o[1]]),
       borda: ult.novo ? 'var(--acc-line)' : 'var(--line2)'
     }));
-    const estado = ult.novo
+    const estado = semOct
+      ? { txt: 'No OCT recorded yet. Your first exam becomes your OCT baseline.', fundo: 'var(--chip)', linha: 'var(--line2)', dot: 'var(--tx3)' }
+      : ult.novo
       ? { txt: 'New record saved and sent for medical review.', fundo: 'var(--acc-soft)', linha: 'var(--acc-line)', dot: 'var(--acc-text)' }
       : { txt: 'Last exam (' + ult.nome.toLowerCase() + ') · ' + ult.interp + '.', fundo: 'var(--chip)', linha: 'var(--line2)', dot: ult.interp === 'Reviewed' ? 'var(--ok)' : (ult.interp === 'To review' ? 'var(--warn)' : 'var(--bad)') };
 
@@ -349,7 +363,7 @@ class Component extends DCLogic {
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
-      selo: 'Simulated data',
+      selo: window.Visao ? window.Visao.selo() : 'Simulated data',
       claro: claro, escuro: !claro,
       temaLabel: claro ? 'Dark mode' : 'Light mode',
       toggleTema: () => {
@@ -358,7 +372,7 @@ class Component extends DCLogic {
         try { window.localStorage.setItem('visao-tema', nt); } catch (e) {}
       },
       eu: eu,
-      gate: s.modo === 'registar' && !s.resp,
+      gate: !euR && s.modo === 'registar' && !s.resp,
       gateTexto: s.perfil === 'B'
         ? 'The station recorded unusual motion that overlapped your 10:42 acuity test. Your answer helps tell whether the result was affected.'
         : 'The station recorded unusual motion. Your answer helps the app interpret today\'s exams.',
@@ -385,13 +399,14 @@ class Component extends DCLogic {
         const st = this.state;
         if (!(valido(st.oe) && valido(st.od))) return;
         const sg = st.sinal === '' ? '—' : Number(st.sinal);
+        if (euR) { window.Visao.guardarOCT(Math.round(Number(st.oe)), Math.round(Number(st.od)), st.sinal === '' ? null : Number(st.sinal)); }
         this.setState({ novo: { oe: Math.round(Number(st.oe)), od: Math.round(Number(st.od)), sinal: sg }, modo: 'comparar', oe: '', od: '', sinal: '', anexo: false });
       },
       passos: passos,
-      ultimo: { nome: ult.nome, oe: ult.oe, od: ult.od, sinal: sinalTxt(ult.sinal) },
-      grafico: grafico,
-      tabela: tabela,
-      olhosComp: olhosComp,
+      ultimo: { nome: ult.nome, oe: semOct ? '—' : ult.oe, od: semOct ? '—' : ult.od, sinal: semOct ? '—' : sinalTxt(ult.sinal) },
+      grafico: semOct ? Object.assign({}, grafico, { pontos: [], linhaOE: '', linhaOD: '', rotulos: [], label: 'No OCT recorded yet.' }) : grafico,
+      tabela: semOct ? [] : tabela,
+      olhosComp: semOct ? olhosComp.map((o) => Object.assign({}, o, { quando: 'No OCT yet', valor: '—', dBase: '—', dAnt: '—', antLabel: 'Record your first exam' })) : olhosComp,
       estado: estado
     };
   }
