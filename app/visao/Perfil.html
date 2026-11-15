@@ -66,6 +66,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <section aria-labelledby="priv-titulo" style="padding: 18px 22px; border-radius: 24px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px">
 <h2 id="priv-titulo" style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--tx)"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Privacy</h2>
 <p style="margin: 0; font-size: 13px; line-height: 1.5; color: var(--tx2)">{{ privTxt }}</p>
+<sc-if value="{{ temRosto }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ apagarRosto }}" style="align-self: flex-start; margin-top: 2px; height: 40px; padding: 0 16px; border: 1px solid var(--line); border-radius: 20px; background: transparent; color: var(--bad-tx); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ apagarRostoTxt }}</button></sc-if>
 </section>
 </aside>
 
@@ -505,6 +506,15 @@ class Component extends DCLogic {
       sessaoCor: FR && FR.entrada !== 'rosto' ? 'var(--tx2)' : 'var(--ok-tx)',
       sessaoVisto: FR && FR.entrada !== 'rosto' ? 'none' : 'inline',
       sessaoFundo: FR && FR.entrada !== 'rosto' ? 'var(--chip)' : 'var(--ok-soft)',
+      temRosto: (() => { if (!FR) return false; try { return !!(JSON.parse(window.localStorage.getItem('dt_rostos')) || {})[window.Visao.real()]; } catch (e) { return false; } })(),
+      apagarRostoTxt: s.confirmarRosto ? 'Tap again to delete my face' : 'Delete my face',
+      apagarRosto: () => {
+        if (!s.confirmarRosto) { this.setState({ confirmarRosto: true }); return; }
+        try { const r = JSON.parse(window.localStorage.getItem('dt_rostos')) || {}; delete r[window.Visao.real()]; window.localStorage.setItem('dt_rostos', JSON.stringify(r)); } catch (e) {}
+        clearTimeout(this.timerToast);
+        this.setState({ confirmarRosto: false, toast: 'Face deleted from this device' });
+        this.timerToast = setTimeout(() => this.setState({ toast: '' }), 3000);
+      },
       privTxt: FR ? 'Your tests stay on this device only. Anyone using this device can open the profile from the list; signing in with your face confirms it is you.'
                   : 'Only you see and edit this profile. To open another profile, that person must confirm their identity with Face ID or password.',
       ofTitulo: FR ? 'Your records' : 'Official data',

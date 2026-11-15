@@ -48,8 +48,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <img src="{{ irisImg }}" alt="" aria-hidden="true" style="position: absolute; left: 120px; top: 110px; width: 400px; height: 400px; pointer-events: none">
 
 <div style="position: absolute; left: 60px; top: 520px; width: 520px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
-<span class="dt-logo" role="img" aria-label="IRIS" style="width: 180px; height: 100px; color: var(--tx)"></span>
-<span style="margin-top: -6px; font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: var(--acc-text)">Integrated Remote Intelligence for Spaceflight</span>
+<span style="font-size: 13px; font-weight: 600; letter-spacing: 0.4px; color: var(--acc-text)">Integrated Remote Intelligence for Spaceflight</span>
 <span style="font-size: 16px; line-height: 1.5; color: var(--tx2)">Vision monitoring on long missions.<br>Short tests, a clear traffic light and help when you need it.</span>
 <span style="margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--tx3); border: 1px solid var(--line2); border-radius: 999px; padding: 5px 12px">Deep Thinkers · NASA Space Apps 2026</span>
 </div>
@@ -97,7 +96,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <input id="dia" type="number" min="0" max="999" inputmode="numeric" value="{{ dia }}" onChange="{{ onDia }}" style="width: 84px; height: 44px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 14px; padding: 0 12px; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--tx); background: var(--input)">
 <span style="flex-grow: 1"></span>
 <sc-if value="{{ podeRemover }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ remover }}" style="height: 44px; padding: 0 12px; border: 0; border-radius: 22px; background: transparent; color: var(--bad-tx); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ removerTxt }}</button></sc-if>
-<button type="button" onClick="{{ gerirRosto }}" style="height: 44px; padding: 0 14px; border: 0; border-radius: 22px; background: transparent; color: var(--acc-text); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ gerirRostoTxt }}</button>
+<sc-if value="{{ semRostoReg }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ gerirRosto }}" style="height: 44px; padding: 0 14px; border: 0; border-radius: 22px; background: transparent; color: var(--acc-text); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ gerirRostoTxt }}</button></sc-if>
 </div>
 </sc-if>
 
@@ -341,7 +340,8 @@ class Component extends DCLogic {
       registar: () => this.registarRosto(),
       dia: s.dia,
       onDia: (e) => this.setState({ dia: e.target.value }),
-      gerirRostoTxt: temRosto ? 'Delete my face' : 'Register my face',
+      gerirRostoTxt: 'Register my face',
+      semRostoReg: equipa && !temRosto,
       // Perfis de fora da equipa (criados por engano) podem ser removidos: 1.º toque pede confirmação.
       podeRemover: equipa && this.temBack() && window.Armazem.EQUIPA.indexOf(atual.id) === -1,
       removerTxt: s.confirmarRemover === atual.id ? 'Tap again to remove ' + atual.curto : 'Remove profile',

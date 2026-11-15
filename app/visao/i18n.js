@@ -1140,7 +1140,9 @@
 "vs first OCT": "face ao primeiro OCT",
 "The app only compares values with your history. Interpretation is up to the medical team.": "A app só compara os valores com o teu histórico. A interpretação cabe à equipa médica.",
 "LE": "OE",
-"RE": "OD"
+"RE": "OD",
+"Tap again to delete my face": "Toque de novo para apagar o meu rosto",
+"Face deleted from this device": "Rosto apagado deste dispositivo"
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };
