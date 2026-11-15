@@ -203,7 +203,9 @@
 
   function ligarMicrofone(aoOuvir, aoEstado, permitirOnline) {
     mic.aoOuvir = aoOuvir; mic.aoEstado = aoEstado; mic.querido = true;
-    if (!R) { mic.querido = false; estado("indisponivel", "This browser has no speech recognition. Use the buttons."); return; }
+    if (!R) { mic.querido = false; estado("indisponivel", "This browser has no speech recognition (Firefox, for example). Use Chrome, Edge or Safari, or the buttons."); return; }
+    // O browser só dá o microfone em https:// ou localhost. Noutro aparelho por http://IP fica bloqueado sem aviso.
+    if (g.isSecureContext === false) { mic.querido = false; estado("indisponivel", "Voice needs a secure page: open the app with https:// (python3 servidor.py --rede) or on localhost. Use the buttons for now."); return; }
     if (permitirOnline) escrever(CHAVE_ONLINE, "1");
     // Without on-device recognition: online only with explicit permission.
     if (!suportaLocal()) {

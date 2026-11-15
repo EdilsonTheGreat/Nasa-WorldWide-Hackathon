@@ -1171,7 +1171,9 @@
 "Sent automatically to Earth and the medical team": "Enviado automaticamente para a Terra e para a equipa médica",
 "These caveats are saved with the result.": "Estas ressalvas ficam guardadas com o resultado.",
 "The measurement would not be reliable.": "A medição não seria fiável.",
-"Fix the condition and answer again.": "Corrige a condição e responde de novo."
+"Fix the condition and answer again.": "Corrige a condição e responde de novo.",
+"This browser has no speech recognition (Firefox, for example). Use Chrome, Edge or Safari, or the buttons.": "Este browser não tem reconhecimento de voz (o Firefox, por exemplo). Usa o Chrome, o Edge ou o Safari, ou os botões.",
+"Voice needs a secure page: open the app with https:// (python3 servidor.py --rede) or on localhost. Use the buttons for now.": "A voz precisa de uma página segura: abre a app com https:// (python3 servidor.py --rede) ou em localhost. Por agora, usa os botões."
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };

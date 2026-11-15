@@ -156,3 +156,9 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Telemóvel: em vez do modo contínuo (que no Android repete e corta), ouve frase a frase e reinicia logo.
 - Chrome recente: dicas ao reconhecedor com os nomes das letras e os comandos (SpeechRecognitionPhrase), quando existir.
 - Questionário: cada resposta fica com a cor que o motor lhe dá (verde, amarelo = ressalva, vermelho = não fiável). A faixa de prontidão mostra os motivos em etiquetas curtas e o "Answer again" passou para a linha dos botões; o cartão já não transborda.
+
+## 15 Nov (noite): voz noutros aparelhos
+- O browser só dá o microfone (e a câmara) em `https://` ou em `localhost`. Noutro aparelho por `http://IP` a voz ficava bloqueada sem aviso; agora a app diz porquê.
+- `python3 servidor.py --rede` serve a app em https na rede Wi-Fi (porta 8443) com um certificado autoassinado feito na hora (`.cert/`, fora do git) e mostra o endereço para os outros aparelhos. Na 1.ª vez cada aparelho avisa do certificado: aceitar e continuar.
+- Sem `--rede` fica como antes: só `http://localhost:8000` neste computador.
+- Firefox não tem reconhecimento de voz; no Safari (iPhone/Mac) a voz passa pelo serviço da Apple e é preciso tocar em "Allow online voice".

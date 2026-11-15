@@ -6,6 +6,4 @@ venv/
 node_modules/
 .idea/
 .vscode/
-
-# Gráfico de validação: gerado pelo simulador, só para os slides
-dados/validacao.png
+.cert/
