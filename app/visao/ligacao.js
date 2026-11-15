@@ -126,7 +126,7 @@
     [/^A calibrar o teu normal\..*$/, "Calibrating your normal. Do the next test in a week."],
     [/^Dentro do esperado\..*$/, "Within expected. Next test in a week."],
     [/^Repete daqui a 3 dias\..*$/, "Repeat in 3 days. Use the spare glasses. Check cabin CO₂."],
-    [/^Avisa já o médico de voo\..*$/, "Tell the flight surgeon now. Your results package is ready."],
+    [/^Avisa já o médico de voo\..*$/, "Tell the flight surgeon now. Your report was sent automatically to Earth."],
     [/^Leitura de perto abaixo do teu habitual \(linha ([\d.,]+); costumas ler a ([\d.,]+)\)\.?$/, function (m, a, b) { return "Near reading below your usual (line " + a + "; you usually read " + b + ")."; }],
     [/^Sintomas acima do teu habitual \(soma ([\d.,]+); costuma ser ([\d.,]+)\)\.?$/, function (m, a, b) { return "Symptoms above your usual (sum " + a + "; usually " + b + ")."; }]
   ];
@@ -235,6 +235,18 @@
 
   // Guarda o teste feito no TesteRapido e devolve a decisão do motor e o texto do modelo.
   //   t = { q: [0|1|2 x4], res: {esq:{sem,com}, dir:{sem,com}}, marks: {dir:{...}, esq:{...}}, resp: "sim"|"nao"|"naosei" }
+  // Envio automático do relatório: cada teste guardado entra logo na caixa de saída para a equipa médica,
+  // sem perguntar. A app não tem rede: sai sozinho no próximo contacto com a Terra.
+  function enviosDe(id) { try { return JSON.parse(ler("visao-envios-" + id)) || []; } catch (e) { return []; } }
+  function enviarRelatorio(id, reg, av) {
+    var L = enviosDe(id).filter(function (e) { return e.dia !== reg.dia; });
+    var e = { dia: reg.dia, cor: ["verde", "amarelo", "laranja", "vermelho"][av.nivel] || av.cor, nivel: av.nivel, prioridade: av.nivel >= 3 || reg.alerta_clinico ? "prioridade" : (av.nivel === 2 ? "revisao" : "rotina"),
+              quando: new Date().toISOString(), estado: "em_fila" };
+    L.push(e); L.sort(function (a, b) { return a.dia - b.dia; });
+    escrever("visao-envios-" + id, JSON.stringify(L));
+    return e;
+  }
+  function envioDe(id, dia) { var L = enviosDe(id); for (var i = 0; i < L.length; i++) if (L[i].dia === dia) return L[i]; return null; }
   function guardarTeste(t) {
     var id = real(); if (!id) return null;
     var d = diaDe(id);
@@ -273,6 +285,7 @@
     });
     if (!reg) return { erro: "Could not save on this device." };
     var regs = rapidos(id), av = avaliarRegisto(baseDe(regs), reg);
+    var envio = enviarRelatorio(id, reg, av);
     var modelo = g.Modelo ? g.Modelo.treinar(g.Armazem.registosDe(id), g.FAIXAS, d) : null;
     return {
       registo: reg, nivel: av.nivel, cor: av.cor, primeiro: av.primeiro, motivos: av.motivos, ressalvas: ressalvas,
@@ -280,7 +293,7 @@
       texto_motor: en((g.REGRAS.textos[av.cor] || g.REGRAS.textos.verde).mensagem),
       proximo_dias: (g.REGRAS.textos[av.cor] || g.REGRAS.textos.verde).proximo_teste_dias,
       modelo: modelo ? { avisos: (modelo.avisos || []).map(en), testes_aprendidos: modelo.estado.rapido.n } : null,
-      testes: regs.length
+      testes: regs.length, envio: envio
     };
   }
 
@@ -559,7 +572,7 @@
       escrever("dt_registos", JSON.stringify(rs.filter(function (r) { return r.astronauta_id !== id; })));
     } catch (e) { }
     try { var r = JSON.parse(ler("dt_rostos")) || {}; delete r[id]; g.localStorage.setItem("dt_rostos", JSON.stringify(r)); } catch (e) { }
-    escrever("visao-iris-" + id, null); escrever("visao-dia-" + id, null); escrever("visao-registo-" + id, null); escrever("visao-vistos-" + id, null);
+    escrever("visao-iris-" + id, null); escrever("visao-dia-" + id, null); escrever("visao-registo-" + id, null); escrever("visao-vistos-" + id, null); escrever("visao-envios-" + id, null);
     if (ler("visao-real") === id) escrever("visao-real", null);
     return true;
   }
@@ -573,7 +586,7 @@
   g.Visao = {
     temBackend: temBackend, real: real, removerPerfil: removerPerfil, irisDe: irisDe, guardarIris: guardarIris, eu: eu, entrar: entrar, sair: sair, diaSugerido: diaSugerido, nomeDe: nomeDe, iniciais: iniciais,
     selo: function () { return real() ? "Real data · this device only" : "Simulated data"; },
-    anterior: anterior, guardarTeste: guardarTeste, resumoHoje: resumoHoje, linhaTempo: linhaTempo, alertas: alertas,
+    anterior: anterior, guardarTeste: guardarTeste, envioDe: envioDe, enviosDe: enviosDe, resumoHoje: resumoHoje, linhaTempo: linhaTempo, alertas: alertas,
     fichaPerfil: fichaPerfil, tendencia: tendencia, camara: camara, missao: missao, en: en, octDe: octDe, guardarOCT: guardarOCT, historico: historico, diaTxt: diaTxt, registoDe: registoDe, guardarRegisto: guardarRegisto, vistosDe: vistosDe, guardarVistos: guardarVistos,
     _zonasDe: zonasDe, _avaliarRegisto: avaliarRegisto
   };

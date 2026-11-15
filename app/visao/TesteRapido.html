@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261115h" rel="stylesheet">
-<link href="iris.css?v=20261115h" rel="stylesheet">
+<link href="fonte.css?v=20261115m" rel="stylesheet">
+<link href="iris.css?v=20261115m" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -21,17 +21,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115h"></script>
-<script src="../../motor/regras.js?v=20261115h"></script>
-<script src="../../motor/motor.js?v=20261115h"></script>
-<script src="../../motor/modelo.js?v=20261115h"></script>
-<script src="../armazenamento.js?v=20261115h"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115h"></script>
-<script src="../camara/distancia.js?v=20261115h"></script>
-<script src="ligacao.js?v=20261115h"></script>
-<script src="voz.js?v=20261115h"></script>
-<script src="i18n.js?v=20261115h"></script>
-<script src="runtime.js?v=20261115h"></script>
+<script src="../dados.js?v=20261115m"></script>
+<script src="../../motor/regras.js?v=20261115m"></script>
+<script src="../../motor/motor.js?v=20261115m"></script>
+<script src="../../motor/modelo.js?v=20261115m"></script>
+<script src="../armazenamento.js?v=20261115m"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115m"></script>
+<script src="../camara/distancia.js?v=20261115m"></script>
+<script src="ligacao.js?v=20261115m"></script>
+<script src="voz.js?v=20261115m"></script>
+<script src="i18n.js?v=20261115m"></script>
+<script src="runtime.js?v=20261115m"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -86,34 +86,30 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </nav>
 
 <sc-if value="{{ p1 }}" hint-placeholder-val="{{ true }}">
-<section aria-labelledby="ola-titulo" style="position: absolute; left: 40px; top: 228px; width: 300px; height: 432px; box-sizing: border-box; padding: 20px 20px; border-radius: 26px; background: radial-gradient(100% 60% at 0% 0%, {{ pr.glow }}, rgba(0,0,0,0) 60%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid {{ pr.linha }}; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 8px; overflow-y: auto">
-<h2 id="ola-titulo" style="margin: 0; font-size: 24px; font-weight: 400; letter-spacing: -0.4px; color: var(--tx)">{{ ola }}</h2>
-<sc-if value="{{ pr.pronto }}" hint-placeholder-val="{{ false }}">
-<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.3px; color: var(--tx3)">READINESS FOR THE TEST</span>
-<span role="status" style="display: flex; align-items: center; gap: 9px; font-size: 22px; font-weight: 400; color: {{ pr.cor }}"><span aria-hidden="true" style="width: 11px; height: 11px; flex: none; border-radius: 6px; background: {{ pr.dot }}; box-shadow: 0 0 14px {{ pr.dot }}"></span>{{ pr.titulo }}</span>
-<p style="margin: 0; font-size: 14px; line-height: 1.45; color: var(--tx-soft)">{{ pr.texto }}</p>
-<sc-for list="{{ pr.ressalvas }}" as="r" hint-placeholder-count="2">
-<div style="display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; line-height: 1.4; color: var(--tx)"><span aria-hidden="true" style="width: 6px; height: 6px; flex: none; border-radius: 3px; background: {{ pr.dot }}; transform: translateY(-2px)"></span>{{ r }}</div>
-</sc-for>
-<sc-if value="{{ pr.alerta }}" hint-placeholder-val="{{ false }}">
-<div role="alert" style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 14px; background: var(--bad-soft); border: 1px solid var(--bad-line); font-size: 13.5px; line-height: 1.4; font-weight: 600; color: var(--bad-tx)">{{ pr.textoAlerta }}</div>
+<sc-if value="{{ qIntro }}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="ola-titulo" class="fluido" style="position: absolute; left: 40px; top: 228px; width: 1114px; height: 432px; box-sizing: border-box; padding: 26px 30px; border-radius: 26px; background: radial-gradient(60% 70% at 0% 0%, var(--acc-soft), rgba(0,0,0,0) 60%), linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<h2 id="ola-titulo" style="margin: 0; font-size: 34px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">{{ ola }}</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--tx2)">Let's do the quick vision test. It takes about 5 minutes: 9 short questions, then near acuity and the Amsler grid.</p>
+<sc-if value="{{ telemovel }}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--warn-soft); border: 1px solid var(--warn-line); font-size: 14px; line-height: 1.45; color: var(--warn-tx)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="3" y="5" width="18" height="12" rx="2"></rect><path d="M2 20h20"></path></svg><span><b>Use a laptop or tablet for this test.</b> On a phone the letters and the grid are too small and voice commands are less reliable, so the result may not be valid.</span></div>
 </sc-if>
-<sc-if value="{{ pr.vermelho }}" hint-placeholder-val="{{ false }}">
-<button type="button" onClick="{{ responderDeNovo }}" style="height: 40px; margin-top: 4px; border: 1px solid var(--line); border-radius: 20px; background: var(--chip); color: var(--tx); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Answer again</button>
-</sc-if>
-</sc-if>
-<sc-if value="{{ pr.dicas }}" hint-placeholder-val="{{ true }}">
-<p style="margin: 0 0 2px; font-size: 14px; line-height: 1.45; color: var(--tx2)">{{ pr.dicasTxt }}</p>
+<div style="flex-grow: 1"></div>
+<button type="button" onClick="{{ comecarQuest }}" style="align-self: flex-start; height: 54px; padding: 0 30px; border: 0; border-radius: 27px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">{{ comecarQuestTxt }}</button>
+</div>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: 0.6px; color: var(--tx3); margin-bottom: 6px">FIRST, GET READY</span>
 <sc-for list="{{ preparar }}" as="k" hint-placeholder-count="4">
-<div style="display: flex; align-items: center; gap: 12px; min-height: 56px; border-top: 1px solid var(--line2)">
-<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 17px; background: var(--acc-soft); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ k.icone }}"></path></svg></span>
-<span style="font-size: 13.5px; line-height: 1.4; color: var(--tx-soft)">{{ k.t }}</span>
+<div style="display: flex; align-items: center; gap: 14px; min-height: 70px; border-top: 1px solid var(--line2)">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: var(--acc-soft); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ k.icone }}"></path></svg></span>
+<span style="font-size: 15px; line-height: 1.4; color: var(--tx-soft)">{{ k.t }}</span>
 </div>
 </sc-for>
-</sc-if>
+</div>
 </section>
-
-<section aria-labelledby="perg-titulo" style="position: absolute; left: 356px; top: 228px; width: 798px; height: 432px; box-sizing: border-box; padding: 16px 22px 14px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 4px">
+</sc-if>
+<sc-if value="{{ qLista }}" hint-placeholder-val="{{ false }}">
+<section aria-labelledby="perg-titulo" style="position: absolute; left: 40px; top: 228px; width: 1114px; height: 432px; box-sizing: border-box; padding: 16px 22px 14px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 4px">
 <div style="display: flex; align-items: center; gap: 10px; min-height: 42px">
 <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
 <h2 id="perg-titulo" style="margin: 0; font-size: 17px; font-weight: 600; color: var(--tx)">Pre-exam questionnaire</h2>
@@ -129,7 +125,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-for list="{{ qPag }}" as="q" hint-placeholder-count="3">
 <div role="group" aria-label="{{ q.t }}" style="display: flex; flex-direction: column; gap: 6px; padding: 8px 0 6px; border-top: 1px solid var(--line2)">
 <div style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 12px; font-weight: 700; color: var(--acc-text)">{{ q.n }}</span><span style="font-size: 14.5px; font-weight: 600; line-height: 1.3; color: var(--tx)">{{ q.t }}</span><span style="font-size: 12px; color: var(--tx3)">{{ q.sub }}</span></div>
-<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<div style="display: grid; grid-template-columns: repeat({{ q.cols }}, minmax(0, 1fr)); gap: 6px">
 <sc-for list="{{ q.ops }}" as="op" hint-placeholder-count="3">
 <button type="button" onClick="{{ op.pick }}" aria-pressed="{{ op.on }}" style="min-height: 36px; padding: 5px 10px; border-radius: 12px; border: 1px solid {{ op.borda }}; background: {{ op.fundo }}; color: {{ op.cor }}; font-family: inherit; font-size: 12.5px; font-weight: 600; line-height: 1.25; text-align: left; cursor: pointer">{{ op.t }}</button>
 </sc-for>
@@ -137,16 +133,27 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </div>
 </sc-for>
 <div style="flex-grow: 1"></div>
+<sc-if value="{{ pr.pronto }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; padding: 8px 12px; margin-bottom: 8px; border-radius: 16px; border: 1px solid {{ pr.linha }}; background: {{ pr.glow }}">
+<span style="display: flex; align-items: center; gap: 8px; margin-right: 4px; font-size: 14.5px; font-weight: 700; color: {{ pr.cor }}; white-space: nowrap"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: {{ pr.dot }}"></span>{{ pr.titulo }}</span>
+<sc-for list="{{ pr.ressalvas }}" as="r" hint-placeholder-count="2">
+<span style="padding: 3px 10px; border-radius: 12px; background: var(--card); border: 1px solid {{ pr.linha }}; font-size: 12.5px; line-height: 1.35; color: var(--tx)">{{ r }}</span>
+</sc-for>
+<sc-if value="{{ pr.alerta }}" hint-placeholder-val="{{ false }}"><span style="flex-basis: 100%; font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--bad-tx)">{{ pr.textoAlerta }}</span></sc-if>
+</div>
+</sc-if>
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
 <sc-if value="{{ qTemAnterior }}" hint-placeholder-val="{{ false }}">
 <button type="button" onClick="{{ qAnterior }}" style="height: 36px; padding: 0 16px; border: 1px solid var(--line); border-radius: 18px; background: transparent; color: var(--tx); font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer">‹ Previous questions</button>
 </sc-if>
 <span style="flex-grow: 1"></span>
+<sc-if value="{{ pr.vermelho }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ responderDeNovo }}" style="height: 36px; padding: 0 16px; border: 1px solid var(--bad-line); border-radius: 18px; background: var(--bad-soft); color: var(--bad-tx); font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer">Answer again</button></sc-if>
 <sc-if value="{{ qTemSeguinte }}" hint-placeholder-val="{{ true }}">
 <button type="button" onClick="{{ qSeguinte }}" aria-disabled="{{ qSeguinteOff }}" style="height: 36px; padding: 0 18px; border: 0; border-radius: 18px; background: {{ qSeguinteFundo }}; color: {{ qSeguinteCor }}; font-family: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer">Next questions ›</button>
 </sc-if>
 </div>
 </section>
+</sc-if>
 </sc-if>
 
 <sc-if value="{{ p2Intro }}" hint-placeholder-val="{{ false }}">
@@ -402,10 +409,10 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </div>
 </sc-if>
 <sc-if value="{{ semCondicoes }}" hint-placeholder-val="{{ true }}">
-<span style="font-size: 13px; color: var(--tx3)">{{ rodape }}</span>
+<span style="font-size: 13px; color: var(--tx3); min-width: 0; text-align: center">{{ rodape }}</span>
 </sc-if>
 <sc-if value="{{ temSeguinte }}" hint-placeholder-val="{{ true }}">
-<button type="button" onClick="{{ seguinte }}" disabled="{{ seguinteOff }}" style="display: flex; align-items: center; gap: 8px; height: 50px; padding: 0 26px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; opacity: {{ opSeguinte }}; box-shadow: 0 8px 30px var(--cta-glow)">{{ seguinteLabel }}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 5l7 7-7 7"></path></svg></button>
+<button type="button" onClick="{{ seguinte }}" disabled="{{ seguinteOff }}" style="display: flex; flex: none; align-items: center; gap: 8px; height: 50px; padding: 0 22px; white-space: nowrap; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; opacity: {{ opSeguinte }}; box-shadow: 0 8px 30px var(--cta-glow)">{{ seguinteLabel }}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round"><path d="M9 5l7 7-7 7"></path></svg></button>
 </sc-if>
 <sc-if value="{{ p4 }}" hint-placeholder-val="{{ false }}">
 <div style="display: flex; align-items: center; gap: 10px">
@@ -536,6 +543,8 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 // Teste de acuidade: 5 linhas de letras Sloan, cada vez mais pequenas.
 // Questionário pré-exame (VISION GUARD, 9 perguntas; regras em motor/regras.js → REGRAS.prontidao).
 // Os valores (v) são os mesmos do motor; aqui só ficam os textos curtos em inglês para os botões.
+// Telemóvel: ecrã pequeno e toque. O teste é para portátil ou tablet (letras e grelha com tamanho fiável).
+const IRIS_TELEMOVEL = (function () { try { const m = Math.min(screen.width, screen.height); return m < 600 && matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
 const QUEST = [
   { id: 'nave', t: 'Is the spacecraft stable right now?', ops: [[0, 'Yes, no vibration or manoeuvre'], [1, 'Slight vibration, but I can keep my head and eyes steady'], [2, 'Strong vibration or manoeuvre, hard to stay still']] },
   { id: 'luz', t: 'Can you see the screen clearly with this lighting?', ops: [[0, 'Yes, steady light and no glare'], [1, 'Small changes or glare, but I can see'], [2, 'The light or glare makes the screen hard to see']] },
@@ -549,6 +558,13 @@ const QUEST = [
 ];
 const ALT_CURTO = { 1: 'blurred vision', 2: 'distorted lines or dark spots', 3: 'double vision or brief loss of vision', 4: 'sudden loss or major worsening' };
 // Prontidão (motor do Edilson); os motivos vêm em português e passam por Visao.en.
+// Cor de cada resposta: a mesma regra do motor (verde = sem efeito, amarelo = ressalva, vermelho = medição não fiável).
+function estadoOpcao(q, v) {
+  if (q.multi) return v === 0 ? 'verde' : (v >= 3 ? 'vermelho' : 'amarelo');
+  const P = window.REGRAS && window.REGRAS.prontidao ? window.REGRAS.prontidao.perguntas.find((x) => x.id === q.id) : null;
+  const o = P ? P.opcoes.find((x) => x.v === v) : null;
+  return o && o.e ? o.e : (v === 0 ? 'verde' : 'amarelo');
+}
 function prontidaoDe(qv) {
   const r = window.Motor && window.REGRAS ? window.Motor.prontidao(qv, window.REGRAS) : { estado: 'verde', ressalvas: [], alerta_clinico: false };
   const en = window.Visao && window.Visao.en ? window.Visao.en : (x) => x;
@@ -594,7 +610,7 @@ class Component extends DCLogic {
     this.state = {
       tema: 'escuro', perfil: 'B', resp: null, passo: 1, max: 1, ajuda: false, relatorio: false, real: null, back: null, dist: null,
       intro: { 2: true, 3: true }, voz: window.Voz ? window.Voz.ligada() : false, mic: { estado: 'desligado', mensagem: '' },
-      qv: {}, qpag: 0,
+      qv: {}, qpag: 0, qIntro: true,
       ac: this.acInicial(),
       am: this.amInicial()
     };
@@ -924,12 +940,12 @@ class Component extends DCLogic {
     const pagIni = s.qpag * 3, pagQs = QUEST.slice(pagIni, pagIni + 3);
     const pagCompleta = pagQs.every(respondida);
     const qPag = pagQs.map((q, k) => ({
-      n: String(pagIni + k + 1), t: q.t, sub: q.sub || '',
+      n: String(pagIni + k + 1), t: q.t, sub: q.sub || '', cols: window.innerWidth < 820 ? 1 : (q.ops.length <= 4 ? q.ops.length : 3),
       ops: q.ops.map((o) => {
         const v = o[0];
         const on = q.multi ? (Array.isArray(qv[q.id]) && (v === 0 ? qv[q.id].length === 0 : qv[q.id].indexOf(v) !== -1)) : qv[q.id] === v;
-        const tom = q.multi ? (v === 0 ? 0 : (v >= 3 ? 2 : 1)) : (v === 0 ? 0 : (q.id === 'correcao' && v === 2 ? 0 : 1));
-        const T = [{ fundo: 'var(--ok-soft)', borda: 'var(--ok-line)', cor: 'var(--ok-tx)' }, { fundo: 'var(--acc-soft)', borda: 'var(--acc-line)', cor: 'var(--acc-text)' }, { fundo: 'var(--warn-soft)', borda: 'var(--warn-line)', cor: 'var(--warn-tx)' }][tom];
+        const tom = estadoOpcao(q, v);
+        const T = { verde: { fundo: 'var(--ok-soft)', borda: 'var(--ok-line)', cor: 'var(--ok-tx)' }, amarelo: { fundo: 'var(--ylw-soft)', borda: 'var(--ylw-line)', cor: 'var(--ylw-tx)' }, vermelho: { fundo: 'var(--bad-soft)', borda: 'var(--bad-line)', cor: 'var(--bad-tx)' } }[tom];
         return { t: o[1], on: on, fundo: on ? T.fundo : 'transparent', borda: on ? T.borda : 'var(--line)', cor: on ? T.cor : 'var(--tx2)',
           pick: () => this.setState((st) => {
             const n = Object.assign({}, st.qv);
@@ -955,7 +971,8 @@ class Component extends DCLogic {
       pronto: faltam === 0, dicas: faltam > 0 || (PR.estado === 'verde' && !PR.alerta), vermelho: faltam === 0 && PR.estado === 'vermelho',
       ressalvas: faltam === 0 ? PR.ressalvas : [], alerta: PR.alerta,
       dicasTxt: faltam > 0 ? 'Let\'s do the quick vision test. It takes about 5 minutes. First, get ready:' : 'Before you start, check:',
-      textoAlerta: 'New and important change in vision: tell the flight surgeon now, even if you do not do the test now.'
+      textoAlerta: 'New and important change in vision: tell the flight surgeon now, even if you do not do the test now.',
+      resumo: [PRV.texto.replace(/:$/, '.')].concat(faltam === 0 ? PR.ressalvas : []).join(' ')
     });
     if (faltam > 0) Object.assign(pr, { glow: 'var(--acc-soft)', linha: 'var(--line2)' });
     const altSel = Array.isArray(qv.alteracao_visual) ? qv.alteracao_visual : [];
@@ -1107,12 +1124,12 @@ class Component extends DCLogic {
     const ACC = [
       ['Keep the normal schedule.', 'Next quick test in 7 days.', 'OCT recommended per protocol.'],
       ['Repeat the tests when you can.', 'The result is saved with the conditions flag.', 'If you notice any change in your vision, tell the flight surgeon.'],
-      ['The summary goes to the medical team for review.', 'Repeat the tests in 2 to 3 days, or when the doctor says.', 'If you can, also do the OCT and record the result.'],
-      ['Tell the flight surgeon now.', 'The results package is ready to send.', 'No contact? Follow the approved holding plan.']
+      ['Report sent automatically to Earth, to the medical team for review.', 'Repeat the tests in 2 to 3 days, or when the doctor says.', 'If you can, also do the OCT and record the result.'],
+      ['Tell the flight surgeon now.', 'Report sent automatically to Earth, marked as priority.', 'No contact? Follow the approved holding plan.']
     ];
     const accTxt = ACC[nivel].slice();
     if (back && nivel !== 1) accTxt[1] = nivel === 0 ? 'Next quick test in ' + back.proximo_dias + ' days.' : (nivel === 3 ? accTxt[1] : 'Repeat the tests in ' + back.proximo_dias + ' days, or when the doctor says.');
-    if (back) accTxt[2] = nivel === 3 ? accTxt[2] : 'Saved on this device (test no. ' + back.testes + ').';
+    if (back) accTxt[2] = nivel === 3 ? accTxt[2] : (nivel === 2 ? 'Saved on this device (test no. ' + back.testes + ').' : 'Saved and sent automatically to Earth, to the medical team (test no. ' + back.testes + ').');
     const accoes = accTxt.map((t, i) => ({ n: i + 1, t: t }));
 
     // ---------- Relatório final: a conclusão e em que dados se baseou ----------
@@ -1164,7 +1181,7 @@ class Component extends DCLogic {
     if (mg.dia === 0) porque.push({ k: 'Pre-flight', t: 'Recorded on Earth before launch, without microgravity. This is the reference for every test in flight.' });
     else if (mg.p50 !== undefined) porque.push({ k: 'Microgravity', t: 'Day ' + mg.dia + ' in microgravity: in the reference population the retina around the optic nerve has thickened about +' + mg.p50 + '% by now (9 in 10 stay below +' + mg.p90 + '%). ' + (nivel >= 2 ? 'A change in the quick tests at this stage should be checked with OCT when available.' : 'The quick tests found no visual change today.') });
     if (oct) porque.push({ k: 'OCT', t: 'Latest OCT (day ' + oct.dia + '): ' + (oct.delta >= 0 ? '+' : '') + oct.delta + '% vs the first OCT, ' + (oct.level === 0 ? 'within the expected range.' : 'above the expected range: ' + oct.motivo) });
-    const relMeta = eu.nome + ' · Day ' + eu.dia + ' · ' + (this._hora || new Date()).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' · ' + (euReal ? 'Real data' : 'Simulated example');
+    const relMeta = eu.nome + ' · Day ' + eu.dia + ' · ' + (this._hora || new Date()).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' · ' + (euReal ? 'Real data' : 'Simulated example') + ' · Sent automatically to Earth and the medical team';
     const REV = [
       { t: 'No review needed', cor: 'var(--ok-tx)', soft: 'var(--ok-soft)' },
       { t: 'Repeat the test', cor: 'var(--ylw-tx)', soft: 'var(--ylw-soft)' },
@@ -1203,7 +1220,7 @@ class Component extends DCLogic {
     let rodape1 = 'About 5 minutes in total';
     if (faltam > 0) rodape1 = 'Answer ' + faltam + (faltam === 1 ? ' question' : ' questions') + ' to start';
     else if (PR.estado === 'vermelho') rodape1 = 'Not reliable right now: fix the condition first';
-    const rodapes = [rodape1, '', '', 'Done · day ' + eu.dia + (back ? ' · saved on this device' : '')];
+    const rodapes = [rodape1, '', '', 'Done · day ' + eu.dia + ' · report sent automatically to Earth and the medical team'];
     const subtitulos = ['Checks · about 5 minutes', 'Checks · test 1 of 2 · about 1 minute per eye', 'Checks · test 2 of 2 · about 1 minute per eye', 'Checks · result'];
     const alvoCm = s.passo === 2 ? '40' : '33';
     const dv = s.dist;
@@ -1317,6 +1334,10 @@ class Component extends DCLogic {
       aj: aj,
       // 1
       ola: eu.ola,
+      qIntro: !!s.qIntro, qLista: !s.qIntro,
+      telemovel: IRIS_TELEMOVEL,
+      comecarQuestTxt: IRIS_TELEMOVEL ? 'Continue on this phone ›' : 'Start the questions ›',
+      comecarQuest: () => this.setState({ qIntro: false }),
       preparar: preparar,
       pr: pr, qPag: qPag,
       qPagTxt: 'Questions ' + (pagIni + 1) + '–' + (pagIni + 3) + ' of 9',
@@ -1374,7 +1395,7 @@ class Component extends DCLogic {
       accoes: accoes,
       revisao: REV[nivel],
       comAlerta: nivel >= 2,
-      refazer: () => { if (window.Visao) { window.Visao.camara.parar(); window.Visao.camara.limpar(); } this.setState({ passo: 1, max: 1, qv: {}, qpag: 0, ac: this.acInicial(), am: this.amInicial(), back: null, dist: null, intro: { 2: true, 3: true }, resp: this.state.real ? null : this.state.resp }); },
+      refazer: () => { if (window.Visao) { window.Visao.camara.parar(); window.Visao.camara.limpar(); } this.setState({ passo: 1, max: 1, qv: {}, qpag: 0, qIntro: true, ac: this.acInicial(), am: this.amInicial(), back: null, dist: null, intro: { 2: true, 3: true }, resp: this.state.real ? null : this.state.resp }); },
       noInicio: s.passo === 1,
       opAnterior: s.passo === 1 ? 0.4 : 1,
       anterior: () => { if (this.state.passo > 1) this.irPara(this.state.passo - 1); },

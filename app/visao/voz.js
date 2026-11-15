@@ -140,13 +140,40 @@
     return tenta();
   }
 
+  // Telemóvel: o modo contínuo do Chrome/Android repete resultados e corta; aí ouvimos frase a frase e reiniciamos logo.
+  var MOVEL = (function () { try { return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (matchMedia("(pointer: coarse)").matches && Math.min(screen.width, screen.height) < 820); } catch (e) { return false; } })();
+  function tokens(t) { return semAcentos(String(t || "").toLowerCase()).replace(/[.,;:!?«»“”"]/g, " ").replace(/\s+/g, " ").trim().split(" ").filter(Boolean); }
+  function eLetra(tok) { return !!((emPT() ? MAPA_PT : MAPA)[tok]); }
+  // Dicas ao reconhecedor (Chrome recente): reforça os nomes das letras e os comandos.
+  function dicas(rec) {
+    try {
+      if (typeof g.SpeechRecognitionPhrase === "function" && "phrases" in rec) {
+        var lista = emPT() ? ["cê", "dê", "é", "efe", "agá", "capa", "ele", "ene", "ó", "pê", "erre", "esse", "tê", "vê", "zê", "seguinte", "apagar", "não consigo ler", "repetir"]
+                           : ["C", "D", "E", "F", "H", "K", "L", "N", "O", "P", "R", "S", "T", "V", "Z", "next", "delete", "can't read", "repeat", "all straight"];
+        rec.phrases = lista.map(function (x) { return new g.SpeechRecognitionPhrase(x, 5.0); });
+      }
+    } catch (e) { }
+  }
   function criar() {
     var rec = new R();
-    rec.lang = mic.idioma; rec.continuous = true; rec.interimResults = false; rec.maxAlternatives = 1;
+    rec.lang = mic.idioma; rec.continuous = !MOVEL; rec.interimResults = true; rec.maxAlternatives = 1;
     if (mic.local) rec.processLocally = true;
+    dicas(rec);
+    var feitos = {};   // por resultado: quantas palavras já foram entregues
+    function entrega(txt) { if (txt && mic.aoOuvir && !aFalar) mic.aoOuvir(txt); }
     rec.onresult = function (ev) {
       for (var k = ev.resultIndex; k < ev.results.length; k++) {
-        if (ev.results[k].isFinal && mic.aoOuvir && !aFalar) mic.aoOuvir(ev.results[k][0].transcript || "");
+        var r = ev.results[k], ja = feitos[k] || 0;
+        if (r.isFinal) {
+          var tf = tokens(r[0] ? r[0].transcript : "");
+          entrega(tf.slice(Math.min(ja, tf.length)).join(" ")); feitos[k] = tf.length;
+        } else {
+          // Resultado provisório: as letras já seguidas de outra palavra não mudam mais; entregam-se logo,
+          // sem esperar pelo silêncio do fim da frase. Comandos esperam pelo resultado final.
+          var ti = tokens(r[0] ? r[0].transcript : ""), est = ja;
+          while (est < ti.length - 1 && eLetra(ti[est])) est++;
+          if (est > ja) { entrega(ti.slice(ja, est).join(" ")); feitos[k] = est; }
+        }
       }
     };
     rec.onerror = function (ev) {
@@ -155,8 +182,11 @@
       else if (ev.error === "language-not-supported") { mic.querido = false; estado("erro", emPT() ? "O reconhecimento de voz em português não está disponível aqui. Usa os botões." : "English speech recognition is not available here. Use the buttons."); }
     };
     rec.onend = function () {
-      // Browsers stop after some silence: keep listening while the microphone is on.
-      if (mic.querido && !mic.pausado) { try { rec.start(); } catch (e) { } }
+      // Os browsers param depois de algum silêncio (no telemóvel, a cada frase): voltamos a ouvir logo.
+      if (mic.querido && !mic.pausado) {
+        if (MOVEL) { mic.rec = criar(); try { mic.rec.start(); } catch (e) { } }
+        else { feitos = {}; try { rec.start(); } catch (e) { } }
+      }
     };
     return rec;
   }

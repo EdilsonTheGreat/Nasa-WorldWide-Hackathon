@@ -137,3 +137,22 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Coerência: OCT do próprio astronauta aparece na linha do tempo SANS, no Perfil e no relatório final; "Vision changes" com o mesmo nome em todo o lado;
   gráfico do Histórico com os dois olhos; miniaturas do índice refeitas com os ecrãs actuais.
 
+
+## 15 Nov: envio automático do relatório
+- Cada teste guardado entra **logo** na caixa de saída para a equipa médica (`Visao.enviosDe(id)`, chave `visao-envios-<ID>`), sem perguntar. Guarda o dia, a cor que o astronauta vê, a prioridade (rotina / revisão / prioridade) e a hora.
+- A app não tem rede: o estado é "em fila" e o relatório sai sozinho no próximo contacto com a Terra.
+- Alertas: saiu o botão "Send to the flight surgeon" (e o "Undo"). Fica um cartão "Sent automatically to the medical team" (ou "… flight surgeon · priority" no vermelho).
+- Resultado e relatório final dizem que o relatório foi enviado automaticamente.
+
+## 15 Nov (tarde): passo 1 em dois ecrãs, aviso no telemóvel, envio para a Terra
+- Passo 1 começa com o ecrã "Olá, <nome>" (o que vai acontecer + a preparação) e um botão "Começar as perguntas ›". Só depois aparece o questionário, agora a toda a largura (acabou a sobreposição dos botões na página 2).
+- A prontidão (Pronto / Pronto com ressalvas / Não fiável) aparece numa faixa dentro do questionário, quando as 9 respostas estão dadas.
+- A pergunta 4 continua de escolha múltipla, como no questionário VISION GUARD ("pode marcar várias"); as outras 8 só aceitam uma resposta.
+- Telemóvel (ecrã < 600 px e toque): aviso para usar portátil ou tablet; o botão passa a "Continuar neste telemóvel ›". Em ecrã estreito as opções ficam numa coluna.
+- Os textos do envio automático dizem agora "para a Terra · equipa médica".
+
+## 15 Nov (noite): reconhecimento de voz mais rápido e mais tolerante (voz.js)
+- Resultados provisórios: as letras são entregues assim que vem a palavra seguinte, sem esperar pelo silêncio do fim da frase. Os comandos (seguinte, apagar…) esperam pelo resultado final.
+- Telemóvel: em vez do modo contínuo (que no Android repete e corta), ouve frase a frase e reinicia logo.
+- Chrome recente: dicas ao reconhecedor com os nomes das letras e os comandos (SpeechRecognitionPhrase), quando existir.
+- Questionário: cada resposta fica com a cor que o motor lhe dá (verde, amarelo = ressalva, vermelho = não fiável). A faixa de prontidão mostra os motivos em etiquetas curtas e o "Answer again" passou para a linha dos botões; o cartão já não transborda.
