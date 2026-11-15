@@ -13,8 +13,6 @@
 <script src="armazenamento.js"></script>                  <!-- Armazem (perfis e testes guardados no aparelho) -->
 <script src="camara/vendor/mediapipe/face_detection.js"></script>
 <script src="camara/distancia.js"></script>               <!-- Distancia (câmara) -->
-<script src="camara/vendor/faceapi/face-api.js"></script>
-<script src="camara/rosto.js"></script>                   <!-- Rosto (entrar com a cara) -->
 ```
 Sem `fetch`, sem CDN. A câmara só funciona abrindo com `abrir_app.command` / `abrir_app.bat` (http://localhost).
 
@@ -56,23 +54,15 @@ Distancia.iniciar(videoEl, { minCm: 30, maxCm: 45, pastaModelo: "camara/vendor/m
 Distancia.calibrar(40);  Distancia.parar();
 ```
 
-## 5b. Entrar com a cara (`Rosto`)
-> **Fora da app.** O desafio não pode ter autenticação: `app/visao/` já não usa `Rosto` (escolhe-se o perfil e entra-se). Fica só no ecrã de teste `camara/teste_visao.html`.
-
-```js
-Rosto.definirPasta("camara/vendor/faceapi/");
-Rosto.identificar(videoEl).then(r => { if (r.ok) /* entrar no perfil r.id */; else /* mostrar r.mensagem e a lista */ });
-Rosto.registar(videoEl, "MARLLON").then(r => /* r.ok, r.mensagem */);   // só a própria pessoa, com consentimento
-Rosto.registados();  Rosto.apagar("MARLLON");
-```
-Guarda só um código numérico da cara, no aparelho. A lista de perfis tem de continuar disponível (a cara é um atalho, não uma obrigação). Parar `Distancia` antes de usar `Rosto` (partilham a câmara).
+## 5b. Sem autenticação
+O desafio não pode ter autenticação: escolhe-se o perfil na lista e entra-se (sem palavra-passe nem reconhecimento do rosto). O antigo módulo `Rosto` (`camara/rosto.js` + `camara/vendor/faceapi/`) foi retirado do projecto.
 
 ## 5c. Perfis da equipa e questionário pré-exame
 - `Armazem.perfis()` já devolve CHANDY, EDILSON, LUKANGA, MARLLON, NEYDE e SHEINAZE (`Armazem.EQUIPA`); `Armazem.criarPerfil(nome)` cria outros.
 - Questionário (VISION GUARD): as perguntas e opções estão em `REGRAS.prontidao.perguntas`; desenha-as a partir daí. `Motor.prontidao(respostas, REGRAS)` → `{estado: verde|amarelo|vermelho, ressalvas, alerta_clinico, sintomas, texto, texto_alerta}`. Vermelho = não avançar para o teste. `alerta_clinico` = mostrar `texto_alerta` sempre, mesmo sem teste. Guardar com o teste: `pre_exame`, `prontidao`, `ressalvas`, `alerta_clinico`.
 
 ## 6. Exemplo completo a funcionar
-`app/camara/teste_visao.html` + `teste_visao.js`: perfis, entrada pela cara, questionário pré-exame, distância, Amsler por olho, leitura de perto, óculos de reserva, 4 perguntas, semáforo e avisos do modelo. Podes copiar os blocos de lógica e mudar só o HTML/CSS. Marcadores `window.__passo`, `window.__resultado` e `window.__modelo` servem para testes automáticos: mantém-nos se puderes.
+`app/camara/teste_visao.html` + `teste_visao.js`: perfis, questionário pré-exame, distância, Amsler por olho, leitura de perto, óculos de reserva, 4 perguntas, semáforo e avisos do modelo. Podes copiar os blocos de lógica e mudar só o HTML/CSS. Marcadores `window.__passo`, `window.__resultado` e `window.__modelo` servem para testes automáticos: mantém-nos se puderes.
 
 ## 7. Prompt para colar no teu Claude
 > Lê `CLAUDE.md` e `docs/MARLLON.md`. Tenho a minha UI em `app/` (diz-lhe os ficheiros). Liga-a ao backend existente usando só as funções descritas em `docs/MARLLON.md` (`Armazem`, `Motor`, `Modelo`, `Distancia`), sem reescrever lógica e sem alterar ficheiros em `motor/`, `simulador/`, `dados/` nem `app/camara/vendor/`. Usa `app/camara/teste_visao.js` como referência de como chamar cada função. No fim, confirma que funciona sem internet.

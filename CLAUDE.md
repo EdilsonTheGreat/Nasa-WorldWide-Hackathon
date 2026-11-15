@@ -13,6 +13,7 @@ Ciclo: **teste → comparação → semáforo → acção**.
 4. **JavaScript simples (ES2017+), sem frameworks, sem build, sem npm** na app e no motor. Funções puras sempre que possível.
 5. **Textos visíveis ao utilizador em português** (variante de Moçambique / europeia: "acção", "objectivo", "projecto").
 6. **Não inventar números médicos.** Limites e textos clínicos estão em `motor/regras.js` e são validados pela equipa de saúde (Sheinaze e Neyde). Se faltar um valor, deixar `// TODO saúde:` e avisar.
+7. **Sem autenticação.** Nada de palavra-passe, Face ID nem reconhecimento do rosto: escolhe-se o perfil na lista e entra-se.
 
 ## Quem é dono de cada pasta (não editar pastas de outros sem combinar)
 | Pasta | Dono | Conteúdo |
@@ -20,7 +21,7 @@ Ciclo: **teste → comparação → semáforo → acção**.
 | `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Gera `dados/*` e `app/dados.js` |
 | `dados/` | gerado | **Não editar à mão.** Correr `python3 simulador/simulador.py` |
 | `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `testes.js` + `teste.html` (9 testes) |
-| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`), entrada pela cara (`rosto.js`, só no ecrã de teste: a app em `app/visao/` não tem autenticação) e teste completo; bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
+| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`) e teste completo do backend (`teste_visao.html`); bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
 | `docs/` | todos | Especificações. `docs/EDILSON.md` = motor; `docs/MARLLON.md` = como a UI chama o backend (`Armazem`, `Motor`, `Modelo`, `Distancia`) |
 
 ## Contrato de dados (mudar só depois de avisar a equipa toda)
@@ -29,8 +30,9 @@ Ciclo: **teste → comparação → semáforo → acção**.
 - `perfil`: `populacao` | `demo_verde` (DEMO_A) | `demo_amarelo` (DEMO_B) | `demo_vermelho` (DEMO_C).
 - Cores: sempre as strings `"verde"`, `"amarelo"`, `"vermelho"` (e `"a_calibrar"` quando não há linha de base).
 
-## Privacidade (reconhecimento facial)
-- Só a própria pessoa regista a sua cara, com consentimento. Guarda-se apenas o descritor numérico, no aparelho (`localStorage`). Nunca guardar nem enviar fotografias. A escolha manual do perfil tem de existir sempre.
+## Sem autenticação (15 Nov)
+- O desafio não pode ter autenticação: escolhe-se o perfil na lista e entra-se. Nada de palavra-passe, Face ID nem reconhecimento do rosto (o `rosto.js` e o `face-api` foram retirados).
+- A câmara só mede a distância ao ecrã e a luz. Nunca guardar nem enviar fotografias.
 
 ## Comandos
 - Regenerar dados: `python3 simulador/simulador.py` (seed fixa → resultados iguais)

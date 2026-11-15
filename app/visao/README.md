@@ -183,4 +183,5 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - `Perfil`: "Switch profile" volta ao `Main` (saiu a folha com Face ID / palavra-passe e o "Sign out"); saiu "Delete my face".
   Perfis fora da equipa (criados por engano) removem-se em Perfil › Privacy ("Remove this profile", 2 toques).
 - `ligacao.js` apaga uma vez os descritores de rosto guardados antes (`dt_rostos`) e a chave `visao-entrada`.
-- `app/camara/teste_visao.html` (ecrã de teste do backend, fora da app) não foi mexido.
+- `app/camara/teste_visao.html` (ecrã de teste do backend) também deixou de ter entrada pela cara. Saíram do projecto `app/camara/rosto.js`
+  e `app/camara/vendor/faceapi/` (o face-api só servia para isto; a distância usa o MediaPipe).

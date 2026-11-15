@@ -64,10 +64,7 @@
 
   <!-- 0. Quem é e que dia é -->
   <section class="passo activo" id="p-inicio">
-    <h2>1. Identificação</h2>
-    <button class="principal" id="b-rosto-entrar">Entrar com a cara</button>
-    <span class="nota" id="rosto-info"></span>
-    <p class="aviso" id="rosto-msg" hidden></p>
+    <h2>1. Perfil</h2>
     <label for="perfil">Astronauta</label>
     <select id="perfil"></select>
     <div id="novo-perfil">
@@ -79,10 +76,7 @@
     <p class="nota" id="historico-info"></p>
     <button class="principal" id="b-iniciar">Teste rápido (5 min)</button>
     <button id="b-ver">Ver último resultado</button>
-    <button id="b-rosto-registar">Registar a minha cara neste perfil</button>
-    <button id="b-rosto-apagar">Apagar a cara registada</button>
     <button id="b-apagar">Apagar os testes deste astronauta</button>
-    <p class="nota">Reconhecimento facial: só com o consentimento da própria pessoa. Guarda-se apenas um código numérico da cara, neste aparelho; nenhuma fotografia é guardada nem enviada. Podes sempre escolher o perfil na lista.</p>
   </section>
 
   <!-- Questionário pré-exame (VISION GUARD) -->
@@ -166,8 +160,6 @@
 <script src="../armazenamento.js"></script>
 <script src="vendor/mediapipe/face_detection.js"></script>
 <script src="distancia.js"></script>
-<script src="vendor/faceapi/face-api.js"></script>
-<script src="rosto.js"></script>
 <script src="teste_visao.js"></script>
 </body>
 </html>

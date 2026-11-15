@@ -3,7 +3,7 @@
 //
 // (Sem OCT: o astronauta não regista exames de OCT nesta app. O OCT só existe
 //  nos astronautas simulados da demo.)
-// Passos: identificação (lista ou cara) → questionário pré-exame (prontidão) →
+// Passos: perfil (escolhido na lista) → questionário pré-exame (prontidão) →
 //         distância (câmara) → Amsler olho direito →
 //         Amsler olho esquerdo → leitura de perto → (óculos de reserva) →
 //         4 perguntas → resultado do motor (semáforo)
@@ -63,7 +63,6 @@
     var novo = $("perfil").value === "__novo__";
     $("novo-perfil").style.display = novo ? "block" : "none";
     $("b-ver").disabled = novo || !registosDe(idActual()).length; $("b-apagar").disabled = novo;
-    actualizarRosto();
     var r = novo ? [] : registosDe(idActual());
     if (r.length === 0) {
       $("historico-info").textContent = "Primeiro registo deste astronauta: vai ficar como linha de base (o normal dele).";
@@ -100,45 +99,6 @@
     Armazem.criarPerfil(i.id);
     iniciarPre();
   };
-
-  // ---------- Entrar com a cara (camara/rosto.js) ----------
-  function msgRosto(texto) { $("rosto-msg").textContent = texto; $("rosto-msg").hidden = !texto; }
-  function actualizarRosto() {
-    var n = window.Rosto ? Rosto.registados() : [];
-    $("rosto-info").textContent = n.length ? "Caras registadas: " + n.join(", ") : "Ainda sem caras registadas.";
-    var novo = $("perfil").value === "__novo__";
-    $("b-rosto-registar").disabled = novo;
-    $("b-rosto-apagar").disabled = novo || n.indexOf(idActual()) === -1;
-  }
-  function comRosto(fn) {
-    if (!window.Rosto) { msgRosto("Reconhecimento facial indisponível. Escolhe o perfil na lista."); return; }
-    if (dist.iniciada) { Distancia.parar(); dist.iniciada = false; }
-    Rosto.definirPasta("vendor/faceapi/");
-    $("camara").hidden = false; $("cam-estado").textContent = "a olhar…"; $("cam-cm").textContent = "";
-    msgRosto("Olha de frente para a câmara…");
-    fn().then(function (r) {
-      $("camara").hidden = true;
-      msgRosto(r.mensagem);
-      window.__rosto = r;   // usado pelos testes automáticos
-      actualizarRosto();
-      return r;
-    });
-  }
-  $("b-rosto-entrar").onclick = function () {
-    comRosto(function () {
-      return Rosto.identificar($("video")).then(function (r) {
-        if (r.ok) { Armazem.criarPerfil(r.id); preencherPerfis(r.id); }
-        return r;
-      });
-    });
-  };
-  $("b-rosto-registar").onclick = function () {
-    var id = idActual();
-    if (!id) return;
-    if (!confirm("Registar a cara de " + id + " neste aparelho? Só a própria pessoa deve fazer isto.")) return;
-    comRosto(function () { return Rosto.registar($("video"), id); });
-  };
-  $("b-rosto-apagar").onclick = function () { Rosto.apagar(idActual()); msgRosto("Cara apagada."); actualizarRosto(); };
 
   // ---------- Questionário pré-exame (regras em motor/regras.js) ----------
   function iniciarPre() {
