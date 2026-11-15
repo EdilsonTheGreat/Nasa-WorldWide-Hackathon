@@ -1173,7 +1173,14 @@
 "The measurement would not be reliable.": "A medição não seria fiável.",
 "Fix the condition and answer again.": "Corrige a condição e responde de novo.",
 "This browser has no speech recognition (Firefox, for example). Use Chrome, Edge or Safari, or the buttons.": "Este browser não tem reconhecimento de voz (o Firefox, por exemplo). Usa o Chrome, o Edge ou o Safari, ou os botões.",
-"Voice needs a secure page: open the app with https:// (python3 servidor.py --rede) or on localhost. Use the buttons for now.": "A voz precisa de uma página segura: abre a app com https:// (python3 servidor.py --rede) ou em localhost. Por agora, usa os botões."
+"Voice needs a secure page: open the app with https:// (python3 servidor.py --rede) or on localhost. Use the buttons for now.": "A voz precisa de uma página segura: abre a app com https:// (python3 servidor.py --rede) ou em localhost. Por agora, usa os botões.",
+"On a phone the letters and the grid are too small and voice answers do not work offline, so the result may not be valid.": "No telemóvel as letras e a grelha ficam demasiado pequenas e a resposta por voz não funciona sem internet, por isso o resultado pode não ser válido.",
+"Voice answers work offline only in recent Chrome or Edge on a computer. Here, use the letter keys.": "A resposta por voz só funciona sem internet no Chrome ou no Edge recentes, num computador. Aqui, usa as teclas das letras.",
+"Voice needs a secure page (https:// or localhost). Use the letter keys.": "A voz precisa de uma página segura (https:// ou localhost). Usa as teclas das letras.",
+"The English voice pack is not installed on this device. Install it once before the mission (“Prepare voice” on the start page). Use the letter keys for now.": "O pacote de voz em inglês não está instalado neste aparelho. Instala-o uma vez antes da missão (“Prepare voice” na página inicial). Por agora, usa as teclas das letras.",
+"On-device English speech recognition is not available here. Use the letter keys.": "O reconhecimento de voz em inglês no aparelho não está disponível aqui. Usa as teclas das letras.",
+"Could not start the microphone. Use the letter keys.": "Não foi possível ligar o microfone. Usa as teclas das letras.",
+"This browser cannot recognise speech on the device. Use Chrome or Edge on a computer, or the letter keys.": "Este browser não reconhece voz no aparelho. Usa o Chrome ou o Edge num computador, ou as teclas das letras."
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };

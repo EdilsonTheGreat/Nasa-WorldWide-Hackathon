@@ -5,29 +5,27 @@
 //    (Mac, iPad, Windows, Android). Prefers a local English voice.
 //    No voice installed -> the app keeps working with text only.
 //
-// 2. LISTEN (speech recognition) to answer the letters by voice:
-//    a) ON THE DEVICE (processLocally = true; recent Chrome/Edge): the sound never
-//       leaves the device. The English pack is downloaded once, with internet,
-//       before the mission (Voz.prepararMicrofone(), "Prepare voice" on index.html).
-//    b) ONLINE (Safari and others): the browser sends the sound to its own
-//       service (Apple / Google) and needs internet. Only used if the astronaut
-//       allows it explicitly (second tap on "Microphone"); the choice is remembered
-//       on this device in "visao-voz-online".
-//    Without either, the astronaut uses the buttons.
+// 2. LISTEN (speech recognition) to answer the letters by voice: ONLY ON THE DEVICE.
+//    processLocally = true (recent Chrome/Edge on a computer): the sound never leaves the
+//    device and no internet is used. The English pack is installed once, before the mission,
+//    like the app itself (Voz.prepararMicrofone(), "Prepare voice" on index.html).
+//    There is NO online recognition: browsers that only recognise through Apple/Google
+//    servers (Safari, phones) get the letter keys instead.
 //
 // Use:
 //   Voz.falar("Which letter do you see?")
 //   Voz.ligada() / Voz.alternar()                       spoken instructions on/off
-//   Voz.ligarMicrofone(aoOuvir, aoEstado, permitirOnline)
+//   Voz.ligarMicrofone(aoOuvir, aoEstado)
 //        aoOuvir(text), aoEstado({estado, mensagem})
-//        estado: desligado | a_preparar | a_ouvir | precisa_online | sem_pacote | indisponivel | erro
+//        estado: desligado | a_preparar | a_ouvir | sem_pacote | indisponivel | erro
 //   Voz.desligarMicrofone()
 //   Voz.interpretar("F P next", letters)  -> [{tipo:"letra", v:"F"}, {tipo:"letra", v:"P"}, {tipo:"seguinte"}]
 // =====================================================================
 (function (g) {
   "use strict";
   var CHAVE = "visao-voz";              // "1" speak, "0" silent
-  var CHAVE_ONLINE = "visao-voz-online"; // "1" = online recognition allowed on this device
+  // Sem reconhecimento online: apaga a autorização antiga, se ficou guardada neste aparelho.
+  try { g.localStorage.removeItem("visao-voz-online"); } catch (e) { }
   // Língua da app (botão PT/EN, i18n.js): voz e reconhecimento seguem-na.
   function emPT() { return !!(g.I18N && g.I18N.lingua() === "pt"); }
   var IDIOMAS_EN = ["en-US", "en-GB"], IDIOMAS_PT = ["pt-PT", "pt-BR"];
@@ -124,7 +122,6 @@
     if (mic.aoEstado) mic.aoEstado({ estado: e, mensagem: msg || "" });
   }
   function suportaLocal() { return !!(R && "processLocally" in R.prototype && typeof R.available === "function"); }
-  function onlinePermitido() { return ler(CHAVE_ONLINE) === "1"; }
 
   // Looks for an English language pack already installed on the device.
   function idiomaLocal() {
@@ -195,39 +192,25 @@
     mic.rec = criar();
     try {
       mic.rec.start();
-      estado("a_ouvir", mic.local
-        ? "Listening (on this device). Say the letters, “next”, “delete” or “can't read”."
-        : "Listening (online service). Say the letters, “next”, “delete” or “can't read”.");
+      estado("a_ouvir", "Listening (on this device). Say the letters, “next”, “delete” or “can't read”.");
     } catch (e) { mic.querido = false; estado("erro", "Could not start the microphone. Use the buttons."); }
   }
 
-  function ligarMicrofone(aoOuvir, aoEstado, permitirOnline) {
+  function ligarMicrofone(aoOuvir, aoEstado) {
     mic.aoOuvir = aoOuvir; mic.aoEstado = aoEstado; mic.querido = true;
-    if (!R) { mic.querido = false; estado("indisponivel", "This browser has no speech recognition (Firefox, for example). Use Chrome, Edge or Safari, or the buttons."); return; }
-    // O browser só dá o microfone em https:// ou localhost. Noutro aparelho por http://IP fica bloqueado sem aviso.
-    if (g.isSecureContext === false) { mic.querido = false; estado("indisponivel", "Voice needs a secure page: open the app with https:// (python3 servidor.py --rede) or on localhost. Use the buttons for now."); return; }
-    if (permitirOnline) escrever(CHAVE_ONLINE, "1");
-    // Without on-device recognition: online only with explicit permission.
-    if (!suportaLocal()) {
-      if (!onlinePermitido()) {
-        mic.querido = false;
-        estado("precisa_online", "This browser recognises speech through its online service (Apple or Google): your voice leaves the device and it needs internet. Tap “Allow online voice” to use it, or use the buttons.");
-        return;
-      }
-      mic.local = false; mic.idioma = idiomas()[0];
-      arrancar();
-      return;
-    }
+    // Só reconhecimento NO APARELHO: a voz nunca sai daqui e não há internet.
+    if (!R || !suportaLocal()) { mic.querido = false; estado("indisponivel", "Voice answers work offline only in recent Chrome or Edge on a computer. Here, use the letter keys."); return; }
+    // O browser só dá o microfone em https:// ou localhost.
+    if (g.isSecureContext === false) { mic.querido = false; estado("indisponivel", "Voice needs a secure page (https:// or localhost). Use the letter keys."); return; }
     estado("a_preparar", "Preparing the microphone…");
     idiomaLocal().then(function (r) {
       if (!mic.querido) return;
       if (r.idioma) { mic.local = true; mic.idioma = r.idioma; arrancar(); return; }
-      if (onlinePermitido()) { mic.local = false; mic.idioma = idiomas()[0]; arrancar(); return; }
       mic.querido = false;
-      estado(r.descarregavel ? "sem_pacote" : "precisa_online", r.descarregavel
-        ? "The English speech pack is not on this device yet. Download it once, with internet, before the mission (“Prepare voice” on the start page), or tap “Allow online voice”."
-        : "On-device English speech recognition is not available. Tap “Allow online voice” to use the browser's online service, or use the buttons.");
-    }, function () { mic.querido = false; estado("erro", "Could not start the microphone. Use the buttons."); });
+      estado(r.descarregavel ? "sem_pacote" : "indisponivel", r.descarregavel
+        ? "The English voice pack is not installed on this device. Install it once before the mission (“Prepare voice” on the start page). Use the letter keys for now."
+        : "On-device English speech recognition is not available here. Use the letter keys.");
+    }, function () { mic.querido = false; estado("erro", "Could not start the microphone. Use the letter keys."); });
   }
   function desligarMicrofone() {
     mic.querido = false;
@@ -239,7 +222,7 @@
 
   // Downloads the English pack (needs internet ONCE, before the mission).
   function prepararMicrofone() {
-    if (!suportaLocal() || typeof R.install !== "function") return Promise.resolve({ ok: false, mensagem: "This browser cannot recognise speech on the device. In the test you can allow the online voice instead." });
+    if (!suportaLocal() || typeof R.install !== "function") return Promise.resolve({ ok: false, mensagem: "This browser cannot recognise speech on the device. Use Chrome or Edge on a computer, or the letter keys." });
     return idiomaLocal().then(function (r) {
       if (r.idioma) return { ok: true, mensagem: "Speech recognition ready (" + r.idioma + "), no internet needed." };
       var lg = idiomas()[0];
@@ -305,8 +288,6 @@
     ligarMicrofone: ligarMicrofone, desligarMicrofone: desligarMicrofone, prepararMicrofone: prepararMicrofone,
     microfone: function () { return mic.estado; },
     microfonePossivel: function () { return suportaLocal(); },
-    onlinePermitido: onlinePermitido,
-    esquecerOnline: function () { try { g.localStorage.removeItem(CHAVE_ONLINE); } catch (e) { } },
     interpretar: interpretar
   };
 })(typeof window !== "undefined" ? window : globalThis);

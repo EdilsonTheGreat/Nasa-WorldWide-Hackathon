@@ -162,3 +162,8 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - `python3 servidor.py --rede` serve a app em https na rede Wi-Fi (porta 8443) com um certificado autoassinado feito na hora (`.cert/`, fora do git) e mostra o endereço para os outros aparelhos. Na 1.ª vez cada aparelho avisa do certificado: aceitar e continuar.
 - Sem `--rede` fica como antes: só `http://localhost:8000` neste computador.
 - Firefox não tem reconhecimento de voz; no Safari (iPhone/Mac) a voz passa pelo serviço da Apple e é preciso tocar em "Allow online voice".
+
+## 15 Nov (noite): voz só no aparelho, sem internet
+- Saiu o reconhecimento de voz online (botão "Allow online voice" e a chave `visao-voz-online`, que é apagada ao abrir). A app não usa internet em nada.
+- A voz só funciona com reconhecimento no aparelho (`processLocally`, Chrome/Edge recentes num computador). O pacote de inglês instala-se uma vez antes da missão ("Prepare voice" no índice), como a própria app.
+- Safari e telemóveis (que só reconhecem pelos servidores da Apple/Google): a app diz para usar as teclas das letras.
