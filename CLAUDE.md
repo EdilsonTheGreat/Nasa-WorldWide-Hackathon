@@ -1,68 +1,65 @@
-# CLAUDE.md: regras do projecto para qualquer Claude que trabalhe neste repositório
+# CLAUDE.md: project rules for any Claude working in this repository
 
-## O projecto
-Deep Thinkers, NASA Space Apps Challenge 2026 (Maputo, 14–15 Nov). Desafio: *Create Health Monitoring Software for Astronauts on Space Missions*.
-Construímos uma app que detecta cedo sinais de **SANS** (Síndrome Neuro-Ocular Associada ao Voo Espacial): compara cada astronauta com o seu próprio normal e com a evolução esperada, e mostra um semáforo (verde / amarelo / vermelho) com uma acção.
-Ciclo: **teste → comparação → semáforo → acção**.
+## The project
+Deep Thinkers, NASA Space Apps Challenge 2026 (Maputo, Nov 14–15). Challenge: *Create Health Monitoring Software for Astronauts on Space Missions*.
+We built an app that detects early signs of **SANS** (Spaceflight-Associated Neuro-ocular Syndrome): it compares each astronaut against their own normal and against the expected progression, and shows a traffic light (green / yellow / red) with an action.
+Cycle: **test → comparison → traffic light → action**.
 
-## Regras que não se negociam
-1. **A app funciona SEM internet.** Nada de CDN, APIs externas, fontes do Google, `fetch()` a URLs. Bibliotecas (ex.: Chart.js) ficam copiadas dentro de `app/`.
-2. **A app corre em qualquer dispositivo com browser**: telemóvel, tablet, portátil, PC. Layout responsivo. O núcleo (dados, motor, ecrãs) funciona com duplo clique em `app/index.html` (`file://`).
-   **Excepção: módulo da câmara** (`app/camara/`). Precisa de `http://localhost`, porque o browser não dá câmara nem carrega o modelo a partir de `file://`. Abrir com `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows): servidor local, continua **sem internet**. Se a câmara falhar, a app tem de continuar (o módulo devolve `estado: "indisponivel"`).
-3. **Nunca ler `.json` ou `.csv` com `fetch()` na app.** Em `file://` o browser bloqueia. Os dados entram como JavaScript: `<script src="dados.js">` cria `window.FAIXAS` e `window.ASTRONAUTAS`. As regras entram como `<script src="../motor/regras.js">` → `window.REGRAS`.
-4. **JavaScript simples (ES2017+), sem frameworks, sem build, sem npm** na app e no motor. Funções puras sempre que possível.
-5. **Textos visíveis ao utilizador em português** (variante de Moçambique / europeia: "acção", "objectivo", "projecto").
-6. **Não inventar números médicos.** Limites e textos clínicos estão em `motor/regras.js` e são validados pela equipa de saúde (Sheinaze e Neyde). Se faltar um valor, deixar `// TODO saúde:` e avisar.
-7. **Sem autenticação.** Nada de palavra-passe, Face ID nem reconhecimento do rosto: escolhe-se o perfil na lista e entra-se.
+## Non-negotiable rules
+1. **The app works WITHOUT internet.** No CDNs, external APIs, Google Fonts, or `fetch()` calls to URLs. Libraries (e.g. Chart.js) are copied into `app/`.
+2. **The app runs on any device with a browser**: phone, tablet, laptop, PC. Responsive layout. The core (data, engine, screens) works by double-clicking `app/index.html` (`file://`).
+   **Exception: the camera module** (`app/camara/`). It needs `http://localhost`, because the browser won't grant camera access or load the model from `file://`. Open it with `abrir_app.command` (Mac) or `abrir_app.bat` (Windows): a local server, still **without internet**. If the camera fails, the app must keep working (the module returns `estado: "indisponivel"`).
+3. **Never read `.json` or `.csv` files with `fetch()` in the app.** The browser blocks it under `file://`. Data is loaded as JavaScript: `<script src="dados.js">` creates `window.FAIXAS` and `window.ASTRONAUTAS`. Rules are loaded as `<script src="../motor/regras.js">` → `window.REGRAS`.
+4. **Plain JavaScript (ES2017+), no frameworks, no build step, no npm** in the app and the engine. Pure functions whenever possible.
+5. **User-facing text in Portuguese** (Mozambican / European variant: "acção", "objectivo", "projecto"). *(Superseded for the interface by the Nov 14 and Nov 15 sections below.)*
+6. **Do not invent medical numbers.** Thresholds and clinical texts live in `motor/regras.js` and are validated by the health team (Sheinaze and Neyde). If a value is missing, leave a `// TODO saúde:` comment and flag it.
 
-## Quem é dono de cada pasta (não editar pastas de outros sem combinar)
-| Pasta | Dono | Conteúdo |
+## Who owns each folder (do not edit other people's folders without agreeing first)
+| Folder | Owner | Contents |
 |---|---|---|
-| `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Gera `dados/*` e `app/dados.js` |
-| `dados/` | gerado | **Não editar à mão.** Correr `python3 simulador/simulador.py` |
-| `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `testes.js` + `teste.html` (9 testes) |
-| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`) e teste completo do backend (`teste_visao.html`); bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
-| `docs/` | todos | Especificações. `docs/EDILSON.md` = motor; `docs/MARLLON.md` = como a UI chama o backend (`Armazem`, `Motor`, `Modelo`, `Distancia`) |
+| `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Generates `dados/*` and `app/dados.js` |
+| `dados/` | generated | **Do not edit by hand.** Run `python3 simulador/simulador.py` |
+| `motor/` | Edilson | `motor.js` (traffic-light rules), `regras.js` (thresholds and texts), `testes.js` + `teste.html` (9 tests) |
+| `app/` | Marllon (+ Chandy on design) | `index.html`, screens, CSS. `app/dados.js` is generated by the simulator. `app/camara/` = screen distance (`distancia.js`), face login (`rosto.js`), and the full test; offline libraries in `vendor/` (do not edit). **`app/visao/` = Marllon's interface, already wired to the backend through `ligacao.js` (read `app/visao/README.md` before touching it); this is what `abrir_app` opens** |
+| `docs/` | everyone | Specifications. `docs/EDILSON.md` = engine; `docs/MARLLON.md` = how the UI calls the backend (`Armazem`, `Motor`, `Modelo`, `Distancia`) |
 
-## Contrato de dados (mudar só depois de avisar a equipa toda)
-- `window.ASTRONAUTAS`: array de registos `{astronauta_id, perfil, dia, oct_um, amsler_zonas, amsler_centro, acuidade_linha, melhora_com_oculos, perg_focar, perg_contraste, perg_dor_cabeca, perg_visao_dupla}`. Campos sem medição nesse dia = `null`. `amsler_zonas` = array de inteiros 0–8 (grelha 3×3, centro = 4).
-- `window.FAIXAS`: `p10`, `p50`, `p90`, `p97` = arrays de 181 números (índice = dia 0..180) com o Δ% esperado; `subida_rapida` = lista `{de, ate, taxa_p97_pct_dia}`; `calendario_oct` = `[0,10,30,60,90,120,150]`.
+## Data contract (change only after telling the whole team)
+- `window.ASTRONAUTAS`: array of records `{astronauta_id, perfil, dia, oct_um, amsler_zonas, amsler_centro, acuidade_linha, melhora_com_oculos, perg_focar, perg_contraste, perg_dor_cabeca, perg_visao_dupla}`. Fields not measured on that day = `null`. `amsler_zonas` = array of integers 0–8 (3×3 grid, center = 4).
+- `window.FAIXAS`: `p10`, `p50`, `p90`, `p97` = arrays of 181 numbers (index = day 0..180) with the expected Δ%; `subida_rapida` = list of `{de, ate, taxa_p97_pct_dia}`; `calendario_oct` = `[0,10,30,60,90,120,150]`.
 - `perfil`: `populacao` | `demo_verde` (DEMO_A) | `demo_amarelo` (DEMO_B) | `demo_vermelho` (DEMO_C).
-- Cores: sempre as strings `"verde"`, `"amarelo"`, `"vermelho"` (e `"a_calibrar"` quando não há linha de base).
+- Colors: always the strings `"verde"`, `"amarelo"`, `"vermelho"` (and `"a_calibrar"` when there is no baseline).
 
-## Sem autenticação (15 Nov)
-- O desafio não pode ter autenticação: escolhe-se o perfil na lista e entra-se. Nada de palavra-passe, Face ID nem reconhecimento do rosto (o `rosto.js` e o `face-api` foram retirados).
-- A câmara só mede a distância ao ecrã e a luz. Nunca guardar nem enviar fotografias.
+## Privacy (face recognition)
+- Only the person themselves registers their face, with consent. Only the numeric descriptor is stored, on the device (`localStorage`). Never store or send photos. Manual profile selection must always be available.
 
-## Comandos
-- Regenerar dados: `python3 simulador/simulador.py` (seed fixa → resultados iguais)
-- Testar o motor e o modelo: abrir `motor/teste.html` no browser (22 testes)
-- Teste completo com perfis, câmara e OCT: `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows)
+## Commands
+- Regenerate data: `python3 simulador/simulador.py` (fixed seed → identical results)
+- Test the engine and the model: open `motor/teste.html` in the browser (22 tests)
+- Full test with profiles, camera, and OCT: `abrir_app.command` (Mac) or `abrir_app.bat` (Windows)
 
 ## Git
-- Fazer `git pull` antes de começar. Commits pequenos, mensagens em português a dizer **o quê e porquê**.
-- Não fazer commit de ficheiros do IDE (`.idea/`) nem de `__pycache__/`.
+- Run `git pull` before starting. Small commits, messages in Portuguese saying **what and why**.
+- Do not commit IDE files (`.idea/`) or `__pycache__/`.
 
-## Língua da interface (14 Nov)
-- A interface (`app/visao/`) está em **inglês** (pedido do Lukanga, para o júri internacional). Código, comentários e documentos continuam em português.
-- O motor (`motor/`, do Edilson) continua a escrever os motivos em português; `app/visao/ligacao.js` traduz esses textos na função `en()`. Se mudares um texto do motor, acrescenta a tradução em `EN` (ligacao.js).
-- Olhos: LE = left eye (OE), RE = right eye (OD).
-- Abrir a app: `abrir_app.command` / `abrir_app.bat` usam `servidor.py` (sem cache, para o browser não mostrar versões antigas).
+## Interface language (Nov 14)
+- The interface (`app/visao/`) is in **English** (Lukanga's request, for the international jury). Code, comments, and documents stay in Portuguese.
+- The engine (`motor/`, Edilson's) still writes its reasons in Portuguese; `app/visao/ligacao.js` translates those texts in the `en()` function. If you change an engine text, add the translation to `EN` (ligacao.js).
+- Eyes: LE = left eye (OE), RE = right eye (OD).
+- Opening the app: `abrir_app.command` / `abrir_app.bat` use `servidor.py` (no cache, so the browser doesn't show stale versions).
 
-## Nome da app (14 Nov)
-- A app chama-se **IRIS** (Integrated Remote Intelligence for Spaceflight). Não usar "Vision" nem "Visão" como nome.
-- As pastas e chaves internas (`app/visao/`, `visao-*` no localStorage) ficam como estão.
+## App name (Nov 14)
+- The app is called **IRIS** (Integrated Remote Intelligence for Spaceflight). Do not use "Vision" or "Visão" as the name.
+- Internal folders and keys (`app/visao/`, `visao-*` in localStorage) stay as they are.
 
-## Relatório final (14 Nov)
-- No passo do resultado, o botão "Final report" abre o relatório: conclusão ("IRIS concluded <cor> based on …"),
-  testes (acuidade, Amsler, sintomas, OCT) e dados da missão (microgravidade, luz, movimento da nave, distância), e o porquê.
-- A cor vem só dos testes rápidos (motor). Os dados da missão confirmam se a medição é fiável e dão contexto.
-- A luz é medida pela câmara (brilho médio de uma imagem 32x24, 1 vez por segundo). Nada é gravado além dos números.
+## Final report (Nov 14)
+- In the result step, the "Final report" button opens the report: conclusion ("IRIS concluded <color> based on …"),
+  tests (acuity, Amsler, symptoms, OCT) and mission data (microgravity, light, spacecraft motion, distance), and the why.
+- The color comes only from the quick tests (engine). Mission data confirms whether the measurement is reliable and provides context.
+- Light is measured by the camera (average brightness of a 32x24 image, once per second). Nothing is saved except the numbers.
 
-## 15 Nov
-- Dia 0 = pré-registo na Terra (`Registo.html`), mostrado como "Pre-flight / Pré-voo" (regra em `i18n.js`).
-- Antes do teste: questionário pré-exame de 9 perguntas (REGRAS.prontidao do Edilson), 3 por ecrã. Não voltar às 4 perguntas antigas.
-- Privacidade: um perfil real só vê os seus próprios dados (histórico, OCT, alertas). Nada de dados de outras pessoas nos ecrãs.
-- Língua: a app é escrita em inglês; o português vem de `i18n.js` (botão PT/EN). Texto novo na interface → acrescentar a tradução no MAPA de `i18n.js`.
-- Teste de ponta a ponta: percurso completo em EN e PT (ferramentas fora do repositório: fluxo.py + e2e2.py).
-
+## Nov 15
+- Day 0 = pre-registration on Earth (`Registo.html`), shown as "Pre-flight / Pré-voo" (rule in `i18n.js`).
+- Before the test: a 9-question pre-exam questionnaire (Edilson's REGRAS.prontidao), 3 per screen. Do not go back to the old 4 questions.
+- Privacy: a real profile only sees its own data (history, OCT, alerts). No other people's data on the screens.
+- Language: the app is written in English; Portuguese comes from `i18n.js` (PT/EN button). New interface text → add the translation to the MAPA in `i18n.js`.
+- End-to-end test: full walkthrough in EN and PT (tools outside the repository: fluxo.py + e2e2.py).

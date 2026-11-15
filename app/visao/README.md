@@ -1,187 +1,187 @@
-# app/visao/ (interface do Marllon, ligada ao backend)
+# app/visao/ (Marllon's interface, wired to the backend)
 
-Os 8 ecrãs do Marllon (`Main`, `Hoje`, `TesteRapido`, `Tendencia`, `SANS`, `Alerta`, `Perfil`, `OCT`) com o backend ligado.
-Abrir com `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows): começa em `Main.html`, em `http://localhost:8000`.
-Com duplo clique no ficheiro tudo funciona, **menos a câmara** (distância).
+Marllon's 8 screens (`Main`, `Hoje` (Today), `TesteRapido` (Quick test), `Tendencia` (History), `SANS`, `Alerta` (Alerts), `Perfil` (Profile), `OCT`) with the backend connected.
+Open with `abrir_app.command` (Mac) or `abrir_app.bat` (Windows): it starts at `Main.html`, on `http://localhost:8000`.
+Double-clicking the file makes everything work **except the camera** (distance).
 
-## Como está ligado
+## How it is wired
 
 ```
-ecrã (.html)  ->  window.Visao (ligacao.js)  ->  Armazem, Motor, Modelo, Distancia
+screen (.html)  ->  window.Visao (ligacao.js)  ->  Armazem, Motor, Modelo, Distancia
 ```
 
-Cada ecrã carrega, por esta ordem: `../dados.js`, `../../motor/regras.js`, `../../motor/motor.js`, `../../motor/modelo.js`,
-`../armazenamento.js`, (`../camara/...` só em `Main` e `TesteRapido`), `ligacao.js`, `runtime.js`.
+Each screen loads, in this order: `../dados.js`, `../../motor/regras.js`, `../../motor/motor.js`, `../../motor/modelo.js`,
+`../armazenamento.js`, (`../camara/...` only in `Main` and `TesteRapido`), `ligacao.js`, `runtime.js`.
 
-Há dois tipos de sessão, escolhidos em `Main.html`:
+There are two kinds of session, chosen in `Main.html`:
 
-| Sessão | Quem | De onde vêm os dados | Guarda? |
+| Session | Who | Where the data comes from | Saved? |
 |---|---|---|---|
-| **Equipa · dados reais** | CHANDY, EDILSON, LUKANGA, MARLLON, NEYDE, SHEINAZE (`Armazem.EQUIPA`) | Testes feitos no aparelho + `Motor` + `Modelo` | Sim, `localStorage` (`dt_registos`) |
-| **Demonstração · fictícios** | Marta (A), Daniel (B), Sofia (C) | Valores de exemplo do Marllon | Não |
+| **Team · real data** | CHANDY, EDILSON, LUKANGA, MARLLON, NEYDE, SHEINAZE (`Armazem.EQUIPA`) | Tests taken on the device + `Motor` + `Modelo` | Yes, `localStorage` (`dt_registos`) |
+| **Demo · fictional** | Marta (A), Daniel (B), Sofia (C) | Marllon's sample values | No |
 
-A sessão real fica em `localStorage["visao-real"]` (id do perfil) e `visao-dia-<ID>` (dia de missão escolhido ao entrar).
-Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se existir, senão os valores de exemplo`.
+The real session is stored in `localStorage["visao-real"]` (profile id) and `visao-dia-<ID>` (mission day chosen on entry).
+On every screen the rule is the same: `const R = Visao.something(); use R if it exists, otherwise the sample values`.
 
-## O que cada ecrã usa do backend
+## What each screen uses from the backend
 
-| Ecrã | Sessão real | Demonstração |
+| Screen | Real session | Demo |
 |---|---|---|
-| `Main` | Lista de perfis (`Armazem.perfis`): um toque abre o perfil (`Visao.entrar`), sem autenticação; dia de missão automático | Um toque abre a persona |
-| `TesteRapido` | Compara com a **base** (1.º teste), guarda o teste (`Visao.guardarTeste`), cor decidida por `Motor.corAmsler` e `Motor.corAcuidade` olho a olho, avisos do `Modelo` | Lógica de exemplo do Marllon |
-| `TesteRapido` (os dois) | Distância medida pela câmara em directo (`Distancia`): 35 a 45 cm na acuidade, 28 a 38 cm na grelha | igual |
-| `Hoje` | Último teste, estado por olho, recomendação (`Visao.resumoHoje`) | Exemplo |
-| `SANS` | Linha temporal dos testes guardados (`Visao.linhaTempo`) | Exemplo |
-| `Alerta` | Alertas gerados a partir dos testes (`Visao.alertas`) | Exemplo |
-| `Perfil` | Só dados verdadeiros do aparelho (`Visao.fichaPerfil`); "Trocar de perfil" volta ao `Main` | Exemplo |
-| `Tendencia` | Para todos: séries `DEMO_A/B/C` do simulador, faixas P10/P90/P97 de `FAIXAS` e cor de `Motor.corOCT` | igual |
-| `OCT` | Continua a ser um exemplo simulado (não há OCT a bordo); aparece identificado como "Exemplo simulado" | Exemplo |
+| `Main` | Profile list (`Armazem.perfis`): one tap opens the profile (`Visao.entrar`), no authentication; mission day set automatically | One tap opens the persona |
+| `TesteRapido` | Compares with the **baseline** (1st test), saves the test (`Visao.guardarTeste`), color decided by `Motor.corAmsler` and `Motor.corAcuidade` eye by eye, warnings from `Modelo` | Marllon's sample logic |
+| `TesteRapido` (both) | Distance measured live by the camera (`Distancia`): 35 to 45 cm for acuity, 28 to 38 cm for the grid | same |
+| `Hoje` | Latest test, status per eye, recommendation (`Visao.resumoHoje`) | Sample |
+| `SANS` | Timeline of saved tests (`Visao.linhaTempo`) | Sample |
+| `Alerta` | Alerts generated from the tests (`Visao.alertas`) | Sample |
+| `Perfil` | Only real data from the device (`Visao.fichaPerfil`); "Switch profile" goes back to `Main` | Sample |
+| `Tendencia` | For everyone: `DEMO_A/B/C` series from the simulator, P10/P90/P97 ranges from `FAIXAS`, and color from `Motor.corOCT` | same |
+| `OCT` | Still a simulated example (there is no OCT on board); labeled as "Simulated example" | Sample |
 
-## Escalas desta interface (atenção)
+## Scales used by this interface (important)
 
-- Acuidade: **0 a 5 linhas por olho** (`acuidade_oe`, `acuidade_od`). `acuidade_linha` = a pior das duas (para o `Modelo`).
-- Grelha de Amsler: 12x12 por olho (`celulas_od`, `celulas_oe`), convertida para as 9 zonas do motor (`amsler_od`, `amsler_oe`); o bloco central 4x4 é a zona 4.
-- Perguntas: Não / Ligeiro / Marcado = 0 / 1 / 3.
-- Níveis do ecrã: verde 0, amarelo 1 (condições duvidosas), laranja 2 (= amarelo do motor, ou sintomas), vermelho 3 (= vermelho do motor).
-- O ecrã de teste antigo (`app/camara/teste_visao.html`) usa 10 linhas e grelha 3x3. **Não misturar os dois no mesmo perfil.**
+- Acuity: **0 to 5 lines per eye** (`acuidade_oe`, `acuidade_od`). `acuidade_linha` = the worse of the two (for `Modelo`).
+- Amsler grid: 12x12 per eye (`celulas_od`, `celulas_oe`), converted to the engine's 9 zones (`amsler_od`, `amsler_oe`); the central 4x4 block is zone 4.
+- Questions: No / Mild / Marked = 0 / 1 / 3.
+- Screen levels: green 0, yellow 1 (questionable conditions), orange 2 (= engine yellow, or symptoms), red 3 (= engine red).
+- The old test screen (`app/camara/teste_visao.html`) uses 10 lines and a 3x3 grid. **Do not mix the two on the same profile.**
 
-## Correcções de 14 Nov (pedido da equipa)
+## Fixes from Nov 14 (team request)
 
-- **«Tela» em vez de «tablet»** em todos os textos.
-- **Íris**: a imagem do olho no ecrã inicial muda com o perfil seleccionado; cada perfil guarda a sua íris
-  (`visao-iris-<ID>`, escolhida em Perfil). Ver `Visao.irisDe(id)` e `Visao.guardarIris(id, iris)`.
-- **Fundo acompanha a íris** (`iris.css`): escuro = preto com o brilho da cor da íris; claro = branco com a cor da íris.
-- **Gradiente por baixo da barra de navegação** (cor do fundo: preto no escuro, branco no claro) quando há conteúdo por trás.
-- **Instruções antes do teste**: acuidade e grelha de Amsler começam com um ecrã de instruções e o botão «Começar».
-- **Voz** (`voz.js`): instruções faladas em português (vozes do sistema, sem internet): «Que letras vês?», «Afasta-te um pouco
-  da tela», «Aproxima-te», «Diz seguinte para avançar». Botão «Voz ligada/desligada».
-  **Microfone** (opcional): diz as letras, «seguinte», «apagar», «não consigo», «tudo direito». Só funciona se o navegador
-  reconhecer a voz **no aparelho** (`processLocally`, Chrome/Edge recentes); o som nunca sai do aparelho.
-  O pacote de português descarrega-se uma vez, com internet, em `index.html` → «Preparar voz». Sem isso, usam-se os botões.
-- **Indicador de acertos**: em vez de «toca nas letras que reconheces», o astronauta toca na letra que vê num teclado
-  (C D E F L O P T Z). Cada letra fica verde (certa) ou vermelha (errada); a linha conta como lida com 60% certas.
-  Os acertos ficam guardados (`acertos_oe`, `acertos_od`, ex.: "14/15").
-- **Ecrã de acuidade simplificado**: só o olho, a linha, as letras, os acertos e o teclado.
-- **Responsividade** (`runtime.js`): ecrãs largos (PC, tablet, TV) mostram o desenho inteiro, ampliado, com o fundo a encher a janela.
-  Ecrãs estreitos ou baixos (telemóvel; largura < 820 px ou altura < 520 px) passam a **modo coluna**: os blocos ficam uns por baixo
-  dos outros, em tamanho real, com scroll; a barra de navegação fica fixa em baixo; grelhas de cartões passam a uma coluna;
-  gráficos com posições fixas (linha temporal SANS) deslizam para o lado. Não há rotação do ecrã.
-- **Teste dividido em duas metades** (acuidade e grelha de Amsler): à esquerda o teste; à direita a **imagem da câmara em directo**
-  com a distância por cima (cm, «Distância certa / Perto demais / Longe demais», moldura verde ou amarela) e os botões de voz.
-  O `<video>` é um só: fica registado em `window.DC_FIXOS.camara` e o `runtime.js` encaixa-o onde o ecrã tiver
-  `<div data-fixo="camara">` (o ecrã é redesenhado a cada mudança, por isso o vídeo não pode viver dentro do modelo).
-  Nada é gravado: a imagem só é mostrada e usada para medir a distância.
+- **"Screen" instead of "tablet"** in all texts.
+- **Iris**: the eye image on the home screen changes with the selected profile; each profile keeps its own iris
+  (`visao-iris-<ID>`, chosen in Profile). See `Visao.irisDe(id)` and `Visao.guardarIris(id, iris)`.
+- **Background follows the iris** (`iris.css`): dark = black with a glow in the iris color; light = white with the iris color.
+- **Gradient under the navigation bar** (background color: black in dark mode, white in light mode) when there is content behind it.
+- **Instructions before the test**: acuity and the Amsler grid start with an instructions screen and a "Start" button.
+- **Voice** (`voz.js`): spoken instructions (system voices, no internet): "Which letters do you see?", "Move back a little
+  from the screen", "Move closer", "Say next to continue". "Voice on/off" button.
+  **Microphone** (optional): say the letters, "next", "delete", "can't read", "all straight". Only works if the browser
+  recognizes speech **on the device** (`processLocally`, recent Chrome/Edge); audio never leaves the device.
+  The language pack is downloaded once, with internet, in `index.html` → "Prepare voice". Without it, the buttons are used.
+- **Score indicator**: instead of "tap the letters you recognize", the astronaut taps the letter they see on a keypad
+  (C D E F L O P T Z). Each letter turns green (correct) or red (wrong); a line counts as read with 60% correct.
+  Scores are saved (`acertos_oe`, `acertos_od`, e.g. "14/15").
+- **Simplified acuity screen**: only the eye, the line, the letters, the score, and the keypad.
+- **Responsiveness** (`runtime.js`): wide screens (PC, tablet, TV) show the full design, scaled up, with the background filling the window.
+  Narrow or short screens (phone; width < 820 px or height < 520 px) switch to **column mode**: blocks stack on top of each other,
+  at real size, with scrolling; the navigation bar stays fixed at the bottom; card grids become one column;
+  charts with fixed positions (SANS timeline) scroll sideways. The screen does not rotate.
+- **Test split into two halves** (acuity and Amsler grid): the test on the left; on the right the **live camera image**
+  with the distance overlaid (cm, "Right distance / Too close / Too far", green or yellow frame) and the voice buttons.
+  There is only one `<video>`: it is registered in `window.DC_FIXOS.camara` and `runtime.js` slots it wherever the screen has
+  `<div data-fixo="camara">` (the screen is redrawn on every change, so the video cannot live inside the template).
+  Nothing is recorded: the image is only displayed and used to measure distance.
 
-## Inglês, voz e perfis (14 Nov, noite)
+## English, voice, and profiles (Nov 14, evening)
 
-- **Toda a interface em inglês.** Textos do motor traduzidos em `ligacao.js` (`Visao.en`). OE/OD → LE/RE.
-- **Responder às letras por voz** (botão «Answer by voice» no teste de acuidade): diz as letras («F P», «tee oh zed»),
-  «next», «delete», «can't read», «all straight», «repeat».
-  - Chrome/Edge recentes: reconhecimento **no aparelho** (pacote inglês descarregado uma vez em `index.html` → «Prepare voice»).
-  - Safari e outros: só reconhecem pela internet (serviço da Apple/Google). A app pede autorização explícita
-    («Allow online voice»); a escolha fica em `visao-voz-online`.
-- **Perfil AUTRO1** (criado por engano) é removido automaticamente uma vez (`visao-limpo-autro1`). Qualquer perfil
-  fora da equipa pode ser removido no `Main` («Remove profile», dois toques). Os da equipa nunca são removidos.
-- **Sem cache:** `servidor.py` + versão nos ficheiros (`?v=...`): ao mudar ficheiros, sobe a versão em todos os `.html`.
+- **The whole interface is in English.** Engine texts are translated in `ligacao.js` (`Visao.en`). OE/OD → LE/RE.
+- **Answering letters by voice** ("Answer by voice" button in the acuity test): say the letters ("F P", "tee oh zed"),
+  "next", "delete", "can't read", "all straight", "repeat".
+  - Recent Chrome/Edge: recognition **on the device** (English pack downloaded once in `index.html` → "Prepare voice").
+  - Safari and others: only recognize via the internet (Apple/Google service). The app asks for explicit permission
+    ("Allow online voice"); the choice is stored in `visao-voz-online`. *(Removed later on Nov 15, see below.)*
+- **Profile AUTRO1** (created by mistake) is removed automatically once (`visao-limpo-autro1`). Any profile
+  outside the team can be removed in `Main` ("Remove profile", two taps). Team profiles are never removed.
+- **No cache:** `servidor.py` + a version on the files (`?v=...`): when files change, bump the version in every `.html`.
 
-## Por fazer
+## To do
 
-- O questionário pré-exame VISION GUARD (9 perguntas, `REGRAS.prontidao`, `Motor.prontidao`) só existe em `app/camara/teste_visao.html`.
-  Aqui o passo "Antes de começar" tem a pergunta do movimento da nave e 4 sintomas. Falta o Marllon desenhar esse passo.
-- Calibrar a distância (`Distancia.calibrar(40)`) ainda não tem botão nesta interface.
-- Criar perfis novos (além da equipa) ainda não tem botão: `Armazem.criarPerfil("NOME")` na consola, ou pelo ecrã de teste antigo.
+- The VISION GUARD pre-exam questionnaire (9 questions, `REGRAS.prontidao`, `Motor.prontidao`) only exists in `app/camara/teste_visao.html`.
+  Here the "Before you start" step has the spacecraft-motion question and 4 symptoms. Marllon still needs to design that step. *(Done on Nov 15, see below.)*
+- Distance calibration (`Distancia.calibrar(40)`) does not have a button in this interface yet.
+- Creating new profiles (beyond the team) does not have a button yet: `Armazem.criarPerfil("NAME")` in the console, or through the old test screen.
 
-## Regras
+## Rules
 
-- Sem internet: a fonte Manrope está em `assets/fonte/` (licença OFL). Nada de `<link>` para fora.
-- Sem autenticação: não há palavra-passe nem reconhecimento do rosto. Escolhe-se o perfil e entra-se.
-- "Repor a demonstração" (em `index.html`) apaga só as chaves `visao-*`. Os testes reais ficam.
+- No internet: the Manrope font is in `assets/fonte/` (OFL license). No external `<link>` tags.
+- No authentication: no password and no face recognition. You pick the profile and go in.
+- "Reset the demo" (in `index.html`) clears only the `visao-*` keys. Real tests are kept.
 
-## Voz gravada (14 Nov)
-- As frases faladas no teste tocam os MP3 de `audio/` (lista em `audio/frases.md`), via `Voz.falarClip(clips, texto)`.
-- Se um ficheiro faltar ou não tocar, a mesma frase é dita pela voz do sistema (speechSynthesis). Tudo offline.
-- No passo do resultado é lido o nível (result_green/yellow/orange/red).
-- Voice generated with ElevenLabs (elevenlabs.io). Uso não comercial (plano gratuito).
+## Recorded voice (Nov 14)
+- The phrases spoken during the test play the MP3s in `audio/` (list in `audio/frases.md`), via `Voz.falarClip(clips, texto)`.
+- If a file is missing or fails to play, the same phrase is spoken by the system voice (speechSynthesis). All offline.
+- On the result step, the level is read aloud (result_green/yellow/orange/red).
+- Voice generated with ElevenLabs (elevenlabs.io). Non-commercial use (free plan).
 
-## IRIS e relatório final (14 Nov)
-- Nome da app: IRIS (Integrated Remote Intelligence for Spaceflight), no cabeçalho, nos títulos e no ecrã de entrada.
-- Resultado → "Final report": conclusão, testes, dados da missão (microgravidade com a faixa P50/P90 de `dados/faixas.json`,
-  luz medida pela câmara, movimento da nave, distância) e o porquê. Funções novas: `Visao.missao(dia, letraDemo)`, `Visao.camara.luz()`.
-- Luz fraca ou forte em 40% ou mais das leituras entra nas ressalvas (resultado amarelo se os testes estiverem iguais).
-- Registos novos: `luz_media` (0–100) e `luz_nivel` (boa | fraca | forte).
-- Modo coluna: a barra de navegação voltou a ficar fixa em baixo (o runtime procurava o rótulo em português).
+## IRIS and the final report (Nov 14)
+- App name: IRIS (Integrated Remote Intelligence for Spaceflight), in the header, the titles, and the entry screen.
+- Result → "Final report": conclusion, tests, mission data (microgravity with the P50/P90 range from `dados/faixas.json`,
+  light measured by the camera, spacecraft motion, distance) and the why. New functions: `Visao.missao(dia, letraDemo)`, `Visao.camara.luz()`.
+- Low or high light in 40% or more of the readings is added to the caveats (yellow result if the tests are unchanged).
+- New record fields: `luz_media` (0–100) and `luz_nivel` (boa | fraca | forte = good | low | high).
+- Column mode: the navigation bar is fixed at the bottom again (the runtime was looking for the Portuguese label).
 
-## 15 Nov: pré-registo, questionário, privacidade, alertas vistos, PT/EN
-- **Pré-registo (dia 0, na Terra):** `Registo.html`. Ficha da missão (destino, lançamento, duração), dos olhos (correcção, óculos de reserva,
-  doença conhecida) e OCT de base opcional; depois os testes de base. Guardado em `visao-registo-<ID>` (`Visao.registoDe/guardarRegisto`).
-  A 1.ª entrada de um perfil sem pré-registo vai para este ecrã. O dia 0 aparece sempre como "Pre-flight / Pré-voo".
-- **Questionário pré-exame (VISION GUARD):** as 9 perguntas de `REGRAS.prontidao`, 3 por ecrã, com prontidão verde/amarela/vermelha
-  (`Motor.prontidao`). Vermelho bloqueia o teste; perda súbita ou visão dupla = alerta clínico. Guardado em `pre_exame` e `alteracao_visual`.
-  Alteração visual nova → laranja; importante (3, 4) → vermelho.
-- **Privacidade do histórico:** perfil real só vê os seus dados. Histórico (Tendencia) e OCT mostram só os testes/exames da própria pessoa
-  (`Visao.historico`, `Visao.octDe/guardarOCT`); a lista de entrada já não mostra testes de outras pessoas; na demonstração, só a persona com sessão.
-- **Alertas vistos:** "Mark as seen" guarda por perfil (`visao-vistos-<ID>`), o botão dá lugar a "Seen ✓"; "Mark all as seen"; o Hoje só conta os por ver.
-- **Letras e teclado sorteados** em cada teste (9 de 15 letras: Sloan C D H K N O R S V Z + E F L P T).
-- **PT ↔ EN:** botão ao lado do tema em todos os ecrãs. `i18n.js` traduz o texto desenhado (dicionário + regras para textos com números);
-  a voz em PT usa a voz portuguesa do sistema (os MP3 são em inglês) e o reconhecimento em pt-PT com os nomes das letras em português.
-  Para mudar traduções: editar o dicionário em `i18n.js` (MAPA) ou as REGRAS no fim do ficheiro.
+## Nov 15: pre-registration, questionnaire, privacy, seen alerts, PT/EN
+- **Pre-registration (day 0, on Earth):** `Registo.html`. Mission sheet (destination, launch, duration), eye sheet (correction, backup glasses,
+  known conditions), and an optional baseline OCT; then the baseline tests. Saved in `visao-registo-<ID>` (`Visao.registoDe/guardarRegisto`).
+  A profile's 1st entry without pre-registration goes to this screen. Day 0 is always shown as "Pre-flight / Pré-voo".
+- **Pre-exam questionnaire (VISION GUARD):** the 9 questions from `REGRAS.prontidao`, 3 per screen, with green/yellow/red readiness
+  (`Motor.prontidao`). Red blocks the test; sudden loss or double vision = clinical alert. Saved in `pre_exame` and `alteracao_visual`.
+  New visual change → orange; significant (3, 4) → red.
+- **History privacy:** a real profile only sees its own data. History (Tendencia) and OCT show only that person's own tests/exams
+  (`Visao.historico`, `Visao.octDe/guardarOCT`); the entry list no longer shows other people's tests; in the demo, only the persona in session.
+- **Seen alerts:** "Mark as seen" is saved per profile (`visao-vistos-<ID>`), the button turns into "Seen ✓"; "Mark all as seen"; Today only counts unseen ones.
+- **Letters and keypad randomized** on every test (9 of 15 letters: Sloan C D H K N O R S V Z + E F L P T).
+- **PT ↔ EN:** button next to the theme toggle on every screen. `i18n.js` translates the rendered text (dictionary + rules for texts with numbers);
+  in PT the voice uses the system's Portuguese voice (the MP3s are in English) and recognition runs in pt-PT with the letter names in Portuguese.
+  To change translations: edit the dictionary in `i18n.js` (MAPA) or the REGRAS at the end of the file.
 
-## 15 Nov (tarde): logótipo e limpeza
-- Logótipo da equipa em `assets/logo_iris.png` (marca + "iris") e `assets/logo_marca.png` (só a flor). São máscaras: `.dt-logo` / `.dt-marca`
-  (em `fonte.css`) pintam-nas com a cor do texto, por isso servem no tema claro e no escuro. Ícone do separador: `assets/logo_icone.png`.
-- "O essencial a bordo" no Hoje (orientações gerais: olhos, corpo e regra de ouro).
-- Coerência: OCT do próprio astronauta aparece na linha do tempo SANS, no Perfil e no relatório final; "Vision changes" com o mesmo nome em todo o lado;
-  gráfico do Histórico com os dois olhos; miniaturas do índice refeitas com os ecrãs actuais.
+## Nov 15 (afternoon): logo and cleanup
+- Team logo in `assets/logo_iris.png` (mark + "iris") and `assets/logo_marca.png` (flower only). They are masks: `.dt-logo` / `.dt-marca`
+  (in `fonte.css`) paint them with the text color, so they work in both light and dark themes. Tab icon: `assets/logo_icone.png`.
+- "Onboard essentials" on Today (general guidance: eyes, body, and the golden rule).
+- Consistency: the astronaut's own OCT appears in the SANS timeline, in Profile, and in the final report; "Vision changes" uses the same name everywhere;
+  History chart shows both eyes; index thumbnails redone with the current screens.
 
 
-## 15 Nov: envio automático do relatório
-- Cada teste guardado entra **logo** na caixa de saída para a equipa médica (`Visao.enviosDe(id)`, chave `visao-envios-<ID>`), sem perguntar. Guarda o dia, a cor que o astronauta vê, a prioridade (rotina / revisão / prioridade) e a hora.
-- A app não tem rede: o estado é "em fila" e o relatório sai sozinho no próximo contacto com a Terra.
-- Alertas: saiu o botão "Send to the flight surgeon" (e o "Undo"). Fica um cartão "Sent automatically to the medical team" (ou "… flight surgeon · priority" no vermelho).
-- Resultado e relatório final dizem que o relatório foi enviado automaticamente.
+## Nov 15: automatic report sending
+- Every saved test goes **immediately** into the outbox for the medical team (`Visao.enviosDe(id)`, key `visao-envios-<ID>`), without asking. It stores the day, the color the astronaut sees, the priority (routine / review / priority), and the time.
+- The app has no network: the status is "queued" and the report goes out by itself at the next contact with Earth.
+- Alerts: the "Send to the flight surgeon" button (and "Undo") was removed. A "Sent automatically to the medical team" card remains (or "… flight surgeon · priority" for red).
+- The result and the final report say the report was sent automatically.
 
-## 15 Nov (tarde): passo 1 em dois ecrãs, aviso no telemóvel, envio para a Terra
-- Passo 1 começa com o ecrã "Olá, <nome>" (o que vai acontecer + a preparação) e um botão "Começar as perguntas ›". Só depois aparece o questionário, agora a toda a largura (acabou a sobreposição dos botões na página 2).
-- A prontidão (Pronto / Pronto com ressalvas / Não fiável) aparece numa faixa dentro do questionário, quando as 9 respostas estão dadas.
-- A pergunta 4 continua de escolha múltipla, como no questionário VISION GUARD ("pode marcar várias"); as outras 8 só aceitam uma resposta.
-- Telemóvel (ecrã < 600 px e toque): aviso para usar portátil ou tablet; o botão passa a "Continuar neste telemóvel ›". Em ecrã estreito as opções ficam numa coluna.
-- Os textos do envio automático dizem agora "para a Terra · equipa médica".
+## Nov 15 (afternoon): step 1 in two screens, phone warning, sending to Earth
+- Step 1 starts with a "Hello, <name>" screen (what will happen + preparation) and a "Start the questions ›" button. Only then does the questionnaire appear, now full width (the overlapping buttons on page 2 are gone).
+- Readiness (Ready / Ready with caveats / Not reliable) appears in a band inside the questionnaire once all 9 answers are given.
+- Question 4 remains multiple choice, as in the VISION GUARD questionnaire ("you may select several"); the other 8 accept only one answer.
+- Phone (screen < 600 px and touch): a warning to use a laptop or tablet; the button becomes "Continue on this phone ›". On narrow screens the options stack in one column.
+- The automatic-sending texts now say "to Earth · medical team".
 
-## 15 Nov (noite): reconhecimento de voz mais rápido e mais tolerante (voz.js)
-- Resultados provisórios: as letras são entregues assim que vem a palavra seguinte, sem esperar pelo silêncio do fim da frase. Os comandos (seguinte, apagar…) esperam pelo resultado final.
-- Telemóvel: em vez do modo contínuo (que no Android repete e corta), ouve frase a frase e reinicia logo.
-- Chrome recente: dicas ao reconhecedor com os nomes das letras e os comandos (SpeechRecognitionPhrase), quando existir.
-- Questionário: cada resposta fica com a cor que o motor lhe dá (verde, amarelo = ressalva, vermelho = não fiável). A faixa de prontidão mostra os motivos em etiquetas curtas e o "Answer again" passou para a linha dos botões; o cartão já não transborda.
+## Nov 15 (evening): faster and more tolerant speech recognition (voz.js)
+- Interim results: letters are delivered as soon as the next word arrives, without waiting for the silence at the end of the sentence. Commands (next, delete…) wait for the final result.
+- Phone: instead of continuous mode (which repeats and cuts off on Android), it listens phrase by phrase and restarts immediately.
+- Recent Chrome: hints to the recognizer with the letter names and the commands (SpeechRecognitionPhrase), when available.
+- Questionnaire: each answer takes the color the engine gives it (green, yellow = caveat, red = not reliable). The readiness band shows the reasons as short tags, and "Answer again" moved to the button row; the card no longer overflows.
 
-## 15 Nov (noite): voz noutros aparelhos
-- O browser só dá o microfone (e a câmara) em `https://` ou em `localhost`. Noutro aparelho por `http://IP` a voz ficava bloqueada sem aviso; agora a app diz porquê.
-- `python3 servidor.py --rede` serve a app em https na rede Wi-Fi (porta 8443) com um certificado autoassinado feito na hora (`.cert/`, fora do git) e mostra o endereço para os outros aparelhos. Na 1.ª vez cada aparelho avisa do certificado: aceitar e continuar.
-- Sem `--rede` fica como antes: só `http://localhost:8000` neste computador.
-- Firefox não tem reconhecimento de voz; no Safari (iPhone/Mac) a voz passa pelo serviço da Apple e é preciso tocar em "Allow online voice".
+## Nov 15 (evening): voice on other devices
+- The browser only grants the microphone (and camera) on `https://` or on `localhost`. On another device via `http://IP` the voice was blocked without warning; now the app explains why.
+- `python3 servidor.py --rede` serves the app over https on the Wi-Fi network (port 8443) with a self-signed certificate created on the fly (`.cert/`, not in git) and shows the address for other devices. The first time, each device warns about the certificate: accept and continue.
+- Without `--rede` it works as before: only `http://localhost:8000` on this computer.
+- Firefox has no speech recognition; on Safari (iPhone/Mac) voice goes through Apple's service and you need to tap "Allow online voice".
 
-## 15 Nov (noite): voz só no aparelho, sem internet
-- Saiu o reconhecimento de voz online (botão "Allow online voice" e a chave `visao-voz-online`, que é apagada ao abrir). A app não usa internet em nada.
-- A voz só funciona com reconhecimento no aparelho (`processLocally`, Chrome/Edge recentes num computador). O pacote de inglês instala-se uma vez antes da missão ("Prepare voice" no índice), como a própria app.
-- Safari e telemóveis (que só reconhecem pelos servidores da Apple/Google): a app diz para usar as teclas das letras.
+## Nov 15 (evening): on-device voice only, no internet
+- Online speech recognition was removed (the "Allow online voice" button and the `visao-voz-online` key, which is cleared on startup). The app uses no internet for anything.
+- Voice only works with on-device recognition (`processLocally`, recent Chrome/Edge on a computer). The English pack is installed once before the mission ("Prepare voice" on the index), like the app itself.
+- Safari and phones (which only recognize through Apple/Google servers): the app tells the user to use the letter keys.
 
-## 15 Nov (noite): voz OFFLINE em qualquer browser (Vosk)
-- A app traz o seu próprio reconhecedor de voz: `vosk/vosk.js` (vosk-browser, WebAssembly) + `vosk/modelo-en.bin` (modelo oficial `vosk-model-small-en-us-0.15`, ~40 MB). Licenças em `vosk/LICENCAS.md` (Apache-2.0).
-- Funciona no Safari, Chrome, Edge e telemóveis, **sem internet**: o browser pede o microfone e o som nunca sai do aparelho.
-- Só ouve o vocabulário do teste: as 9 letras do teclado deste teste + "next", "delete", "can't read", "repeat", "all straight"… (gramática restrita = menos enganos).
-- O modelo começa a carregar em fundo 2,5 s depois de abrir o teste. "Check offline voice" no índice confirma que corre no browser.
-- Em português as letras dizem-se em inglês (cee, dee, ee…) quando o reconhecedor é o Vosk; os comandos em inglês funcionam nas duas línguas.
-- Testado com voz sintética (espeak): todos os comandos e a maioria das letras certas; T, D e V são as que mais se trocam.
+## Nov 15 (evening): OFFLINE voice in any browser (Vosk)
+- The app ships its own speech recognizer: `vosk/vosk.js` (vosk-browser, WebAssembly) + `vosk/modelo-en.bin` (official `vosk-model-small-en-us-0.15` model, ~40 MB). Licenses in `vosk/LICENCAS.md` (Apache-2.0).
+- Works in Safari, Chrome, Edge, and on phones, **without internet**: the browser asks for the microphone and the audio never leaves the device.
+- It only listens for the test vocabulary: the 9 keypad letters of this test + "next", "delete", "can't read", "repeat", "all straight"… (restricted grammar = fewer mistakes).
+- The model starts loading in the background 2.5 s after the test opens. "Check offline voice" on the index confirms it runs in the browser.
+- In Portuguese, letters are spoken in English (cee, dee, ee…) when the recognizer is Vosk; the English commands work in both languages.
+- Tested with a synthetic voice (espeak): all commands and most letters correct; T, D, and V are the most often confused.
 
-## 15 Nov (noite): grelha de Amsler por arrasto
-- Tocar num quadrado marca/desmarca; **arrastar** (rato ou dedo) pinta todos os quadrados por onde passa. O 1.º quadrado decide: se estava vazio o arrasto marca, se estava marcado apaga.
-- Feito com eventos de ponteiro no documento (`ligarArrasto` em TesteRapido.html), porque o ecrã é redesenhado a cada quadrado. A grelha tem `touch-action: none`, para o dedo não fazer scroll. O teclado (Tab + Enter) continua a funcionar.
+## Nov 15 (evening): Amsler grid by dragging
+- Tapping a square marks/unmarks it; **dragging** (mouse or finger) paints every square it passes over. The 1st square decides: if it was empty the drag marks, if it was marked the drag clears.
+- Built with pointer events on the document (`ligarArrasto` in TesteRapido.html), because the screen is redrawn on every square. The grid has `touch-action: none` so the finger does not scroll. The keyboard (Tab + Enter) still works.
 
-## 15 Nov (noite): sem autenticação no "Pick your profile"
-- O desafio não pode ter autenticação: saíram a entrada pelo rosto, a palavra-passe, o registo do rosto e o "Entrar sem câmara".
-- `Main`: um toque no perfil abre-o. Equipa → `Visao.entrar(id)` e vai para o `Registo` (1.ª vez) ou para o `Hoje`; Demo → `Hoje` com a persona.
-- Dia de missão automático nos perfis reais: 0 (pré-voo) na 1.ª vez; depois, uma semana após o último teste (`Visao.diaSugerido`).
-- `Perfil`: "Switch profile" volta ao `Main` (saiu a folha com Face ID / palavra-passe e o "Sign out"); saiu "Delete my face".
-  Perfis fora da equipa (criados por engano) removem-se em Perfil › Privacy ("Remove this profile", 2 toques).
-- `ligacao.js` apaga uma vez os descritores de rosto guardados antes (`dt_rostos`) e a chave `visao-entrada`.
-- `app/camara/teste_visao.html` (ecrã de teste do backend) também deixou de ter entrada pela cara. Saíram do projecto `app/camara/rosto.js`
-  e `app/camara/vendor/faceapi/` (o face-api só servia para isto; a distância usa o MediaPipe).
+## Nov 15 (evening): no authentication in "Pick your profile"
+- The challenge cannot have authentication: face login, password, face registration, and "Enter without camera" were removed.
+- `Main`: one tap on the profile opens it. Team → `Visao.entrar(id)` and goes to `Registo` (1st time) or to `Hoje`; Demo → `Hoje` with the persona.
+- Automatic mission day for real profiles: 0 (pre-flight) the 1st time; after that, one week after the last test (`Visao.diaSugerido`).
+- `Perfil`: "Switch profile" goes back to `Main` (the sheet with Face ID / password and "Sign out" was removed); "Delete my face" was removed.
+  Profiles outside the team (created by mistake) are removed in Profile › Privacy ("Remove this profile", 2 taps).
+- `ligacao.js` clears, once, any face descriptors saved earlier (`dt_rostos`) and the `visao-entrada` key.
+- `app/camara/teste_visao.html` (the backend test screen) no longer has face login either. `app/camara/rosto.js`
+  and `app/camara/vendor/faceapi/` were removed from the project (face-api was only used for this; distance uses MediaPipe).

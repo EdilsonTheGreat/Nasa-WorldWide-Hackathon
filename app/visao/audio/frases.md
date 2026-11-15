@@ -1,7 +1,7 @@
-# Frases da voz (ElevenLabs)
+# Voice phrases (ElevenLabs)
 
-Uma voz, as mesmas definições para todas. Guardar cada uma como MP3 com o nome indicado, nesta pasta.
-Crédito: «Voice generated with ElevenLabs (elevenlabs.io)».
+One voice, the same settings for all of them. Save each one as an MP3 with the name shown, in this folder.
+Credit: "Voice generated with ElevenLabs (elevenlabs.io)".
 
 ## 1. Instructions before each test
 

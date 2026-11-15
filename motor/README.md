@@ -1,10 +1,10 @@
 # motor/ (Edilson)
 
-Especificação completa: **[`../docs/EDILSON.md`](../docs/EDILSON.md)**. Estado: implementado, 9/9 testes ✅.
+Full specification: **[`../docs/EDILSON.md`](../docs/EDILSON.md)**. Status: implemented, 9/9 tests ✅.
 
-| Ficheiro | O que é |
+| File | What it is |
 |---|---|
-| `regras.js` | `window.REGRAS`: limites e textos. **A equipa de saúde edita só este ficheiro.** |
+| `regras.js` | `window.REGRAS`: thresholds and texts. **The health team edits only this file.** |
 | `motor.js` | `window.Motor`: `avaliar`, `corOCT`, `corAmsler`, `corAcuidade`, `piorCor`, `registosDe` |
-| `testes.js` | Os 9 testes obrigatórios |
-| `teste.html` | Abre com duplo clique e mostra ✅/❌ |
+| `testes.js` | The 9 required tests |
+| `teste.html` | Opens with a double-click and shows ✅/❌ |

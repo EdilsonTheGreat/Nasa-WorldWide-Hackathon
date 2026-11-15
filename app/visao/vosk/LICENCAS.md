@@ -1,7 +1,7 @@
-# Reconhecimento de voz offline (Vosk)
+# Offline speech recognition (Vosk)
 
 - `vosk.js`: vosk-browser 0.0.8 (Ciaran O'Reilly), Apache-2.0, https://github.com/ccoreilly/vosk-browser
-- `modelo-en.bin` (é um .tar.gz; a extensão .bin evita que o servidor o mande com Content-Encoding): modelo oficial `vosk-model-small-en-us-0.15` da Alpha Cephei, Apache-2.0, https://alphacephei.com/vosk/models
-  (pasta `model/`, sem alterações).
+- `modelo-en.bin` (it is a .tar.gz; the .bin extension stops the server from sending it with Content-Encoding): official `vosk-model-small-en-us-0.15` model from Alpha Cephei, Apache-2.0, https://alphacephei.com/vosk/models
+  (`model/` folder, unmodified).
 
-Tudo corre dentro do browser (WebAssembly, num Web Worker). O som do microfone nunca sai do aparelho e não é usada internet.
+Everything runs inside the browser (WebAssembly, in a Web Worker). Microphone audio never leaves the device and no internet is used.
