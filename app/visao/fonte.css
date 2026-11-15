@@ -11,3 +11,7 @@
 /* Vídeo da câmara: escondido quando está guardado no <body>, visível (em espelho) quando encaixado num ecrã. */
 body > video.fixo{position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none}
 [data-fixo] > video.fixo{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);max-width:none}
+
+/* Logótipo IRIS (assets/logo_iris.png é uma máscara: toma a cor do texto, por isso serve nos dois temas) */
+.dt-logo,.dt-marca{display:inline-block;flex:none;background:currentColor;-webkit-mask:url(assets/logo_iris.png) center/contain no-repeat;mask:url(assets/logo_iris.png) center/contain no-repeat}
+.dt-marca{-webkit-mask-image:url(assets/logo_marca.png);mask-image:url(assets/logo_marca.png)}

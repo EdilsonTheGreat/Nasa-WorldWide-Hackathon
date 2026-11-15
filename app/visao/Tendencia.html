@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/logo_icone.png">
 <title>Trend · IRIS</title>
-<link href="fonte.css?v=20261115e" rel="stylesheet">
-<link href="iris.css?v=20261115e" rel="stylesheet">
+<link href="fonte.css?v=20261115h" rel="stylesheet">
+<link href="iris.css?v=20261115h" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
-.tema-escuro{--bg:#0D0C0A;--glow1:rgba(207,227,243,0.15);--glow2:rgba(95,157,184,0.15);--card:rgba(255,255,255,0.06);--card2:rgba(255,255,255,0.025);--card-shadow:none;--line:rgba(255,255,255,0.12);--line2:rgba(255,255,255,0.08);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--tx-soft:#E1E5EA;--chip:rgba(255,255,255,0.06);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#CFE3F3;--acc-glow:rgba(207,227,243,0.35);--acc-soft:rgba(207,227,243,0.14);--acc-line:rgba(207,227,243,0.5);--cta:#F2F4F7;--cta-tx:#0D0C0A;--nav:rgba(22,24,28,0.82);--nav-shadow:0 16px 40px rgba(0,0,0,0.45);--ok:#7FD1A6;--ok-tx:#7FD1A6;--warn:#F0A940;--warn-tx:#F0A940;--bad:#F0766B;--bad-tx:#F0766B;--ok-glow:rgba(127,209,166,0.24);--warn-glow:rgba(240,169,64,0.26);--bad-glow:rgba(240,118,107,0.28);--zone-ok:rgba(127,209,166,0.13);--zone-warn:rgba(240,169,64,0.16);--zone-bad:rgba(240,118,107,0.10);--line-glow:rgba(242,244,247,0.16);--bad-btn:linear-gradient(180deg,#F5918A,#E0645A);--bad-btn-tx:#1A0D0B;--bad-btn-glow:rgba(240,118,107,0.4)}
-.tema-claro{--bg:#FAFBFC;--glow1:rgba(207,227,243,0.85);--glow2:rgba(95,157,184,0.12);--card:rgba(255,255,255,0.96);--card2:rgba(244,248,252,0.94);--card-shadow:0 10px 30px rgba(13,12,10,0.06);--line:rgba(13,12,10,0.13);--line2:rgba(13,12,10,0.07);--tx:#0D0C0A;--tx2:#45484D;--tx3:#5F636A;--tx-soft:#1F2124;--chip:rgba(13,12,10,0.04);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#2F5E80;--acc-glow:rgba(120,170,210,0.35);--acc-soft:rgba(207,227,243,0.7);--acc-line:#9DC2DE;--cta:#0D0C0A;--cta-tx:#FFFFFF;--nav:rgba(255,255,255,0.9);--nav-shadow:0 14px 34px rgba(13,12,10,0.12);--ok:#3FAE6A;--ok-tx:#1E7B34;--warn:#F0A940;--warn-tx:#A05A00;--bad:#E0645A;--bad-tx:#C4141B;--ok-glow:rgba(127,209,166,0.35);--warn-glow:rgba(240,169,64,0.30);--bad-glow:rgba(240,118,107,0.25);--zone-ok:rgba(127,209,166,0.24);--zone-warn:rgba(240,169,64,0.22);--zone-bad:rgba(240,118,107,0.14);--line-glow:rgba(13,12,10,0.10);--bad-btn:linear-gradient(180deg,#D83A30,#B3241B);--bad-btn-tx:#FFFFFF;--bad-btn-glow:rgba(196,20,27,0.3)}
+.tema-escuro{--teal:#7FB7CF;--bg:#0D0C0A;--glow1:rgba(207,227,243,0.15);--glow2:rgba(95,157,184,0.15);--card:rgba(255,255,255,0.06);--card2:rgba(255,255,255,0.025);--card-shadow:none;--line:rgba(255,255,255,0.12);--line2:rgba(255,255,255,0.08);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--tx-soft:#E1E5EA;--chip:rgba(255,255,255,0.06);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#CFE3F3;--acc-glow:rgba(207,227,243,0.35);--acc-soft:rgba(207,227,243,0.14);--acc-line:rgba(207,227,243,0.5);--cta:#F2F4F7;--cta-tx:#0D0C0A;--nav:rgba(22,24,28,0.82);--nav-shadow:0 16px 40px rgba(0,0,0,0.45);--ok:#7FD1A6;--ok-tx:#7FD1A6;--warn:#F0A940;--warn-tx:#F0A940;--bad:#F0766B;--bad-tx:#F0766B;--ok-glow:rgba(127,209,166,0.24);--warn-glow:rgba(240,169,64,0.26);--bad-glow:rgba(240,118,107,0.28);--zone-ok:rgba(127,209,166,0.13);--zone-warn:rgba(240,169,64,0.16);--zone-bad:rgba(240,118,107,0.10);--line-glow:rgba(242,244,247,0.16);--bad-btn:linear-gradient(180deg,#F5918A,#E0645A);--bad-btn-tx:#1A0D0B;--bad-btn-glow:rgba(240,118,107,0.4)}
+.tema-claro{--teal:#3E7F9C;--bg:#FAFBFC;--glow1:rgba(207,227,243,0.85);--glow2:rgba(95,157,184,0.12);--card:rgba(255,255,255,0.96);--card2:rgba(244,248,252,0.94);--card-shadow:0 10px 30px rgba(13,12,10,0.06);--line:rgba(13,12,10,0.13);--line2:rgba(13,12,10,0.07);--tx:#0D0C0A;--tx2:#45484D;--tx3:#5F636A;--tx-soft:#1F2124;--chip:rgba(13,12,10,0.04);--acc:#CFE3F3;--acc-tx:#0D0C0A;--acc-text:#2F5E80;--acc-glow:rgba(120,170,210,0.35);--acc-soft:rgba(207,227,243,0.7);--acc-line:#9DC2DE;--cta:#0D0C0A;--cta-tx:#FFFFFF;--nav:rgba(255,255,255,0.9);--nav-shadow:0 14px 34px rgba(13,12,10,0.12);--ok:#3FAE6A;--ok-tx:#1E7B34;--warn:#F0A940;--warn-tx:#A05A00;--bad:#E0645A;--bad-tx:#C4141B;--ok-glow:rgba(127,209,166,0.35);--warn-glow:rgba(240,169,64,0.30);--bad-glow:rgba(240,118,107,0.25);--zone-ok:rgba(127,209,166,0.24);--zone-warn:rgba(240,169,64,0.22);--zone-bad:rgba(240,118,107,0.14);--line-glow:rgba(13,12,10,0.10);--bad-btn:linear-gradient(180deg,#D83A30,#B3241B);--bad-btn-tx:#FFFFFF;--bad-btn-glow:rgba(196,20,27,0.3)}
 </style>
 <style>
 html,body{margin:0;height:100%;overflow:hidden}
@@ -18,14 +19,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115e"></script>
-<script src="../../motor/regras.js?v=20261115e"></script>
-<script src="../../motor/motor.js?v=20261115e"></script>
-<script src="../../motor/modelo.js?v=20261115e"></script>
-<script src="../armazenamento.js?v=20261115e"></script>
-<script src="ligacao.js?v=20261115e"></script>
-<script src="i18n.js?v=20261115e"></script>
-<script src="runtime.js?v=20261115e"></script>
+<script src="../dados.js?v=20261115h"></script>
+<script src="../../motor/regras.js?v=20261115h"></script>
+<script src="../../motor/motor.js?v=20261115h"></script>
+<script src="../../motor/modelo.js?v=20261115h"></script>
+<script src="../armazenamento.js?v=20261115h"></script>
+<script src="ligacao.js?v=20261115h"></script>
+<script src="i18n.js?v=20261115h"></script>
+<script src="runtime.js?v=20261115h"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -34,8 +35,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
-<svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span title="Integrated Remote Intelligence for Spaceflight" style="font-size: 22px; font-weight: 600; letter-spacing: 1.5px; color: var(--tx)">IRIS</span>
+<span class="dt-logo" role="img" aria-label="IRIS" title="Integrated Remote Intelligence for Spaceflight" style="width: 65px; height: 36px; color: var(--tx)"></span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -44,7 +44,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ claro }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
 {{ temaLabel }}</button>
 <span style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 18px; background: var(--chip); border: 1px solid var(--line2); font-size: 13px; font-weight: 500; color: var(--tx2)">
-<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>{{ chip }}</span>
+<span aria-hidden="true" style="width: 24px; height: 24px; margin-left: -8px; border-radius: 12px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ chipIni }}</span>{{ chip }}</span>
 </div>
 </div>
 
@@ -325,7 +325,7 @@ class Component extends DCLogic {
     let rh = null;
     if (H) {
       const T = H.testes;
-      const maxD = Math.max(30, H.dia, T.length ? T[T.length - 1].dia : 0);
+      const maxD = Math.ceil(Math.max(30, H.dia, T.length ? T[T.length - 1].dia : 0) / 30) * 30;
       const RX = (d) => 52 + d / maxD * 572, RY = (v) => 330 - (v || 0) / 5 * 290;
       const CN = ['var(--ok)', 'var(--ylw)', 'var(--warn)', 'var(--bad)'];
       const CT = ['var(--ok-tx)', 'var(--ylw-tx)', 'var(--warn-tx)', 'var(--bad-tx)'];
@@ -333,7 +333,7 @@ class Component extends DCLogic {
       const comOlhos = T.filter((t) => t.oe !== null && t.oe !== undefined);
       const pontos = [];
       comOlhos.forEach((t) => {
-        pontos.push({ x: RX(t.dia).toFixed(1), y: RY(t.od).toFixed(1), r: 4, cor: CN[t.nivel], fill: 'var(--bg)' });
+        pontos.push({ x: RX(t.dia).toFixed(1), y: RY(t.od).toFixed(1), r: 4, cor: 'var(--teal)', fill: 'var(--bg)' });
         pontos.push({ x: RX(t.dia).toFixed(1), y: RY(t.oe).toFixed(1), r: 6, cor: CN[t.nivel], fill: 'var(--bg)' });
       });
       const ult = T[T.length - 1];
@@ -343,7 +343,7 @@ class Component extends DCLogic {
         nTxt: T.length + (T.length === 1 ? ' test' : ' tests'),
         label: 'Lines read per eye in ' + T.length + ' tests of ' + H.nome + '.',
         grelha: [0, 1, 2, 3, 4, 5].map((k) => ({ y: RY(k).toFixed(1), ty: (RY(k) + 4).toFixed(1), t: k + '/5' })),
-        eixoX: [0, 0.25, 0.5, 0.75, 1].map((f) => { const d = Math.round(maxD * f); return { x: RX(d).toFixed(1), t: d === 0 ? 'Pre-flight' : String(d) }; }),
+        eixoX: [0, 1, 2, 3].map((k) => { const d = Math.round(maxD * k / 3); return { x: RX(d).toFixed(1), t: d === 0 ? 'Pre-flight' : String(d) }; }),
         linhaOE: comOlhos.map((t) => RX(t.dia).toFixed(1) + ',' + RY(t.oe).toFixed(1)).join(' '),
         linhaOD: comOlhos.map((t) => RX(t.dia).toFixed(1) + ',' + RY(t.od).toFixed(1)).join(' '),
         pontos: pontos, vazio: T.length === 0,
@@ -380,6 +380,7 @@ class Component extends DCLogic {
         this.setState({ tema: nt });
         try { window.localStorage.setItem('visao-tema', nt); } catch (e) {}
       },
+      chipIni: euReal ? euReal.ini : ({ A: 'MS', B: 'DC', C: 'SL' })[s.who],
       chip: euReal ? euReal.nome + ' · ' + (window.Visao.diaTxt ? window.Visao.diaTxt(euReal.dia) : 'Day ' + euReal.dia) : chips[s.who],
       real: !!rh, demo: !rh, rh: rh || {},
       subtitulo: rh ? 'Your own tests only · compared with your pre-flight baseline' : 'OCT · retina around the optic nerve, vs your pre-flight baseline',

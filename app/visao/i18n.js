@@ -799,7 +799,7 @@
 "Central heterochromia": "Heterocromia central",
 "Age": "Idade",
 "Morning": "Manhã",
-"None recorded": "Nenhuma registada",
+"None recorded": "Nenhum registado",
 "Night": "Noite",
 "Asks for identity": "Pede identidade",
 "Privacy": "Privacidade",
@@ -1128,12 +1128,24 @@
 "Follow the radiation protocol:": "Siga o protocolo de radiação:",
 "wear the dosimeter and go to the shelter if there is a solar storm alert.": "use o dosímetro e vá para o abrigo se houver alerta de tempestade solar.",
 "Any change in vision, strong headache, dizziness or unusual tiredness:": "Qualquer mudança na visão, dor de cabeça forte, tontura ou cansaço invulgar:",
-"tell the flight surgeon immediately.": "comunique ao médico de voo de imediato."
+"tell the flight surgeon immediately.": "comunique ao médico de voo de imediato.",
+"all screens": "todos os ecrãs",
+"Before you start, check:": "Antes de começar, confirma:",
+"Simulated values.": "Valores simulados.",
+"9 · Pre-flight registration": "9 · Pré-registo",
+"Day 0, on Earth: mission, eyes and baseline OCT, before the baseline tests.": "Dia 0, na Terra: missão, olhos e OCT de base, antes dos testes de base.",
+"Pre-flight, on Earth: mission, eyes and baseline OCT, before the baseline tests.": "Pré-voo, na Terra: missão, olhos e OCT de base, antes dos testes de base.",
+"The colour comes only from the quick tests, compared with your baseline.": "A cor vem só dos testes rápidos, comparados com a tua base.",
+"Status comes from the quick tests, compared with your baseline (your first test).": "O estado vem dos testes rápidos, comparados com a tua base (o teu primeiro teste).",
+"vs first OCT": "face ao primeiro OCT",
+"The app only compares values with your history. Interpretation is up to the medical team.": "A app só compara os valores com o teu histórico. A interpretação cabe à equipa médica.",
+"LE": "OE",
+"RE": "OD"
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };
   var COR = { Green: "Verde", Yellow: "Amarelo", Orange: "Laranja", Red: "Vermelho", green: "verde", yellow: "amarelo", orange: "laranja", red: "vermelho" };
-  var NIVEL = { "routine": "rotina", "possible interference": "possível interferência", "clinical review advised": "revisão clínica aconselhada", "clinical priority": "prioridade clínica" };
+  var NIVEL = { "routine": "rotina", "possible interference": "possível interferência", "clinical review advised": "revisão clínica recomendada", "clinical priority": "prioridade clínica" };
   var OLHO = { left: "esquerdo", right: "direito", Left: "esquerdo", Right: "direito" };
   var IRIS = { "Brown": "castanha", "Hazel": "avelã", "Green": "verde", "Blue": "azul", "Grey": "cinzenta", "Amber": "âmbar", "Central heterochromia": "heterocromia central", "Original": "original" };
   var ITENS = {
@@ -1232,12 +1244,14 @@
     [/^Day (\d+) in microgravity: in the reference population the retina around the optic nerve has thickened about (.+) by now \(9 in 10 stay below (.+)\)\. (.+)$/, function (m, d, a, b, f) {
       return "Dia " + d + " em microgravidade: na população de referência, a retina à volta do nervo óptico espessou cerca de " + num(a) + " até agora (9 em cada 10 ficam abaixo de " + num(b) + "). " +
         (/checked with OCT/.test(f) ? "Uma alteração nos testes rápidos nesta fase deve ser confirmada com OCT, quando houver." : "Os testes rápidos não encontraram alterações visuais hoje."); }],
-    [/^Latest OCT \(day (\d+)\): (.+) vs the first OCT, within the expected range\.$/, function (m, d, v) { return "Último OCT (dia " + d + "): " + num(v) + " face ao primeiro OCT, dentro do esperado."; }],
-    [/^Latest OCT \(day (\d+)\): (.+) vs the first OCT, above the expected range: (.+)$/, function (m, d, v, r) { return "Último OCT (dia " + d + "): " + num(v) + " face ao primeiro OCT, acima do esperado: " + r; }],
+    [/^Latest OCT \((.+?)\): (.+) vs the first OCT, within the expected range\.$/, function (m, d, v) { return "Último OCT (" + dia(d) + "): " + num(v) + " face ao primeiro OCT, dentro do esperado."; }],
+    [/^Latest OCT \((.+?)\): (.+) vs the first OCT, above the expected range: (.+)$/, function (m, d, v, r) { return "Último OCT (" + dia(d) + "): " + num(v) + " face ao primeiro OCT, acima do esperado: " + r; }],
     [/^(First test saved as your baseline|Acuity and Amsler grid same as your baseline)\. Next quick test on day (\d+)\.$/, function (m, a, d) {
       return (/First/.test(a) ? "Primeiro teste guardado como a tua base" : "Acuidade e grelha de Amsler iguais à tua base") + ". Próximo teste rápido no dia " + d + "."; }],
-    [/^Lines read per eye and status vs your baseline \((.+)\)\. No OCT on board: decision by the rules engine from the quick tests\.$/, function (m, d) {
-      return "Linhas lidas por olho e estado face à tua base (" + dia(d) + "). Sem OCT a bordo: decisão do motor de regras a partir dos testes rápidos."; }],
+    [/^Lines read per eye and status vs your baseline \((.+)\)\. Decision by the rules engine from the quick tests\.$/, function (m, d) {
+      return "Linhas lidas por olho e estado face à tua base (" + dia(d) + "). Decisão do motor de regras a partir dos testes rápidos."; }],
+    [/^(\d+) exams? recorded$/, function (m, n) { return pl(n, "exame registado", "exames registados"); }],
+    [/^vs first OCT · expected up to (.+) \(P90\)$/, function (m, v) { return "face ao primeiro OCT · esperado até " + num(v) + " (P90)"; }],
     [/^(Acuity|Amsler grid|Symptoms|Spacecraft motion|OCT|Interference|Review), (pre-flight|day \d+): (.+)$/, function (m, a, d, r, T) {
       var A = { "Acuity": "Acuidade", "Amsler grid": "Grelha de Amsler", "Symptoms": "Sintomas", "Spacecraft motion": "Movimento da nave", "OCT": "OCT", "Interference": "Interferência", "Review": "Revisão" };
       var rr = T(r); if (rr === r) rr = item(r); return A[a] + ", " + dia(d) + ": " + rr; }],
@@ -1264,6 +1278,7 @@
     [/^(Left|Right) eye: you read up to line (\d+)\. (.+)$/, function (m, o, n, r, T) { return "Olho " + OLHO[o] + ": leste até à linha " + n + ". " + T(r); }],
     [/^Score: (.+)$/, function (m, r, T) { return "Pontuação: " + T(r); }],
     [/^Baseline \((.+)\): (.+)$/, function (m, d, r, T) { return "Base (" + dia(d) + "): " + T(r); }],
+    [/^OCT baseline$/, "OCT de base"], [/^(.+) vs first OCT$/, function (m, x, T) { return num(T(x)) + " face ao primeiro OCT"; }],
     [/^· (.+)$/, function (m, x, T) { return "· " + T(x); }],
     [/^baseline from (.+)$/, function (m, d) { return "base de " + dia(d); }],
     [/^Today (.+ UTC)$/, "Hoje $1"],

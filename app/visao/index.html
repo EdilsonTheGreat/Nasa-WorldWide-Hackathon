@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/logo_icone.png">
 <title>IRIS · Deep Thinkers · prototype screens</title>
-<link href="fonte.css?v=20261115e" rel="stylesheet">
-<link href="iris.css?v=20261115e" rel="stylesheet">
+<link href="fonte.css?v=20261115h" rel="stylesheet">
+<link href="iris.css?v=20261115h" rel="stylesheet">
 <style>
 :root{--bg:#0D0C0A;--card:rgba(255,255,255,0.06);--line:rgba(255,255,255,0.10);--tx:#F2F4F7;--tx2:#C5CBD3;--tx3:#8E959E;--acc:#CFE3F3;--acc-tx:#0D0C0A}
 *{box-sizing:border-box}
@@ -35,7 +36,7 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 <header>
 <div>
 <span class="sub">Deep Thinkers · NASA Space Apps 2026 · vision app prototype</span>
-<h1>IRIS · all screens</h1>
+<h1><span class="dt-logo" role="img" aria-label="IRIS" style="width: 72px; height: 40px; vertical-align: middle; margin-right: 10px"></span>all screens</h1>
 </div>
 <div class="acoes">
 <button class="btn btn-sec" type="button" id="repor">Reset the demo</button>
@@ -53,14 +54,15 @@ h1{margin:4px 0 0;font-size:40px;font-weight:300;letter-spacing:-1px}
 <a class="cartao" href="Tendencia.html"><img src="assets/miniaturas/Tendencia.jpg" alt=""><b>6 · History</b><span>Retina trend against the pre-flight baseline.</span></a>
 <a class="cartao" href="SANS.html"><img src="assets/miniaturas/SANS.jpg" alt=""><b>7 · SANS monitoring</b><span>Timeline of exams and mission events.</span></a>
 <a class="cartao" href="Alerta.html"><img src="assets/miniaturas/Alerta.jpg" alt=""><b>8 · Medical alerts</b><span>Alerts on four levels, with detail and sending to the flight surgeon.</span></a>
+<a class="cartao" href="Registo.html"><img src="assets/miniaturas/Registo.jpg" alt=""><b>9 · Pre-flight registration</b><span>Day 0, on Earth: mission, eyes and baseline OCT, before the baseline tests.</span></a>
 </div>
 <div class="nota">
 <b>How to use.</b> Open this folder and double-click <b>index.html</b>, or start at <b>Main.html</b>. Works without internet. For the camera (distance and face sign-in), open the app with the file <b>abrir_app</b> in the project folder (http://localhost:8000); with a double-click everything works except the camera. Profile, theme and answers are kept in the browser: use <b>Reset the demo</b> to see the motion notification again and start over.<br>
 Marta = routine · Daniel = review advised · Sofia = clinical priority. Everything is simulated, with no link to NASA systems, and the app does not diagnose SANS.
 </div>
 </main>
-<script src="i18n.js?v=20261115e"></script>
-<script src="voz.js?v=20261115e"></script>
+<script src="i18n.js?v=20261115h"></script>
+<script src="voz.js?v=20261115h"></script>
 <script>
 // Reconhecimento de voz no aparelho: o pacote de português descarrega-se UMA vez, com internet.
 document.getElementById('preparar-voz').addEventListener('click', function () {

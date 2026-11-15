@@ -323,7 +323,7 @@
         rec: registoDe(me.id) ? { titulo: "Record your baseline", texto: "No tests stored on this device yet. Your first test becomes your pre-flight baseline." }
           : { titulo: "Pre-flight registration", texto: "Before launch, on Earth: record your mission and eye details, then your baseline tests." },
         olhoEsq: vazio, olhoDir: vazio, olhosSub: "No tests yet", alertas: "None",
-        olhosNota: "No OCT on board: status comes from the quick tests, compared with your baseline (your first test)."
+        olhosNota: "Status comes from the quick tests, compared with your baseline (your first test)."
       };
     }
     var r = u.reg, av = u.av, nivel3 = av.nivel >= 3 ? 2 : (av.nivel === 2 ? 1 : 0);
@@ -340,7 +340,7 @@
       olhoEsq: Object.assign({ valor: acTxt(r, "oe"), uni: "" }, E[IDX[av.corOlho.oe]]),
       olhoDir: Object.assign({ valor: acTxt(r, "od"), uni: "" }, E[IDX[av.corOlho.od]]),
       olhosSub: "Last quick test · day " + r.dia,
-      olhosNota: "Lines read per eye and status vs your baseline (day " + baseDe(u.regs).dia + "). No OCT on board: decision by the rules engine from the quick tests.",
+      olhosNota: "Lines read per eye and status vs your baseline (day " + baseDe(u.regs).dia + "). Decision by the rules engine from the quick tests.",
       alertas: nAl ? nAl + " to review" : "None active", nAlertas: nAl
     };
   }
@@ -360,6 +360,11 @@
         .concat((r.alteracao_visual || []).map(function (v) { return ALT_EN[v]; }));
       if (s.length) T.sin.push([r.dia, av.nSint ? 2 : 0, s.join(", ")]);
       if (r.evento_nave === "sim" || r.evento_nave === "naosei") T.mov.push([r.dia, 4, r.pre_exame ? (r.pre_exame.nave === 2 ? "Strong vibration or manoeuvre before the test" : "Slight vibration before the test") : (r.evento_nave === "sim" ? "You felt spacecraft motion during the test" : "Spacecraft motion unconfirmed")]);
+    });
+    var oc = octDe(me.id);
+    oc.forEach(function (o, i) {
+      var pc = function (a, b) { return (a >= b ? "+" : "−") + Math.abs((a - b) / b * 100).toFixed(1) + "%"; };
+      T.oct.push([o.dia, 0, i === 0 ? "OCT baseline · LE " + o.oe + " µm · RE " + o.od + " µm" : "LE " + pc(o.oe, oc[0].oe) + " · RE " + pc(o.od, oc[0].od) + " vs first OCT"]);
     });
     return T;
   }
@@ -420,11 +425,11 @@
       nome: me.nome, curto: me.curto, ini: me.ini, papel: "Deep Thinkers team", dia: me.dia,
       entrada: ler("visao-entrada") === "rosto" ? "rosto" : "lista",
       grupos: [
-        { titulo: "SESSION", linhas: [["Profile", me.id], ["Mission day", String(me.dia)], ["Face registered", rosto ? "Yes · numeric descriptor only" : "No"], ["Data", "Stored on this device only"]] },
+        { titulo: "SESSION", linhas: [["Profile", me.id], ["Mission day", diaTxt(me.dia)], ["Face registered", rosto ? "Yes · numeric descriptor only" : "No"], ["Data", "Stored on this device only"]] },
         { titulo: "QUICK TESTS", linhas: [["Tests saved", String(regs.length)], ["Baseline", base ? diaTxt(base.dia) + " · LE " + acTxt(base, "oe") + " · RE " + acTxt(base, "od") : "To do"],
           ["Last test", u ? diaTxt(u.dia) + " · LE " + acTxt(u, "oe") + " · RE " + acTxt(u, "od") : "–"], ["Amsler grid", u ? amTxt(u) : "–"]] },
         { titulo: "STATUS", linhas: [["Traffic light", av ? COR[av.cor] : "No tests"], ["Average distance", dist.length ? Math.round(dist.reduce(function (a, b) { return a + b; }, 0) / dist.length) + " cm" : "Not measured"],
-          ["OCT", "No OCT on board"], ["Limits", g.REGRAS.provisorio ? "Provisional · to validate" : "Validated"]] }
+          ["OCT", octDe(me.id).length ? octDe(me.id).length + (octDe(me.id).length === 1 ? " exam recorded" : " exams recorded") : "None recorded"], ["Limits", g.REGRAS.provisorio ? "Provisional · to validate" : "Validated"]] }
       ].map(function (gr) { return { titulo: gr.titulo, linhas: gr.linhas.map(function (x) { return { k: x[0], v: x[1] }; }) }; })
     };
   }
@@ -525,6 +530,14 @@
       r.microgravidade.p50 = Math.round(F.p50[i] * 10) / 10;
       r.microgravidade.p90 = Math.round(F.p90[i] * 10) / 10;
       r.microgravidade.fonte = "Macias et al. 2020";
+    }
+    if (real()) {
+      // perfil real: o último OCT que o próprio astronauta registou (contexto; não muda a cor)
+      var oc = octDe();
+      if (oc.length) {
+        var u = oc[oc.length - 1], dl = Math.round((u.oe - oc[0].oe) / oc[0].oe * 1000) / 10, lim = r.microgravidade.p90;
+        r.oct = { dia: u.dia, delta: dl, p90: lim === undefined ? 0 : lim, level: lim !== undefined && oc.length > 1 && dl > lim ? 1 : 0, motivo: "the medical team reviews it." };
+      }
     }
     if (!real() && letraDemo) {
       var t = tendencia(letraDemo);

@@ -130,3 +130,10 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
   a voz em PT usa a voz portuguesa do sistema (os MP3 são em inglês) e o reconhecimento em pt-PT com os nomes das letras em português.
   Para mudar traduções: editar o dicionário em `i18n.js` (MAPA) ou as REGRAS no fim do ficheiro.
 
+## 15 Nov (tarde): logótipo e limpeza
+- Logótipo da equipa em `assets/logo_iris.png` (marca + "iris") e `assets/logo_marca.png` (só a flor). São máscaras: `.dt-logo` / `.dt-marca`
+  (em `fonte.css`) pintam-nas com a cor do texto, por isso servem no tema claro e no escuro. Ícone do separador: `assets/logo_icone.png`.
+- "O essencial a bordo" no Hoje (orientações gerais: olhos, corpo e regra de ouro).
+- Coerência: OCT do próprio astronauta aparece na linha do tempo SANS, no Perfil e no relatório final; "Vision changes" com o mesmo nome em todo o lado;
+  gráfico do Histórico com os dois olhos; miniaturas do índice refeitas com os ecrãs actuais.
+

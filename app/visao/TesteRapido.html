@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="assets/logo_icone.png">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261115e" rel="stylesheet">
-<link href="iris.css?v=20261115e" rel="stylesheet">
+<link href="fonte.css?v=20261115h" rel="stylesheet">
+<link href="iris.css?v=20261115h" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -20,17 +21,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115e"></script>
-<script src="../../motor/regras.js?v=20261115e"></script>
-<script src="../../motor/motor.js?v=20261115e"></script>
-<script src="../../motor/modelo.js?v=20261115e"></script>
-<script src="../armazenamento.js?v=20261115e"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115e"></script>
-<script src="../camara/distancia.js?v=20261115e"></script>
-<script src="ligacao.js?v=20261115e"></script>
-<script src="voz.js?v=20261115e"></script>
-<script src="i18n.js?v=20261115e"></script>
-<script src="runtime.js?v=20261115e"></script>
+<script src="../dados.js?v=20261115h"></script>
+<script src="../../motor/regras.js?v=20261115h"></script>
+<script src="../../motor/motor.js?v=20261115h"></script>
+<script src="../../motor/modelo.js?v=20261115h"></script>
+<script src="../armazenamento.js?v=20261115h"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115h"></script>
+<script src="../camara/distancia.js?v=20261115h"></script>
+<script src="ligacao.js?v=20261115h"></script>
+<script src="voz.js?v=20261115h"></script>
+<script src="i18n.js?v=20261115h"></script>
+<script src="runtime.js?v=20261115h"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -39,8 +40,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 
 <div style="position: absolute; left: 40px; right: 40px; top: 28px; display: flex; align-items: center; justify-content: space-between">
 <div style="display: flex; align-items: center; gap: 10px">
-<svg aria-hidden="true" width="28" height="28" viewBox="0 0 28 28" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round"><circle cx="14" cy="14" r="5"></circle><path d="M14 2v4M14 22v4M2 14h4M22 14h4M5.5 5.5l2.8 2.8M19.7 19.7l2.8 2.8M5.5 22.5l2.8-2.8M19.7 8.3l2.8-2.8"></path></svg>
-<span title="Integrated Remote Intelligence for Spaceflight" style="font-size: 22px; font-weight: 600; letter-spacing: 1.5px; color: var(--tx)">IRIS</span>
+<span class="dt-logo" role="img" aria-label="IRIS" title="Integrated Remote Intelligence for Spaceflight" style="width: 65px; height: 36px; color: var(--tx)"></span>
 <span style="margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--tx3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px">{{ selo }}</span>
 </div>
 <div style="display: flex; align-items: center; gap: 10px">
@@ -103,7 +103,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </sc-if>
 </sc-if>
 <sc-if value="{{ pr.dicas }}" hint-placeholder-val="{{ true }}">
-<p style="margin: 0 0 2px; font-size: 14px; line-height: 1.45; color: var(--tx2)">Let's do the quick vision test. It takes about 5 minutes. First, get ready:</p>
+<p style="margin: 0 0 2px; font-size: 14px; line-height: 1.45; color: var(--tx2)">{{ pr.dicasTxt }}</p>
 <sc-for list="{{ preparar }}" as="k" hint-placeholder-count="4">
 <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; border-top: 1px solid var(--line2)">
 <span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 17px; background: var(--acc-soft); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="{{ k.icone }}"></path></svg></span>
@@ -483,7 +483,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <div style="position: absolute; left: -1500px; top: -1500px; right: -1500px; bottom: -1500px; background: var(--overlay); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px)"></div>
 <section role="dialog" aria-modal="true" aria-labelledby="rel-titulo" style="position: absolute; left: 117px; top: 40px; width: 960px; max-height: 754px; box-sizing: border-box; overflow-y: auto; padding: 24px 28px; border-radius: 30px; background: var(--sheet); border: 1px solid var(--sheet-line); box-shadow: 0 30px 80px rgba(0,0,0,0.35); display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; align-items: flex-start; gap: 14px">
-<span aria-hidden="true" style="height: 44px; flex: none; padding: 0 14px; border-radius: 22px; background: var(--acc); color: var(--acc-tx); font-size: 15px; font-weight: 800; letter-spacing: 1.5px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px var(--acc-glow)">IRIS</span>
+<span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--acc); color: var(--acc-tx); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px var(--acc-glow)"><span class="dt-marca" style="width: 20px; height: 28px"></span></span>
 <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
 <h2 id="rel-titulo" style="margin: 0; font-size: 24px; font-weight: 400; letter-spacing: -0.3px; color: var(--tx)">Final report</h2>
 <span style="font-size: 13px; color: var(--tx3)">{{ relMeta }}</span>
@@ -952,8 +952,9 @@ class Component extends DCLogic {
       vermelho: { titulo: 'Not reliable right now', texto: 'The measurement would not be reliable. Fix the condition and answer again:', cor: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)', linha: 'var(--bad-line)' }
     }[PR.estado];
     const pr = Object.assign({}, PRV, {
-      pronto: faltam === 0, dicas: faltam > 0, vermelho: faltam === 0 && PR.estado === 'vermelho',
+      pronto: faltam === 0, dicas: faltam > 0 || (PR.estado === 'verde' && !PR.alerta), vermelho: faltam === 0 && PR.estado === 'vermelho',
       ressalvas: faltam === 0 ? PR.ressalvas : [], alerta: PR.alerta,
+      dicasTxt: faltam > 0 ? 'Let\'s do the quick vision test. It takes about 5 minutes. First, get ready:' : 'Before you start, check:',
       textoAlerta: 'New and important change in vision: tell the flight surgeon now, even if you do not do the test now.'
     });
     if (faltam > 0) Object.assign(pr, { glow: 'var(--acc-soft)', linha: 'var(--line2)' });
@@ -1090,7 +1091,7 @@ class Component extends DCLogic {
       { teste: 'Near acuity', valor: 'LE ' + curto(ac.res.esq.sem) + ' · RE ' + curto(ac.res.dir.sem),
         sub: 'Score: LE ' + ac.acertos.esq.sem[0] + '/' + ac.acertos.esq.sem[1] + ' · RE ' + ac.acertos.dir.sem[0] + '/' + ac.acertos.dir.sem[1] + ' · ' + (reservaTxt ? reservaTxt + ' · ' : '') + (primeiroTeste ? 'First test: becomes your baseline' : (antReal ? 'Baseline (day ' + antReal.dia + ')' : 'Last test') + ': LE ' + curto(ant.ac.esq) + ' · RE ' + curto(ant.ac.dir)),
         dot: ac.res.esq.sem === null && ac.res.dir.sem === null ? 'var(--tx3)' : cores[nAc] },
-      { teste: 'New changes in vision', valor: listaSint.length === 0 ? 'None' : listaSint.length + ' reported',
+      { teste: 'Vision changes', valor: listaSint.length === 0 ? 'None' : listaSint.length + ' reported',
         sub: listaSint.length === 0 ? 'Pre-exam questionnaire: no new change' : listaSint.join(', '), dot: cores[nSint] }
     ];
     const dR = back ? back.distancia : (window.Visao ? window.Visao.camara.resumo() : { n: 0 });
@@ -1128,8 +1129,8 @@ class Component extends DCLogic {
     const relTestes = [
       { k: 'Near acuity', v: aconteceu[0].valor, sub: primeiroTeste ? 'First test: becomes your baseline' : (acMuda.length ? acMuda.join(' · ') + ' vs baseline' : 'Same as your baseline'), dot: aconteceu[0].dot },
       { k: 'Amsler grid', v: amNovas.length ? amNovas.join(' · ') : 'No new zones', sub: primeiroTeste ? 'First map: becomes your baseline' : 'Compared with your baseline map', dot: cores[nAms] },
-      { k: 'Symptoms', v: aconteceu[1].valor, sub: aconteceu[1].sub, dot: aconteceu[1].dot },
-      { k: 'OCT (retina)', v: oct ? (oct.delta >= 0 ? '+' : '') + oct.delta + '% · day ' + oct.dia : 'Not on board',
+      { k: 'Vision changes', v: aconteceu[1].valor, sub: aconteceu[1].sub, dot: aconteceu[1].dot },
+      { k: 'OCT (retina)', v: oct ? (oct.delta >= 0 ? '+' : '') + oct.delta + '% · day ' + oct.dia : 'None recorded',
         sub: oct ? 'vs first OCT · expected up to +' + oct.p90 + '% (P90)' : 'The colour comes from the quick tests', dot: oct ? ['var(--ok)', 'var(--ylw)', 'var(--bad)'][oct.level] || 'var(--ok)' : 'var(--tx3)' }
     ];
     const relMissao = [
@@ -1307,7 +1308,7 @@ class Component extends DCLogic {
       semCondicoes: s.passo === 1 || s.passo === 4,
       condicoes: condicoes,
       cam: cam,
-      octNota: euReal ? 'No OCT on board: the result comes only from the quick tests, compared with your baseline.' : 'OCT: optional but recommended. Measure on the device and record the result in the OCT tab.',
+      octNota: euReal ? 'The colour comes only from the quick tests, compared with your baseline.' : 'OCT: optional but recommended. Measure on the device and record the result in the OCT tab.',
       nos: nos,
       progressoPx: Math.round((s.passo - 1) / 3 * 836),
       abrirAjuda: () => this.setState({ ajuda: true }),
