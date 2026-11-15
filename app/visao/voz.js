@@ -210,7 +210,9 @@
   function semAcentos(s) { return s.normalize ? s.normalize("NFD").replace(/[̀-ͯ]/g, "") : s; }
   var NOMES = {
     C: ["c", "see", "sea", "si", "cee"], D: ["d", "dee", "de"], E: ["e", "ee", "eh"], F: ["f", "ef", "eff", "efe"],
-    L: ["l", "el", "ell", "elle", "ele"], O: ["o", "oh", "owe"], P: ["p", "pee", "pea", "pe"], T: ["t", "tee", "tea", "te"], Z: ["z", "zee", "zed", "ze"]
+    L: ["l", "el", "ell", "elle", "ele"], O: ["o", "oh", "owe"], P: ["p", "pee", "pea", "pe"], T: ["t", "tee", "tea", "te"], Z: ["z", "zee", "zed", "ze"],
+    H: ["h", "aitch", "haitch", "eitch"], K: ["k", "kay", "kei"], N: ["n", "en", "enn"], R: ["r", "ar", "are", "arr"],
+    S: ["s", "ess", "es"], V: ["v", "vee", "vi"]
   };
   var MAPA = {};
   Object.keys(NOMES).forEach(function (L) { NOMES[L].forEach(function (n) { MAPA[n] = L; }); });

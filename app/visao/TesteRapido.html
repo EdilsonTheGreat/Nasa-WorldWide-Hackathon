@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261114g" rel="stylesheet">
-<link href="iris.css?v=20261114g" rel="stylesheet">
+<link href="fonte.css?v=20261115b" rel="stylesheet">
+<link href="iris.css?v=20261115b" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -20,16 +20,16 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261114g"></script>
-<script src="../../motor/regras.js?v=20261114g"></script>
-<script src="../../motor/motor.js?v=20261114g"></script>
-<script src="../../motor/modelo.js?v=20261114g"></script>
-<script src="../armazenamento.js?v=20261114g"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261114g"></script>
-<script src="../camara/distancia.js?v=20261114g"></script>
-<script src="ligacao.js?v=20261114g"></script>
-<script src="voz.js?v=20261114g"></script>
-<script src="runtime.js?v=20261114g"></script>
+<script src="../dados.js?v=20261115b"></script>
+<script src="../../motor/regras.js?v=20261115b"></script>
+<script src="../../motor/motor.js?v=20261115b"></script>
+<script src="../../motor/modelo.js?v=20261115b"></script>
+<script src="../armazenamento.js?v=20261115b"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115b"></script>
+<script src="../camara/distancia.js?v=20261115b"></script>
+<script src="ligacao.js?v=20261115b"></script>
+<script src="voz.js?v=20261115b"></script>
+<script src="runtime.js?v=20261115b"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -156,7 +156,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="flex-grow: 1"></span>
 </div>
 <sc-if value="{{ acLer }}" hint-placeholder-val="{{ true }}">
-<div aria-label="Letter line" style="flex-grow: 1; min-width: 250px; min-height: 130px; display: flex; align-items: center; justify-content: center; gap: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid var(--line2)">
+<div aria-label="Letter line" data-letras="{{ linhaTxt }}" data-teclas="{{ tecladoTxt }}" style="flex-grow: 1; min-width: 250px; min-height: 130px; display: flex; align-items: center; justify-content: center; gap: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid var(--line2)">
 <sc-for list="{{ letrasAc }}" as="l" hint-placeholder-count="5">
 <span style="display: flex; flex-direction: column; align-items: center; gap: 8px"><span aria-hidden="true" style="font-family: Georgia, 'Times New Roman', serif; font-size: {{ l.size }}px; line-height: 1; color: #0D0C0A">{{ l.t }}</span><span style="width: {{ l.w }}px; height: 5px; border-radius: 3px; background: {{ l.marca }}"></span></span>
 </sc-for>
@@ -511,10 +511,22 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </template>
 <script>
 // Teste de acuidade: 5 linhas de letras Sloan, cada vez mais pequenas.
-const LINHAS_AC = [['E'], ['F', 'P'], ['T', 'O', 'Z'], ['L', 'P', 'E', 'D'], ['P', 'E', 'C', 'F', 'D']];
+// Linhas de letras: sorteadas de novo em cada teste, para cada olho e para a leitura com óculos de reserva
+// (assim ninguém decora as letras). Linha n tem n letras diferentes, todas do teclado deste teste.
+function sortearLinhas(teclas) {
+  const L = [];
+  for (let n = 1; n <= 5; n++) {
+    L.push(baralhar(teclas.slice()).slice(0, n));
+  }
+  return L;
+}
 const TAM_AC = [64, 52, 40, 30, 22];
 // Teclado: todas as letras que podem aparecer (o astronauta toca na letra que vê).
-const TECLAS = ['C', 'D', 'E', 'F', 'L', 'O', 'P', 'T', 'Z'];
+// Letras possíveis: as 10 letras Sloan dos quadros clínicos (C D H K N O R S V Z) mais E F L P T.
+// Em cada teste sorteiam-se 9 para o teclado (por ordem alfabética); as linhas usam só essas 9.
+const LETRAS = ['C', 'D', 'E', 'F', 'H', 'K', 'L', 'N', 'O', 'P', 'R', 'S', 'T', 'V', 'Z'];
+function baralhar(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function sortearTeclado() { return baralhar(LETRAS.slice()).slice(0, 9).sort(); }
 // Instruções (aparecem antes do teste e são lidas em voz alta).
 const PASSOS_AC = [
   'Keep the screen at 40 cm, a little further than your usual reading distance. The camera warns you if you are too close or too far.',
@@ -543,7 +555,15 @@ class Component extends DCLogic {
       am: this.amInicial()
     };
   }
+  linhas() {
+    const a = this.state.ac, k = a.eye + '_' + a.pass;
+    if (!this._linhas) this._linhas = {};
+    if (!this._linhas[k]) this._linhas[k] = sortearLinhas(this.teclas());
+    return this._linhas[k];
+  }
+  teclas() { if (!this._teclas) this._teclas = sortearTeclado(); return this._teclas; }
   acInicial() {
+    this._linhas = {}; this._teclas = null;
     return { eye: 'esq', pass: 'sem', linha: 0, toques: {}, fase: 'ler', resp: [],
       res: { esq: { sem: null, com: null }, dir: { sem: null, com: null } }, semReserva: { esq: false, dir: false },
       // acertos [certas, letras] por olho e por passagem (sem / com os óculos de reserva)
@@ -582,7 +602,7 @@ class Component extends DCLogic {
   falar(t, semInterromper, clips) { if (window.Voz) { if (clips && window.Voz.falarClip) window.Voz.falarClip(clips, t, semInterromper); else window.Voz.falar(t, semInterromper); } }
   aoOuvir(texto) {
     if (!window.Voz) return;
-    window.Voz.interpretar(texto, TECLAS).forEach((c) => this.comando(c));
+    window.Voz.interpretar(texto, this.teclas()).forEach((c) => this.comando(c));
   }
   // O mesmo que os botões, mas por voz: letras, «seguinte», «apagar», «não consigo», «tudo direito», «repetir».
   comando(c) {
@@ -622,7 +642,7 @@ class Component extends DCLogic {
     const olho = a.eye === 'esq' ? 'left' : 'right', outro = a.eye === 'esq' ? 'right' : 'left';
     if (a.fase === 'ler') {
       const pre = a.linha === 0 ? (a.pass === 'com' ? 'With the spare glasses. ' : (olho === 'left' ? 'Left eye first: cover your right eye. ' : 'Now the right eye: cover your left eye. ')) : '';
-      this.falar(pre + 'Line ' + (a.linha + 1) + '. ' + (LINHAS_AC[a.linha].length === 1 ? 'Which letter do you see?' : 'Which letters do you see, from left to right?'), false,
+      this.falar(pre + 'Line ' + (a.linha + 1) + '. ' + (this.linhas()[a.linha].length === 1 ? 'Which letter do you see?' : 'Which letters do you see, from left to right?'), false,
         [a.linha > 0 ? 'line' + (a.linha + 1) : (a.pass === 'com' ? 'line1_spare' : 'line1_' + olho)]);
     } else if (a.fase === 'fim') {
       const r = a.res[a.eye][a.pass];
@@ -646,7 +666,7 @@ class Component extends DCLogic {
     let completa = false, certas = 0, n = 0;
     this.setAc((a) => {
       if (a.fase !== 'ler') return a;
-      const linha = LINHAS_AC[a.linha];
+      const linha = this.linhas()[a.linha];
       if (a.resp.length >= linha.length) return a;
       const resp = a.resp.concat([L]);
       completa = resp.length === linha.length;
@@ -664,21 +684,21 @@ class Component extends DCLogic {
   }
   lidaOuFim(a, lida) {
     if (lida) {
-      if (a.linha === LINHAS_AC.length - 1) return this.terminarOlho(a, LINHAS_AC.length);
+      if (a.linha === this.linhas().length - 1) return this.terminarOlho(a, this.linhas().length);
       return Object.assign(a, { linha: a.linha + 1, toques: {}, resp: [] });
     }
     return this.terminarOlho(a, a.linha);
   }
   // Linha lida se acertou pelo menos 60% das letras (1 de 1, 2 de 2, 2 de 3, 3 de 4, 3 de 5).
   avancarLinha() {
-    const a0 = this.state.ac, linha = LINHAS_AC[a0.linha];
+    const a0 = this.state.ac, linha = this.linhas()[a0.linha];
     if (a0.fase !== 'ler' || a0.resp.length < linha.length) return;
     const certas = a0.resp.filter((x, i) => x === linha[i]).length;
     this.setAc((a) => this.lidaOuFim(this.somarAcertos(a, certas, linha.length), certas >= Math.ceil(linha.length * 0.6)));
     this.falarAc();
   }
   naoConsigo() {
-    const a0 = this.state.ac, linha = LINHAS_AC[a0.linha];
+    const a0 = this.state.ac, linha = this.linhas()[a0.linha];
     if (a0.fase !== 'ler') return;
     const certas = a0.resp.filter((x, i) => x === linha[i]).length;
     this.setAc((a) => this.lidaOuFim(this.somarAcertos(a, certas, linha.length), false));
@@ -882,7 +902,7 @@ class Component extends DCLogic {
     const triagem = { on: marcados > 0, txt: '“Marked” answer: it is logged for medical review. If the change was sudden or strong, tell the flight surgeon now.' };
 
     // ---------- 2. Acuidade ----------
-    const LINHAS = LINHAS_AC;
+    const LINHAS = this.linhas();
     const TAM = TAM_AC;
     const ac = s.ac;
     const linhaAtual = LINHAS[ac.linha];
@@ -906,7 +926,7 @@ class Component extends DCLogic {
       }),
       olho: 'This eye: ' + (acTot[0] + certasLinha) + ' of ' + (acTot[1] + nResp) + ' correct'
     };
-    const teclas = TECLAS.map((t) => ({ t: t, off: completa, op: completa ? 0.4 : 1, pick: () => this.responder(t) }));
+    const teclas = this.teclas().map((t) => ({ t: t, off: completa, op: completa ? 0.4 : 1, pick: () => this.responder(t) }));
     const linhasTxt = (x) => (x === null ? '–' : (x === 0 ? 'no lines' : 'line ' + x + ' of 5'));
     const curto = (x) => (x === null ? '–' : x + '/5');
     const resEye = ac.res[ac.eye];
@@ -1001,7 +1021,7 @@ class Component extends DCLogic {
       else if (nSint) hero.texto = 'You reported symptoms. The medical team will review them.';
       if (back.alerta_clinico) hero.texto += ' You marked double vision: tell the flight surgeon now.';
       // Modelo pessoal (aprende com os teus testes): avisa quando o teste de hoje foge do teu habitual.
-      if (back.modelo && back.modelo.avisos.length) hero.texto += ' Modelo pessoal: ' + back.modelo.avisos.join(' ');
+      if (back.modelo && back.modelo.avisos.length) hero.texto += ' Personal model: ' + back.modelo.avisos.join(' ');
     }
     const usouReserva = ac.res.esq.com !== null || ac.res.dir.com !== null;
     const reservaTxt = ['esq', 'dir'].filter((e) => ac.res[e].com !== null).map((e) => sigla[e] + ' with spare: ' + curto(ac.res[e].com)).join(' · ');
@@ -1250,7 +1270,7 @@ class Component extends DCLogic {
       acLer: ac.fase === 'ler', acFim: ac.fase === 'fim', acFeito: ac.fase === 'feito',
       acTitulo: nomeOlho[ac.eye] + ' · cover the ' + outroOlho[ac.eye],
       acSub: 'Line ' + (ac.linha + 1) + ' of 5' + (ac.pass === 'com' ? ' · with spare glasses' : ''),
-      letrasAc: letrasAc,
+      letrasAc: letrasAc, linhaTxt: linhaAtual.join(''), tecladoTxt: this.teclas().join(''),
       acSegOff: !completa,
       acSegOp: completa ? 1 : 0.45,
       seguinteLinha: () => this.avancarLinha(),
