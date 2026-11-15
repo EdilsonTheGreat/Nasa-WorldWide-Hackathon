@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261115p" rel="stylesheet">
-<link href="iris.css?v=20261115p" rel="stylesheet">
+<link href="fonte.css?v=20261115t" rel="stylesheet">
+<link href="iris.css?v=20261115t" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -21,17 +21,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115p"></script>
-<script src="../../motor/regras.js?v=20261115p"></script>
-<script src="../../motor/motor.js?v=20261115p"></script>
-<script src="../../motor/modelo.js?v=20261115p"></script>
-<script src="../armazenamento.js?v=20261115p"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115p"></script>
-<script src="../camara/distancia.js?v=20261115p"></script>
-<script src="ligacao.js?v=20261115p"></script>
-<script src="voz.js?v=20261115p"></script>
-<script src="i18n.js?v=20261115p"></script>
-<script src="runtime.js?v=20261115p"></script>
+<script src="../dados.js?v=20261115t"></script>
+<script src="../../motor/regras.js?v=20261115t"></script>
+<script src="../../motor/motor.js?v=20261115t"></script>
+<script src="../../motor/modelo.js?v=20261115t"></script>
+<script src="../armazenamento.js?v=20261115t"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115t"></script>
+<script src="../camara/distancia.js?v=20261115t"></script>
+<script src="ligacao.js?v=20261115t"></script>
+<script src="voz.js?v=20261115t"></script>
+<script src="i18n.js?v=20261115t"></script>
+<script src="runtime.js?v=20261115t"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -285,9 +285,9 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ p3Teste }}" hint-placeholder-val="{{ false }}">
 <section aria-label="Amsler grid" style="position: absolute; left: 40px; top: 228px; width: 1114px; height: 432px; box-sizing: border-box; padding: 18px 22px; border-radius: 26px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-wrap: wrap; gap: 20px">
 <div style="width: 338px; flex: none; display: flex; align-items: center; justify-content: center">
-<div style="position: relative; display: grid; grid-template-columns: repeat(12, 26px); gap: 1px; padding: 1px; background: #1A1A1A">
+<div data-grelha="1" style="position: relative; display: grid; grid-template-columns: repeat(12, 26px); gap: 1px; padding: 1px; background: #1A1A1A; touch-action: none; user-select: none; -webkit-user-select: none">
 <sc-for list="{{ cells }}" as="c" hint-placeholder-count="144">
-<button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.on }}" aria-label="{{ c.label }}" style="width: 26px; height: 26px; border: 0; padding: 0; margin: 0; cursor: pointer; background: {{ c.bg }}"></button>
+<button type="button" data-cel="{{ c.k }}" onClick="{{ c.pick }}" aria-pressed="{{ c.on }}" aria-label="{{ c.label }}" style="width: 26px; height: 26px; border: 0; padding: 0; margin: 0; cursor: crosshair; background: {{ c.bg }}; touch-action: none"></button>
 </sc-for>
 <span aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 5px; background: #0D0C0A; pointer-events: none"></span>
 </div>
@@ -299,7 +299,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <button type="button" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 19px; border: 1px solid {{ o.borda }}; background: {{ o.fundo }}; font-family: inherit; font-size: 13px; cursor: pointer"><span style="font-weight: 700; color: var(--tx)">{{ o.olho }}</span><span style="font-weight: 600; color: {{ o.cor }}">{{ o.txt }}</span></button>
 </sc-for>
 </div>
-<p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--tx)">Look only at the black dot. Tap the squares where you see <b>bent lines</b>, <b>spots</b> or <b>gaps</b>.</p>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--tx)">Look only at the black dot. Tap or drag over the squares where you see <b>bent lines</b>, <b>spots</b> or <b>gaps</b>.</p>
 <div style="flex-grow: 1"></div>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <button type="button" onClick="{{ tudoDireito }}" style="height: 50px; border: 1px solid var(--ok-line); border-radius: 27px; background: var(--ok-soft); color: var(--ok-tx); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">All looks straight</button>
@@ -601,7 +601,7 @@ const PASSOS_AM = [
   'Hold the screen 33 cm from your face, about the length of a bent forearm. The camera warns you if you are too close or too far.',
   'Look only at the black dot in the centre. Do not move your eyes across the grid.',
   'Without looking away, notice any bent or wavy lines, blurred, dark or missing areas, or squares of different size.',
-  'Tap the squares where you saw something different. If you saw nothing, tap All looks straight, or say “all straight”.',
+  'Tap or drag over the squares where you saw something different. If you saw nothing, tap All looks straight, or say “all straight”.',
   'Then cover your right eye and repeat.'
 ];
 class Component extends DCLogic {
@@ -633,6 +633,7 @@ class Component extends DCLogic {
     return { eye: 'dir', marks: { dir: {}, esq: {} }, feito: { dir: false, esq: false }, direito: { dir: false, esq: false } };
   }
   componentDidMount() {
+    this.ligarArrasto();
     // Reconhecedor de voz offline (Vosk, ~40 MB do próprio servidor): vai carregando em fundo para estar pronto na acuidade.
     setTimeout(() => { if (window.Voz && window.Voz.carregarReconhecedor) window.Voz.carregarReconhecedor(); }, 2500);
     const upd = {};
@@ -655,6 +656,7 @@ class Component extends DCLogic {
     try { window.addEventListener('storage', this.ouvir); } catch (e) {}
   }
   componentWillUnmount() {
+    if (this._pd) { document.removeEventListener('pointerdown', this._pd); document.removeEventListener('pointermove', this._pm); document.removeEventListener('pointerup', this._pu); document.removeEventListener('pointercancel', this._pu); }
     try { window.removeEventListener('storage', this.ouvir); } catch (e) {}
     if (window.Visao) window.Visao.camara.parar();
     if (window.Voz) { window.Voz.desligarMicrofone(); window.Voz.calar(); }
@@ -881,6 +883,36 @@ class Component extends DCLogic {
     if (ac.eye === 'esq') return Object.assign(ac, { eye: 'dir', pass: 'sem', linha: 0, toques: {}, resp: [], fase: 'ler' });
     return Object.assign(ac, { fase: 'feito', toques: {}, resp: [] });
   }
+  // Grelha de Amsler: tocar marca/desmarca um quadrado; arrastar pinta (ou apaga) todos os quadrados por onde passa.
+  // O 1.º quadrado decide o modo: se estava vazio, o arrasto marca; se estava marcado, apaga.
+  pintarCelula(k, marcar) {
+    this.setAm((a) => { const m = a.marks[a.eye]; if (marcar) m[k] = true; else delete m[k]; a.direito[a.eye] = false; return a; });
+  }
+  ligarArrasto() {
+    if (this._arrastoLigado) return; this._arrastoLigado = true;
+    const celDe = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest ? el.closest('[data-cel]') : null; };
+    this._pd = (e) => {
+      const cel = e.target && e.target.closest ? e.target.closest('[data-cel]') : null;
+      if (!cel || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      e.preventDefault();
+      try { if (e.target.releasePointerCapture) e.target.releasePointerCapture(e.pointerId); } catch (x) {}
+      const k = cel.getAttribute('data-cel');
+      const marcar = !this.state.am.marks[this.state.am.eye][k];
+      this._arrasto = { id: e.pointerId, marcar: marcar, vistos: { [k]: true } };
+      this.pintarCelula(k, marcar);
+    };
+    this._pm = (e) => {
+      const d = this._arrasto; if (!d || e.pointerId !== d.id) return;
+      e.preventDefault();
+      const cel = celDe(e.clientX, e.clientY); if (!cel) return;
+      const k = cel.getAttribute('data-cel'); if (d.vistos[k]) return;
+      d.vistos[k] = true; this.pintarCelula(k, d.marcar);
+    };
+    this._pu = (e) => { if (this._arrasto && e.pointerId === this._arrasto.id) this._arrasto = null; };
+    document.addEventListener('pointerdown', this._pd, { passive: false });
+    document.addEventListener('pointermove', this._pm, { passive: false });
+    document.addEventListener('pointerup', this._pu); document.addEventListener('pointercancel', this._pu);
+  }
   setAm(fn) {
     this.setState((st) => {
       const am = st.am;
@@ -926,8 +958,8 @@ class Component extends DCLogic {
       }
     }));
     const gateTexto = euReal ? 'Did you feel the spacecraft move (vibration or manoeuvre) in the last few minutes? Your answer is saved with the test and helps interpret the result.' : s.perfil === 'B'
-      ? 'The station recorded unusual motion that overlapped your 10:42 acuity test. Your answer helps tell whether the result was affected.'
-      : 'The station recorded unusual motion. Your answer helps the app interpret today\'s tests.';
+      ? 'The spacecraft recorded unusual motion that overlapped your 10:42 acuity test. Your answer helps tell whether the result was affected.'
+      : 'The spacecraft recorded unusual motion. Your answer helps the app interpret today\'s tests.';
 
     // ---------- 1. Antes de começar ----------
     const preparar = [
@@ -1035,8 +1067,8 @@ class Component extends DCLogic {
       for (let c = 0; c < 12; c++) {
         const k = r + '-' + c;
         const on = !!am.marks[am.eye][k];
-        cells.push({ on: on, label: 'Row ' + (r + 1) + ', column ' + (c + 1), bg: on ? '#7FB0D6' : '#FFFFFF',
-          pick: () => this.setAm((a) => { const m = a.marks[a.eye]; if (m[k]) delete m[k]; else m[k] = true; a.direito[a.eye] = false; return a; }) });
+        cells.push({ on: on, k: k, label: 'Row ' + (r + 1) + ', column ' + (c + 1), bg: on ? '#7FB0D6' : '#FFFFFF',
+          pick: (e) => { if (e && e.detail > 0) return; this.pintarCelula(k, !on); } });   // rato/toque: tratados no arrasto; aqui só o teclado
       }
     }
     const nMarcas = (e) => Object.keys(am.marks[e]).length;
@@ -1260,7 +1292,7 @@ class Component extends DCLogic {
       { titulo: 'Near visual acuity', meta: 'About 1 minute per eye · test 1 of 2',
         passos: acPassos.map((p) => p.t),
         recs: ['Try first without effort, as you do every day.', 'If your reading is worse than your baseline, the app asks for a second test with the spare glasses.', 'The camera only measures distance. Nothing is recorded.', 'With the microphone on, you can say the letters, “next”, “delete” and “can\'t read”.'],
-        cuidado: 'If you feel the station move during the test, carry on: the app logs it and tells you if you need to repeat.' },
+        cuidado: 'If you feel the spacecraft move during the test, carry on: the app logs it and tells you if you need to repeat.' },
       { titulo: 'Amsler grid', meta: 'About 1 minute per eye · test 2 of 2',
         passos: amPassos.map((p) => p.t + (p.itens.length ? ' ' + p.itens.map((x) => x.t).join('; ') + '.' : '')),
         recs: ['There is no right or wrong answer. Only what you see matters.', 'If you see something new, that is what matters.', 'The app compares with your last test and highlights only what is new.'],
@@ -1310,7 +1342,7 @@ class Component extends DCLogic {
       amslerFace: euReal ? 'Amsler grid · vs your baseline' : 'Amsler grid · vs previous test',
       gateTitulo: euReal ? 'Spacecraft motion' : 'Spacecraft motion detected',
       gateQuando: euReal ? (window.Visao ? window.Visao.diaTxt(eu.dia) : 'Day ' + eu.dia) + ' · before you start' : 'Today · 10:42–10:43 UTC · 52 s',
-      gatePergunta: euReal ? 'Did you feel the station move or vibrate?' : 'Did you feel the station move or vibrate during that time?',
+      gatePergunta: euReal ? 'Did you feel the spacecraft move or vibrate?' : 'Did you feel the spacecraft move or vibrate during that time?',
       gateOps: gateOps,
       abrirEvento: () => { try { window.localStorage.setItem('visao-abrir', 'eventos'); } catch (e) {} },
       p1: s.passo === 1, p2: s.passo === 2, p3: s.passo === 3, p4: s.passo === 4,

@@ -175,3 +175,7 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - O modelo começa a carregar em fundo 2,5 s depois de abrir o teste. "Check offline voice" no índice confirma que corre no browser.
 - Em português as letras dizem-se em inglês (cee, dee, ee…) quando o reconhecedor é o Vosk; os comandos em inglês funcionam nas duas línguas.
 - Testado com voz sintética (espeak): todos os comandos e a maioria das letras certas; T, D e V são as que mais se trocam.
+
+## 15 Nov (noite): grelha de Amsler por arrasto
+- Tocar num quadrado marca/desmarca; **arrastar** (rato ou dedo) pinta todos os quadrados por onde passa. O 1.º quadrado decide: se estava vazio o arrasto marca, se estava marcado apaga.
+- Feito com eventos de ponteiro no documento (`ligarArrasto` em TesteRapido.html), porque o ecrã é redesenhado a cada quadrado. A grelha tem `touch-action: none`, para o dedo não fazer scroll. O teclado (Tab + Enter) continua a funcionar.

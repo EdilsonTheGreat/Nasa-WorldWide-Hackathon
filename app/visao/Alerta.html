@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Medical alerts · IRIS</title>
-<link href="fonte.css?v=20261115p" rel="stylesheet">
-<link href="iris.css?v=20261115p" rel="stylesheet">
+<link href="fonte.css?v=20261115t" rel="stylesheet">
+<link href="iris.css?v=20261115t" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -19,14 +19,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115p"></script>
-<script src="../../motor/regras.js?v=20261115p"></script>
-<script src="../../motor/motor.js?v=20261115p"></script>
-<script src="../../motor/modelo.js?v=20261115p"></script>
-<script src="../armazenamento.js?v=20261115p"></script>
-<script src="ligacao.js?v=20261115p"></script>
-<script src="i18n.js?v=20261115p"></script>
-<script src="runtime.js?v=20261115p"></script>
+<script src="../dados.js?v=20261115t"></script>
+<script src="../../motor/regras.js?v=20261115t"></script>
+<script src="../../motor/motor.js?v=20261115t"></script>
+<script src="../../motor/modelo.js?v=20261115t"></script>
+<script src="../armazenamento.js?v=20261115t"></script>
+<script src="ligacao.js?v=20261115t"></script>
+<script src="i18n.js?v=20261115t"></script>
+<script src="runtime.js?v=20261115t"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -178,10 +178,10 @@ class Component extends DCLogic {
         ['a2', 1, 'Amsler grid with limited conditions', 'Day 58', 'The Amsler grid was done in low light and was flagged as “limited conditions”.', 'Day 58 · 21:40 UTC', 'Automatic check of test conditions', 'Result with reduced reliability.', 'Repeated on day 60 in good light: no changes.', 'Resolved on day 60', ['teste'], false]
       ],
       B: [
-        ['b1', 2, 'Retina above your pre-flight baseline', 'Day 90', 'Left-eye OCT: peripapillary retinal thickness +17.0% vs baseline (362 → 424 µm). Signs of mild oedema to be confirmed.', 'Day 90 · 09:15 UTC', 'External on-board OCT (simulated) · pre-flight baseline', 'Good-quality image. No interference recorded.', 'Review by the medical team. Bring the next OCT forward to day 100, if the doctor agrees.', 'Pending', ['oct', 'sans'], false],
+        ['b1', 2, 'Retina above your pre-flight baseline', 'Day 90', 'Left-eye OCT: peripapillary retinal thickness +16.0% vs baseline (362 → 420 µm). Signs of mild oedema to be confirmed.', 'Day 90 · 09:15 UTC', 'External on-board OCT (simulated) · pre-flight baseline', 'Good-quality image. No interference recorded.', 'Review by the medical team. Bring the next OCT forward to day 100, if the doctor agrees.', 'Pending', ['oct', 'sans'], false],
         ['b2', 2, 'Acuity change between consecutive checks', 'Day 90', 'Left eye dropped from 5/5 (day 87) to 4/5 (day 90). Right eye unchanged.', 'Day 90 · 10:42 UTC', 'Quick test on screen · astronaut answers', 'Limited conditions: motion during the test (10:42–10:43 UTC). The motion does not rule out the change.', 'Repeat in stable conditions. The change goes to medical review.', 'Pending', ['teste', 'sans'], false],
         ['b3', 2, 'New zones on the Amsler grid (LE)', 'Day 87', 'Two mild zones marked in the left eye, off-centre. The previous test had no zones.', 'Day 87 · 08:10 UTC', 'Quick test on screen', 'Good conditions (reliability 91/100).', 'Review by the medical team. Repeat the grid at the next test.', 'Pending', ['sans'], false],
-        ['b4', 1, 'Spacecraft motion during acuity', 'Day 90', 'The station recorded unusual motion during your acuity test.', 'Day 90 · 10:42–10:43 UTC (52 s)', 'Automatic log from the app and station', 'The acuity test was flagged as “limited conditions”.', 'Answer the event notification in your profile and repeat the acuity test.', 'EVENTO', ['evento', 'teste'], false],
+        ['b4', 1, 'Spacecraft motion during acuity', 'Day 90', 'The spacecraft recorded unusual motion during your acuity test.', 'Day 90 · 10:42–10:43 UTC (52 s)', 'Automatic log from the app and spacecraft', 'The acuity test was flagged as “limited conditions”.', 'Answer the event notification in your profile and repeat the acuity test.', 'EVENTO', ['evento', 'teste'], false],
         ['b5', 0, 'RE Amsler grid unchanged', 'Day 87', 'No zones marked in the right eye.', 'Day 87 · 08:10 UTC', 'Quick test on screen', 'Good conditions (reliability 91/100).', 'Keep the normal schedule for this eye.', 'Not needed', ['hist'], false]
       ],
       C: [
@@ -236,7 +236,7 @@ class Component extends DCLogic {
       // o relatório de cada teste é enviado sozinho: não há botão nem confirmação
       comPacote: selA.titulo !== 'No tests yet',
       envioTitulo: selA.nivel >= 3 ? 'Sent automatically to Earth · flight surgeon · priority' : 'Sent automatically to Earth · medical team',
-      envioSub: (euReal ? 'Report: your quick tests, Amsler maps and answers.' : 'Report: trend, OCT for days 10–84, OCT image, Amsler map and answers.') + ' Leaves this device at the next contact with Earth.',
+      envioSub: (euReal ? 'Report: your quick tests, Amsler maps and answers.' : 'Report: trend, OCT for days 10–' + ({ A: 60, B: 90, C: 84 })[s.perfil] + ', OCT image, Amsler map and answers.') + ' Leaves this device at the next contact with Earth.',
       visto: visto,
       naoVisto: !visto,
       marcarVisto: () => this.marcar([selA.id], true)

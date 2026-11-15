@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Trend · IRIS</title>
-<link href="fonte.css?v=20261115p" rel="stylesheet">
-<link href="iris.css?v=20261115p" rel="stylesheet">
+<link href="fonte.css?v=20261115t" rel="stylesheet">
+<link href="iris.css?v=20261115t" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -19,14 +19,14 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115p"></script>
-<script src="../../motor/regras.js?v=20261115p"></script>
-<script src="../../motor/motor.js?v=20261115p"></script>
-<script src="../../motor/modelo.js?v=20261115p"></script>
-<script src="../armazenamento.js?v=20261115p"></script>
-<script src="ligacao.js?v=20261115p"></script>
-<script src="i18n.js?v=20261115p"></script>
-<script src="runtime.js?v=20261115p"></script>
+<script src="../dados.js?v=20261115t"></script>
+<script src="../../motor/regras.js?v=20261115t"></script>
+<script src="../../motor/motor.js?v=20261115t"></script>
+<script src="../../motor/modelo.js?v=20261115t"></script>
+<script src="../armazenamento.js?v=20261115t"></script>
+<script src="ligacao.js?v=20261115t"></script>
+<script src="i18n.js?v=20261115t"></script>
+<script src="runtime.js?v=20261115t"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -63,7 +63,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <sc-if value="{{ demo }}" hint-placeholder-val="{{ true }}">
 <section aria-labelledby="grafico-titulo" style="position: absolute; left: 40px; top: 172px; width: 714px; height: 548px; box-sizing: border-box; padding: 22px; border-radius: 28px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 10px">
 <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
-<h2 id="grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Retinal thickness · left eye</h2>
+<h2 id="grafico-titulo" style="margin: 0; font-size: 18px; font-weight: 600; color: var(--tx)">Retinal thickness · both eyes</h2>
 <div role="group" aria-label="Demo scenario" style="display: flex; gap: 3px; padding: 3px; border-radius: 20px; background: var(--chip); border: 1px solid var(--line2)">
 <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
 <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="height: 30px; padding: 0 12px; border: 0; border-radius: 15px; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; color: {{ t.fg }}; background: {{ t.bg }}">{{ t.label }}</button>
@@ -99,6 +99,9 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <text x="624" y="350">150</text>
 <text x="338" y="374">Mission day</text>
 </g>
+<polyline points="{{ lineOD }}" style="fill: none; stroke: var(--teal); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round"></polyline>
+<path d="{{ dotsOD }}" style="fill: var(--bg); stroke: var(--teal); stroke-width: 2"></path>
+<text x="{{ labelX }}" y="{{ labelYD }}" style="font-size: 14px; font-weight: 700; fill: var(--teal)">{{ lastLabelD }}</text>
 <polyline points="{{ linePts }}" style="fill: none; stroke: var(--line-glow); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round"></polyline>
 <polyline points="{{ linePts }}" style="fill: none; stroke: var(--tx); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round"></polyline>
 <path d="{{ dotsPath }}" style="fill: var(--bg); stroke: var(--tx); stroke-width: 2"></path>
@@ -110,8 +113,9 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--ok); opacity: 0.45"></span>Simulated reference</span>
 <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--warn); opacity: 0.5"></span>Above the reference</span>
 <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--bad); opacity: 0.4"></span>Priority zone</span>
-<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--tx)"></span>{{ who }}</span>
-<span style="margin-left: auto; font-size: 12px; color: var(--tx3)">Demo scenario · simulated data</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--tx)"></span>Left eye</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tx2)"><span aria-hidden="true" style="width: 16px; height: 3px; border-radius: 2px; background: var(--teal)"></span>Right eye</span>
+<span style="margin-left: auto; font-size: 12px; color: var(--tx3)">{{ who }} · demo scenario · simulated data</span>
 </div>
 </section>
 
@@ -252,9 +256,10 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const data = {
-      A: { days: [0, 10, 30, 60], vals: [0, 1.8, 4.2, 6.9] },
-      B: { days: [0, 10, 30, 60, 90], vals: [0, 4.0, 9.5, 14.0, 17.0] },
-      C: { days: [0, 10, 30, 60, 84], vals: [0, 6.0, 18.0, 35.0, 52.9] }
+      // % vs base por olho, iguais ao ecrã OCT (OCT.html), aos Alertas e ao Hoje
+      A: { days: [0, 10, 30, 60], vals: [0, 1.8, 4.2, 6.9], od: [0, 1.0, 2.5, 5.2] },
+      B: { days: [0, 10, 30, 60, 90], vals: [0, 4.0, 9.5, 14.0, 16.0], od: [0, 3.0, 6.5, 9.0, 12.1] },
+      C: { days: [0, 10, 30, 60, 84], vals: [0, 6.0, 18.0, 35.0, 52.9], od: [0, 4.0, 10.0, 18.0, 24.6] }
     };
     const X = (d) => 52 + d / 150 * 572;
     const Y = (v) => 330 - Math.min(v, 55) / 55 * 314;
@@ -276,7 +281,7 @@ class Component extends DCLogic {
     const greenPts = up(p90).concat(down(p10)).join(' ');
     const amberPts = up(p97).concat(down(p90)).join(' ');
     const redPts = up(() => 55).concat(down(p97)).join(' ');
-    const a = TB || data[s.who];
+    const a = data[s.who];
     const linePts = a.days.map((d, i) => pt(d, a.vals[i])).join(' ');
     let dotsPath = '';
     for (let i = 0; i < a.days.length - 1; i++) {
@@ -287,31 +292,42 @@ class Component extends DCLogic {
     const n = a.days.length - 1;
     const day = a.days[n];
     const v = a.vals[n];
+    const vD = a.od[n];
+    const lineOD = a.days.map((d, i) => pt(d, a.od[i])).join(' ');
+    let dotsOD = '';
+    for (let i = 0; i < a.days.length; i++) {
+      const x = X(a.days[i]), y = Y(a.od[i]);
+      dotsOD += 'M' + (x - 3.5).toFixed(1) + ' ' + y.toFixed(1) + ' a3.5 3.5 0 1 0 7 0 a3.5 3.5 0 1 0 -7 0 ';
+    }
     let level = 0;
     if (v > p90(day)) level = 1;
     if (v > p97(day)) level = 2;
     if (TB) level = TB.level;
-    const pct = (x) => x.toFixed(1).replace('.', ',') + '%';
+    const pct = (x) => x.toFixed(1) + '%';
     const looks = [
       { name: 'Green · routine', title: 'Within the reference', fg: 'var(--ok-tx)', dot: 'var(--ok)', glow: 'var(--ok-glow)' },
       { name: 'Orange · review advised', title: 'Above your reference', fg: 'var(--warn-tx)', dot: 'var(--warn)', glow: 'var(--warn-glow)' },
       { name: 'Red · clinical priority', title: 'Tell the flight surgeon', fg: 'var(--bad-tx)', dot: 'var(--bad)', glow: 'var(--bad-glow)' }
     ];
+    const olhos = 'Day ' + day + ' · left eye +' + pct(v) + ', right eye +' + pct(vD) + ' vs your baseline.';
     const texts = [
-      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated reference: up to +' + pct(p90(day)) + '.',
-      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated reference: up to +' + pct(p90(day)) + '. The medical team reviews it.',
-      'Day ' + day + ': +' + pct(v) + ' vs your baseline. Simulated priority limit: +' + pct(p97(day)) + '.'
+      olhos + ' Simulated reference: up to +' + pct(p90(day)) + '.',
+      olhos + ' Simulated reference: up to +' + pct(p90(day)) + '. The medical team reviews it.',
+      olhos + ' Simulated priority limit: +' + pct(p97(day)) + '.'
     ];
     const actionSets = [
       ['Keep the normal schedule.', 'Next quick test in 7 days.', 'Next OCT in one month.'],
       ['The medical team reviews the result.', 'Repeat the quick tests in 2 to 3 days.', 'Use the spare glasses if you need them.'],
-      ['Tell the flight surgeon now.', 'The package for Earth is ready.', 'No contact? Follow the holding plan.']
+      ['Tell the flight surgeon now.', 'Report sent automatically to Earth.', 'No contact? Follow the holding plan.']
     ];
     const acts = actionSets[level];
     const actions = acts.map((t, i) => ({ n: i + 1, t: t, rule: i < acts.length - 1 ? '1px solid var(--line2)' : '0' }));
     const look = looks[level];
     const lastX = X(day);
     const lastY = Y(v);
+    const lastYD = Y(vD);
+    let labY = Math.max(lastY, 30) + 5, labYD = lastYD + 5;
+    if (labYD - labY < 20) labYD = labY + 20;
     const G = (val) => Math.PI * (1 - Math.min(Math.max(val, 0), 30) / 30);
     const gx = (ang, r) => (150 + r * Math.cos(ang)).toFixed(1);
     const gy = (ang, r) => (150 - r * Math.sin(ang)).toFixed(1);
@@ -393,10 +409,13 @@ class Component extends DCLogic {
       lastX: lastX.toFixed(1),
       lastY: lastY.toFixed(1),
       labelX: (lastX + 22).toFixed(1),
-      labelY: (Math.max(lastY, 30) + 5).toFixed(1),
-      lastLabel: '+' + pct(v),
+      labelY: labY.toFixed(1),
+      lastLabel: 'LE +' + pct(v),
+      lineOD: lineOD, dotsOD: dotsOD,
+      labelYD: labYD.toFixed(1),
+      lastLabelD: 'RE +' + pct(vD),
       who: ({ A: 'Marta', B: 'Daniel', C: 'Sofia' })[s.who],
-      chartLabel: 'Astronaut ' + s.who + ': +' + pct(v) + ' vs baseline on day ' + day + '. Status ' + look.name + '.',
+      chartLabel: 'Astronaut ' + s.who + ', day ' + day + ': left eye +' + pct(v) + ', right eye +' + pct(vD) + ' vs baseline. Status ' + look.name + '.',
       knobX: gx(kA, 120),
       knobY: gy(kA, 120),
       t90x1: gx(a90, 104), t90y1: gy(a90, 104), t90x2: gx(a90, 136), t90y2: gy(a90, 136),

@@ -1193,7 +1193,28 @@
 "Loading offline voice recognition…": "A carregar o reconhecimento de voz offline…",
 "Offline voice recognition ready on this device. No internet needed.": "Reconhecimento de voz offline pronto neste aparelho. Não precisa de internet.",
 "This browser cannot run offline voice recognition. Use the letter keys in the test.": "Este browser não consegue correr o reconhecimento de voz offline. No teste, usa as teclas das letras.",
-"Could not load the offline voice recognition.": "Não foi possível carregar o reconhecimento de voz offline."
+"Could not load the offline voice recognition.": "Não foi possível carregar o reconhecimento de voz offline.",
+"Pick your profile": "Escolhe o teu perfil",
+"Each astronaut has their own profile and history, kept only on this device.": "Cada astronauta tem o seu perfil e o seu histórico, guardados só neste aparelho.",
+"Retinal thickness · both eyes": "Espessura da retina · os dois olhos",
+"demo scenario": "cenário de demonstração",
+"simulated data": "dados simulados",
+"The spacecraft recorded unusual motion during your acuity test.": "A nave registou movimento invulgar durante o teu teste de acuidade.",
+"Automatic log from the app and spacecraft": "Registo automático da app e da nave",
+"The app compares spacecraft motion with your screen's motion by itself. We only ask what you felt.": "A app compara sozinha o movimento da nave com o da tua tela. Só te perguntamos o que sentiste.",
+"Spacecraft and screen motion between": "Movimento da nave e da tela entre",
+"Did you feel the spacecraft move or vibrate during that time?": "Sentiste a nave a mexer ou a vibrar nesse período?",
+"The spacecraft recorded unusual motion that overlapped your 10:42 acuity test. Your answer helps tell whether the result was affected.": "A nave registou movimento invulgar e coincidiu com o teu teste de acuidade das 10:42. A tua resposta ajuda a perceber se o resultado foi afectado.",
+"The spacecraft recorded unusual motion. Your answer helps the app interpret today's exams.": "A nave registou movimento invulgar. A tua resposta ajuda a app a interpretar os exames de hoje.",
+"The spacecraft recorded unusual motion. Your answer helps the app interpret today's tests.": "A nave registou movimento invulgar. A tua resposta ajuda a app a interpretar os testes de hoje.",
+"If you feel the spacecraft move during the test, carry on: the app logs it and tells you if you need to repeat.": "Se sentires a nave a mexer durante o teste, continua: a app regista e avisa-te se for preciso repetir.",
+"Did you feel the spacecraft move or vibrate?": "Sentiste a nave a mexer ou a vibrar?",
+"Left-eye OCT: peripapillary retinal thickness +16.0% vs baseline (362 → 420 µm). Signs of mild oedema to be confirmed.": "OCT do olho esquerdo: espessura da retina peripapilar +16,0% face à base (362 → 420 µm). Sinais de edema ligeiro a confirmar.",
+"LE retina +16.0% vs baseline · to review": "Retina do OE +16,0% face à base · por rever",
+"Report sent automatically to Earth.": "Relatório enviado automaticamente para a Terra.",
+"Look only at the black dot. Tap or drag over the squares where you see": "Olha só para o ponto preto. Toca ou arrasta o dedo pelos quadrados onde vires",
+"Tap or drag over the squares where you saw something different. If you saw nothing, tap All looks straight, or say “all straight”.": "Toca ou arrasta o dedo pelos quadrados onde viste algo diferente. Se não viste nada, toca em Vejo tudo direito, ou diz «tudo direito».",
+"Tap or drag over the squares where you saw something different.": "Toca ou arrasta o dedo pelos quadrados onde viste algo diferente."
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };
@@ -1325,6 +1346,9 @@
     [/^Retinal thickness per exam, from (.+) to (.+)\. Left eye (\d+) µm, right eye (\d+) µm\.$/, function (m, a, b, e, d, T) { return "Espessura da retina por exame, de " + T(a) + " a " + T(b) + ". Olho esquerdo " + e + " µm, olho direito " + d + " µm."; }],
     [/^Retina change against your pre-flight baseline\. Simulated reference for day (\d+): up to (.+)\.$/, "Alteração da retina face à tua base pré-voo. Referência simulada para o dia $1: até $2."],
     [/^Day (\d+): (.+) vs your baseline\.$/, "Dia $1: $2 face à tua base."],
+    [/^Report: trend, OCT for days 10–(\d+), OCT image, Amsler map and answers\.$/, "Relatório: tendência, OCT dos dias 10–$1, imagem do OCT, mapa de Amsler e respostas."],
+    [/^Day (\d+) · left eye (.+), right eye (.+) vs your baseline\.$/, "Dia $1 · olho esquerdo $2, olho direito $3 face à tua base."],
+    [/^Astronaut ([A-C]), day (\d+): left eye (.+), right eye (.+) vs baseline\. Status (.+)\.$/, function (m, a, d, e, o, s, T) { return "Astronauta " + a + ", dia " + d + ": olho esquerdo " + e + ", olho direito " + o + " face à base. Estado " + T(s) + "."; }],
     [/^Simulated (reference|priority limit): up to (.+)\.$/, function (m, a, v) { return (a === "reference" ? "Referência simulada" : "Limite de prioridade simulado") + ": até " + v + "."; }],
     [/^Simulated priority limit: (.+)\.$/, "Limite de prioridade simulado: $1."],
     [/^Astronaut ([A-C]): (.+) vs baseline on day (\d+)\. Status (.+)\.$/, function (m, a, v, d, s, T) { return "Astronauta " + a + ": " + v + " face à base no dia " + d + ". Estado " + T(s) + "."; }],
@@ -1342,6 +1366,8 @@
 })()
 ;
 
+  // Português: vírgula decimal ("+16.0%" -> "+16,0%", "1.78 m" -> "1,78 m"). O código escreve sempre ponto.
+  function decimal(s) { return s.replace(/(\d)\.(\d)/g, "$1,$2"); }
   function dia0(s) { return s.replace(/\bDay 0 of \d+\b/g, "Pre-flight").replace(/\bDay 0\b(?! ?[0-9])/g, "Pre-flight").replace(/\bday 0\b(?! ?[0-9])/g, "pre-flight"); }
 
   function exacta(c) {
@@ -1385,7 +1411,7 @@
       if (algum) r = rr;
     }
     if (r === null) r = frase(c);
-    return m[1] + (r === null ? c : r) + m[3];
+    return m[1] + decimal(r === null ? c : r) + m[3];
   }
 
   var ATRIBUTOS = ["aria-label", "title", "placeholder", "alt"];
@@ -1397,7 +1423,8 @@
     lista.forEach(function (t) {
       var p = t.parentNode && t.parentNode.nodeName;
       if (p === "SCRIPT" || p === "STYLE") return;
-      var v = t.nodeValue; if (!v || !/[A-Za-z]/.test(v)) return;
+      var v = t.nodeValue; if (!v) return;
+      if (!/[A-Za-z]/.test(v)) { if (pt && /\d\.\d/.test(v)) t.nodeValue = decimal(v); return; }
       var nv = trad(v); if (nv !== v) t.nodeValue = nv;
     });
     var els = raiz.querySelectorAll ? raiz.querySelectorAll("[aria-label],[title],[placeholder],[alt]") : [];
