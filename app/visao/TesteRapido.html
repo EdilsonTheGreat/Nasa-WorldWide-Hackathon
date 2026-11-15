@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Checks · IRIS</title>
-<link href="fonte.css?v=20261115o" rel="stylesheet">
-<link href="iris.css?v=20261115o" rel="stylesheet">
+<link href="fonte.css?v=20261115p" rel="stylesheet">
+<link href="iris.css?v=20261115p" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -21,17 +21,17 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115o"></script>
-<script src="../../motor/regras.js?v=20261115o"></script>
-<script src="../../motor/motor.js?v=20261115o"></script>
-<script src="../../motor/modelo.js?v=20261115o"></script>
-<script src="../armazenamento.js?v=20261115o"></script>
-<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115o"></script>
-<script src="../camara/distancia.js?v=20261115o"></script>
-<script src="ligacao.js?v=20261115o"></script>
-<script src="voz.js?v=20261115o"></script>
-<script src="i18n.js?v=20261115o"></script>
-<script src="runtime.js?v=20261115o"></script>
+<script src="../dados.js?v=20261115p"></script>
+<script src="../../motor/regras.js?v=20261115p"></script>
+<script src="../../motor/motor.js?v=20261115p"></script>
+<script src="../../motor/modelo.js?v=20261115p"></script>
+<script src="../armazenamento.js?v=20261115p"></script>
+<script src="../camara/vendor/mediapipe/face_detection.js?v=20261115p"></script>
+<script src="../camara/distancia.js?v=20261115p"></script>
+<script src="ligacao.js?v=20261115p"></script>
+<script src="voz.js?v=20261115p"></script>
+<script src="i18n.js?v=20261115p"></script>
+<script src="runtime.js?v=20261115p"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -92,7 +92,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <h2 id="ola-titulo" style="margin: 0; font-size: 34px; font-weight: 400; letter-spacing: -0.6px; color: var(--tx)">{{ ola }}</h2>
 <p style="margin: 0; font-size: 16px; line-height: 1.5; color: var(--tx2)">Let's do the quick vision test. It takes about 5 minutes: 9 short questions, then near acuity and the Amsler grid.</p>
 <sc-if value="{{ telemovel }}" hint-placeholder-val="{{ false }}">
-<div role="alert" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--warn-soft); border: 1px solid var(--warn-line); font-size: 14px; line-height: 1.45; color: var(--warn-tx)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="3" y="5" width="18" height="12" rx="2"></rect><path d="M2 20h20"></path></svg><span><b>Use a laptop or tablet for this test.</b> On a phone the letters and the grid are too small and voice answers do not work offline, so the result may not be valid.</span></div>
+<div role="alert" style="display: flex; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--warn-soft); border: 1px solid var(--warn-line); font-size: 14px; line-height: 1.45; color: var(--warn-tx)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="3" y="5" width="18" height="12" rx="2"></rect><path d="M2 20h20"></path></svg><span><b>Use a laptop or tablet for this test.</b> On a phone the letters and the grid are too small and voice answers are less reliable, so the result may not be valid.</span></div>
 </sc-if>
 <div style="flex-grow: 1"></div>
 <button type="button" onClick="{{ comecarQuest }}" style="align-self: flex-start; height: 54px; padding: 0 30px; border: 0; border-radius: 27px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 17px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">{{ comecarQuestTxt }}</button>
@@ -633,6 +633,8 @@ class Component extends DCLogic {
     return { eye: 'dir', marks: { dir: {}, esq: {} }, feito: { dir: false, esq: false }, direito: { dir: false, esq: false } };
   }
   componentDidMount() {
+    // Reconhecedor de voz offline (Vosk, ~40 MB do próprio servidor): vai carregando em fundo para estar pronto na acuidade.
+    setTimeout(() => { if (window.Voz && window.Voz.carregarReconhecedor) window.Voz.carregarReconhecedor(); }, 2500);
     const upd = {};
     try {
       const t = window.localStorage.getItem('visao-tema');
@@ -1288,7 +1290,7 @@ class Component extends DCLogic {
         if (!window.Voz) return;
         if (micOn) { window.Voz.desligarMicrofone(); return; }
         // Só voz no aparelho (sem internet); onde não houver, ficam as teclas das letras.
-        window.Voz.ligarMicrofone((t) => this.aoOuvir(t), (e) => this.setState({ mic: e }));
+        window.Voz.ligarMicrofone((t) => this.aoOuvir(t), (e) => this.setState({ mic: e }), this.teclas());
       }
     };
     const claro = s.tema === 'claro';

@@ -5,17 +5,18 @@
 //    (Mac, iPad, Windows, Android). Prefers a local English voice.
 //    No voice installed -> the app keeps working with text only.
 //
-// 2. LISTEN (speech recognition) to answer the letters by voice: ONLY ON THE DEVICE.
-//    processLocally = true (recent Chrome/Edge on a computer): the sound never leaves the
-//    device and no internet is used. The English pack is installed once, before the mission,
-//    like the app itself (Voz.prepararMicrofone(), "Prepare voice" on index.html).
-//    There is NO online recognition: browsers that only recognise through Apple/Google
-//    servers (Safari, phones) get the letter keys instead.
+// 2. LISTEN (speech recognition) to answer the letters by voice. ALWAYS OFFLINE.
+//    a) VOSK (vosk/vosk.js + vosk/modelo-en.bin, ~40 MB, shipped with the app): Kaldi in
+//       WebAssembly, inside the browser. Works in Safari, Chrome, Edge and on phones. Only the
+//       test vocabulary is listened for (letter names + commands), so it is accurate and fast.
+//       The browser asks for the microphone; the sound never leaves the device.
+//    b) Chrome/Edge on-device recognition (processLocally) if Vosk cannot run here.
+//    No online recognition (Apple/Google servers) is ever used.
 //
 // Use:
 //   Voz.falar("Which letter do you see?")
 //   Voz.ligada() / Voz.alternar()                       spoken instructions on/off
-//   Voz.ligarMicrofone(aoOuvir, aoEstado)
+//   Voz.ligarMicrofone(aoOuvir, aoEstado, letters)   letters = the 9 letters of this test's keyboard
 //        aoOuvir(text), aoEstado({estado, mensagem})
 //        estado: desligado | a_preparar | a_ouvir | sem_pacote | indisponivel | erro
 //   Voz.desligarMicrofone()
@@ -23,6 +24,7 @@
 // =====================================================================
 (function (g) {
   "use strict";
+  var BASE = (function () { try { return g.document && g.document.currentScript ? g.document.currentScript.src : g.location.href; } catch (e) { return ""; } })();
   var CHAVE = "visao-voz";              // "1" speak, "0" silent
   // Sem reconhecimento online: apaga a autorização antiga, se ficou guardada neste aparelho.
   try { g.localStorage.removeItem("visao-voz-online"); } catch (e) { }
@@ -196,40 +198,125 @@
     } catch (e) { mic.querido = false; estado("erro", "Could not start the microphone. Use the buttons."); }
   }
 
-  function ligarMicrofone(aoOuvir, aoEstado) {
-    mic.aoOuvir = aoOuvir; mic.aoEstado = aoEstado; mic.querido = true;
-    // Só reconhecimento NO APARELHO: a voz nunca sai daqui e não há internet.
-    if (!R || !suportaLocal()) { mic.querido = false; estado("indisponivel", "Voice answers work offline only in recent Chrome or Edge on a computer. Here, use the letter keys."); return; }
+  // ------------------------------------------------------------------
+  // Vosk: reconhecimento offline dentro do browser (WebAssembly)
+  // ------------------------------------------------------------------
+  // Só o vocabulário do teste: os nomes das letras DESTE teclado + comandos. Tudo o resto cai em [unk].
+  // Com menos palavras possíveis o reconhecedor confunde menos letras parecidas (T/D/V…).
+  var FORMAS = { C: ["c", "see"], D: ["d"], E: ["e"], F: ["f"], H: ["h"], K: ["k"], L: ["l"], N: ["n"], O: ["o", "oh"], P: ["p"], R: ["r"], S: ["s"], T: ["t"], V: ["v"], Z: ["z", "zed", "zee"] };
+  var COMANDOS_VOZ = ["next", "delete", "undo", "can't read", "cannot read", "can't see", "repeat", "again", "all straight", "looks straight", "done", "finish", "[unk]"];
+  function gramatica(letras) {
+    var g2 = [];
+    (letras && letras.length ? letras : Object.keys(FORMAS)).forEach(function (L) { (FORMAS[String(L).toUpperCase()] || []).forEach(function (w) { g2.push(w); }); });
+    return g2.concat(COMANDOS_VOZ);
+  }
+  var VK = { promessa: null, modelo: null, sessao: null };
+  function voskPossivel() {
+    try { return !!(g.WebAssembly && g.Worker && g.navigator.mediaDevices && g.navigator.mediaDevices.getUserMedia && (g.AudioContext || g.webkitAudioContext)); } catch (e) { return false; }
+  }
+  function url(rel) { try { return new URL(rel, BASE).href; } catch (e) { return rel; } }
+  // Carrega a biblioteca e o modelo uma vez por página (o modelo vem do próprio servidor da app).
+  function carregarVosk() {
+    if (VK.promessa) return VK.promessa;
+    VK.promessa = new Promise(function (ok, falha) {
+      var limite = setTimeout(function () { falha(new Error("tempo")); }, 180000);
+      function criar() {
+        try {
+          var m = new g.Vosk.Model(url("vosk/modelo-en.bin"), -1);
+          m.on("load", function (msg) { clearTimeout(limite); if (msg.result) { VK.modelo = m; ok(m); } else falha(new Error("modelo")); });
+          m.on("error", function (msg) { clearTimeout(limite); falha(new Error(msg && msg.error || "modelo")); });
+        } catch (e) { clearTimeout(limite); falha(e); }
+      }
+      if (g.Vosk) { criar(); return; }
+      var sc = g.document.createElement("script"); sc.src = url("vosk/vosk.js");
+      sc.onload = criar; sc.onerror = function () { clearTimeout(limite); falha(new Error("vosk.js")); };
+      g.document.head.appendChild(sc);
+    });
+    VK.promessa.catch(function () { VK.promessa = null; });
+    return VK.promessa;
+  }
+  function entregar(txt) { if (txt && mic.aoOuvir && !aFalar) mic.aoOuvir(txt); }
+  function fecharVosk() {
+    var x = VK.sessao; VK.sessao = null; if (!x) return;
+    try { x.no.onaudioprocess = null; x.no.disconnect(); x.fonte.disconnect(); } catch (e) { }
+    try { x.stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) { }
+    try { x.rec.remove(); } catch (e) { }
+    try { x.ctx.close(); } catch (e) { }
+  }
+  function ligarVosk() {
+    var AC = g.AudioContext || g.webkitAudioContext;
+    var ctx;
+    try { ctx = new AC(); } catch (e) { ctx = null; }        // criado já, dentro do toque (o Safari exige)
+    estado("a_preparar", VK.modelo ? "Preparing the microphone…" : "Preparing voice recognition on this device (first time takes a few seconds)…");
+    var pedido = g.navigator.mediaDevices.getUserMedia({ video: false, audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 } });
+    Promise.all([pedido, carregarVosk()]).then(function (r) {
+      var stream = r[0], modelo = r[1];
+      if (!mic.querido || !ctx) { stream.getTracks().forEach(function (t) { t.stop(); }); if (ctx) ctx.close(); return; }
+      var rec = new modelo.KaldiRecognizer(ctx.sampleRate, JSON.stringify(gramatica(mic.letras)));
+      var feitos = 0;   // palavras da frase actual já entregues
+      rec.on("partialresult", function (m) {
+        // As letras já seguidas de outra palavra não mudam mais: entregam-se logo.
+        var ti = tokens(m.result && m.result.partial), est = feitos;
+        while (est < ti.length - 1 && eLetra(ti[est])) est++;
+        if (est > feitos) { entregar(ti.slice(feitos, est).join(" ")); feitos = est; }
+      });
+      rec.on("result", function (m) {
+        var tf = tokens(m.result && m.result.text).filter(function (x) { return x !== "[unk]"; });
+        entregar(tf.slice(Math.min(feitos, tf.length)).join(" ")); feitos = 0;
+      });
+      var fonte = ctx.createMediaStreamSource(stream);
+      var no = ctx.createScriptProcessor(4096, 1, 1);
+      no.onaudioprocess = function (ev) {
+        if (aFalar || mic.pausado || !mic.querido) return;      // não ouve a própria voz da app
+        try { rec.acceptWaveform(ev.inputBuffer); } catch (e) { }
+      };
+      fonte.connect(no); no.connect(ctx.destination);
+      if (ctx.state === "suspended" && ctx.resume) ctx.resume();
+      VK.sessao = { ctx: ctx, stream: stream, fonte: fonte, no: no, rec: rec };
+      mic.local = true; mic.motor = "vosk";
+      estado("a_ouvir", emPT()
+        ? "Listening (on this device, offline). Say the letters in English (cee, dee, ee…), “next”, “delete” or “can't read”."
+        : "Listening (on this device, offline). Say the letters, “next”, “delete” or “can't read”.");
+    }).catch(function (e) {
+      fecharVosk(); if (ctx && !VK.sessao) { try { ctx.close(); } catch (x) { } }
+      if (!mic.querido) return;
+      mic.querido = false;
+      if (e && (e.name === "NotAllowedError" || e.name === "SecurityError" || e.name === "PermissionDeniedError"))
+        estado("erro", "The browser did not allow the microphone. Allow it in the browser settings, or use the letter keys.");
+      else if (e && e.name === "NotFoundError") estado("erro", "No microphone found on this device. Use the letter keys.");
+      else estado("erro", "Could not start voice recognition on this device. Use the letter keys.");
+    });
+  }
+
+  function ligarMicrofone(aoOuvir, aoEstado, letras) {
+    mic.aoOuvir = aoOuvir; mic.aoEstado = aoEstado; mic.querido = true; mic.motor = null; mic.letras = letras || null;
     // O browser só dá o microfone em https:// ou localhost.
     if (g.isSecureContext === false) { mic.querido = false; estado("indisponivel", "Voice needs a secure page (https:// or localhost). Use the letter keys."); return; }
+    // 1.º Vosk (offline, todos os browsers); 2.º reconhecimento no aparelho do Chrome/Edge.
+    if (voskPossivel()) { ligarVosk(); return; }
+    if (!R || !suportaLocal()) { mic.querido = false; estado("indisponivel", "Voice recognition cannot run in this browser. Use the letter keys."); return; }
     estado("a_preparar", "Preparing the microphone…");
     idiomaLocal().then(function (r) {
       if (!mic.querido) return;
-      if (r.idioma) { mic.local = true; mic.idioma = r.idioma; arrancar(); return; }
+      if (r.idioma) { mic.local = true; mic.idioma = r.idioma; mic.motor = "browser"; arrancar(); return; }
       mic.querido = false;
-      estado(r.descarregavel ? "sem_pacote" : "indisponivel", r.descarregavel
-        ? "The English voice pack is not installed on this device. Install it once before the mission (“Prepare voice” on the start page). Use the letter keys for now."
-        : "On-device English speech recognition is not available here. Use the letter keys.");
+      estado("indisponivel", "Voice recognition cannot run in this browser. Use the letter keys.");
     }, function () { mic.querido = false; estado("erro", "Could not start the microphone. Use the letter keys."); });
   }
   function desligarMicrofone() {
     mic.querido = false;
+    fecharVosk();
     if (mic.rec) { try { mic.rec.onend = null; mic.rec.abort(); } catch (e) { } mic.rec = null; }
     estado("desligado", "");
   }
   function pausarOuvir() { if (mic.rec && mic.querido) { mic.pausado = true; try { mic.rec.stop(); } catch (e) { } } }
   function retomarOuvir() { if (mic.rec && mic.querido && mic.pausado) { mic.pausado = false; try { mic.rec.start(); } catch (e) { } } }
 
-  // Downloads the English pack (needs internet ONCE, before the mission).
+  // "Prepare voice" (índice): carrega o reconhecedor offline para confirmar que corre neste browser.
   function prepararMicrofone() {
-    if (!suportaLocal() || typeof R.install !== "function") return Promise.resolve({ ok: false, mensagem: "This browser cannot recognise speech on the device. Use Chrome or Edge on a computer, or the letter keys." });
-    return idiomaLocal().then(function (r) {
-      if (r.idioma) return { ok: true, mensagem: "Speech recognition ready (" + r.idioma + "), no internet needed." };
-      var lg = idiomas()[0];
-      return Promise.resolve(R.install({ langs: [lg], processLocally: true })).then(function (ok) {
-        return ok ? { ok: true, mensagem: "Voice pack downloaded (" + lg + "). It now works offline." } : { ok: false, mensagem: "Could not download the voice pack." };
-      });
-    }).catch(function () { return { ok: false, mensagem: "Could not prepare speech recognition." }; });
+    if (!voskPossivel()) return Promise.resolve({ ok: false, mensagem: "This browser cannot run offline voice recognition. Use the letter keys in the test." });
+    return carregarVosk().then(function () { return { ok: true, mensagem: "Offline voice recognition ready on this device. No internet needed." }; },
+      function () { return { ok: false, mensagem: "Could not load the offline voice recognition." }; });
   }
 
   // ------------------------------------------------------------------
@@ -286,8 +373,9 @@
     alternar: function () { var n = !ligada(); escrever(CHAVE, n ? "1" : "0"); if (!n) calar(); return n; },
     temVozInglesa: function () { return !!voz; },
     ligarMicrofone: ligarMicrofone, desligarMicrofone: desligarMicrofone, prepararMicrofone: prepararMicrofone,
+    carregarReconhecedor: function () { return voskPossivel() ? carregarVosk().then(function () { return true; }, function () { return false; }) : Promise.resolve(false); },
     microfone: function () { return mic.estado; },
-    microfonePossivel: function () { return suportaLocal(); },
+    microfonePossivel: function () { return voskPossivel() || suportaLocal(); },
     interpretar: interpretar
   };
 })(typeof window !== "undefined" ? window : globalThis);

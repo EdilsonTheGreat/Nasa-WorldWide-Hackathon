@@ -167,3 +167,11 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 - Saiu o reconhecimento de voz online (botão "Allow online voice" e a chave `visao-voz-online`, que é apagada ao abrir). A app não usa internet em nada.
 - A voz só funciona com reconhecimento no aparelho (`processLocally`, Chrome/Edge recentes num computador). O pacote de inglês instala-se uma vez antes da missão ("Prepare voice" no índice), como a própria app.
 - Safari e telemóveis (que só reconhecem pelos servidores da Apple/Google): a app diz para usar as teclas das letras.
+
+## 15 Nov (noite): voz OFFLINE em qualquer browser (Vosk)
+- A app traz o seu próprio reconhecedor de voz: `vosk/vosk.js` (vosk-browser, WebAssembly) + `vosk/modelo-en.bin` (modelo oficial `vosk-model-small-en-us-0.15`, ~40 MB). Licenças em `vosk/LICENCAS.md` (Apache-2.0).
+- Funciona no Safari, Chrome, Edge e telemóveis, **sem internet**: o browser pede o microfone e o som nunca sai do aparelho.
+- Só ouve o vocabulário do teste: as 9 letras do teclado deste teste + "next", "delete", "can't read", "repeat", "all straight"… (gramática restrita = menos enganos).
+- O modelo começa a carregar em fundo 2,5 s depois de abrir o teste. "Check offline voice" no índice confirma que corre no browser.
+- Em português as letras dizem-se em inglês (cee, dee, ee…) quando o reconhecedor é o Vosk; os comandos em inglês funcionam nas duas línguas.
+- Testado com voz sintética (espeak): todos os comandos e a maioria das letras certas; T, D e V são as que mais se trocam.

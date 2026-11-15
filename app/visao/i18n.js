@@ -1180,7 +1180,20 @@
 "The English voice pack is not installed on this device. Install it once before the mission (“Prepare voice” on the start page). Use the letter keys for now.": "O pacote de voz em inglês não está instalado neste aparelho. Instala-o uma vez antes da missão (“Prepare voice” na página inicial). Por agora, usa as teclas das letras.",
 "On-device English speech recognition is not available here. Use the letter keys.": "O reconhecimento de voz em inglês no aparelho não está disponível aqui. Usa as teclas das letras.",
 "Could not start the microphone. Use the letter keys.": "Não foi possível ligar o microfone. Usa as teclas das letras.",
-"This browser cannot recognise speech on the device. Use Chrome or Edge on a computer, or the letter keys.": "Este browser não reconhece voz no aparelho. Usa o Chrome ou o Edge num computador, ou as teclas das letras."
+"This browser cannot recognise speech on the device. Use Chrome or Edge on a computer, or the letter keys.": "Este browser não reconhece voz no aparelho. Usa o Chrome ou o Edge num computador, ou as teclas das letras.",
+"On a phone the letters and the grid are too small and voice answers are less reliable, so the result may not be valid.": "No telemóvel as letras e a grelha ficam demasiado pequenas e a resposta por voz é menos fiável, por isso o resultado pode não ser válido.",
+"Preparing voice recognition on this device (first time takes a few seconds)…": "A preparar o reconhecimento de voz neste aparelho (da primeira vez demora uns segundos)…",
+"Listening (on this device, offline). Say the letters, “next”, “delete” or “can't read”.": "A ouvir (neste aparelho, sem internet). Diz as letras, “next”, “delete” ou “can't read”.",
+"Listening (on this device, offline). Say the letters in English (cee, dee, ee…), “next”, “delete” or “can't read”.": "A ouvir (neste aparelho, sem internet). Diz as letras em inglês (cee, dee, ee…), “next”, “delete” ou “can't read”.",
+"The browser did not allow the microphone. Allow it in the browser settings, or use the letter keys.": "O browser não deu acesso ao microfone. Permite-o nas definições do browser ou usa as teclas das letras.",
+"No microphone found on this device. Use the letter keys.": "Não foi encontrado nenhum microfone neste aparelho. Usa as teclas das letras.",
+"Could not start voice recognition on this device. Use the letter keys.": "Não foi possível ligar o reconhecimento de voz neste aparelho. Usa as teclas das letras.",
+"Voice recognition cannot run in this browser. Use the letter keys.": "O reconhecimento de voz não funciona neste browser. Usa as teclas das letras.",
+"Check offline voice": "Verificar a voz offline",
+"Loading offline voice recognition…": "A carregar o reconhecimento de voz offline…",
+"Offline voice recognition ready on this device. No internet needed.": "Reconhecimento de voz offline pronto neste aparelho. Não precisa de internet.",
+"This browser cannot run offline voice recognition. Use the letter keys in the test.": "Este browser não consegue correr o reconhecimento de voz offline. No teste, usa as teclas das letras.",
+"Could not load the offline voice recognition.": "Não foi possível carregar o reconhecimento de voz offline."
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };
