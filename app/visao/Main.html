@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="assets/logo_icone.png">
 <title>Profiles · IRIS</title>
-<link href="fonte.css?v=20261115t" rel="stylesheet">
-<link href="iris.css?v=20261115t" rel="stylesheet">
+<link href="fonte.css?v=20261115u" rel="stylesheet">
+<link href="iris.css?v=20261115u" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#7FB7CF}a:hover{color:#A9D3E4}
@@ -17,18 +17,19 @@ a{color:#7FB7CF}a:hover{color:#A9D3E4}
 html,body{margin:0;height:100%;overflow:hidden}
 body{display:flex;align-items:center;justify-content:center;background:#050506}
 #palco{width:1194px;height:834px;flex:none;transform-origin:center center;border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.45)}
+.pf{transition:background-color .15s ease,border-color .15s ease}
+.pf:hover{background:var(--acc-soft)!important;border-color:var(--acc-line)!important}
+.pf:focus-visible{outline:2px solid var(--acc-text);outline-offset:2px}
 </style>
 <!-- Backend (offline): dados simulados, regras, motor, modelo, armazenamento e ligação aos ecrãs -->
-<script src="../dados.js?v=20261115t"></script>
-<script src="../../motor/regras.js?v=20261115t"></script>
-<script src="../../motor/motor.js?v=20261115t"></script>
-<script src="../../motor/modelo.js?v=20261115t"></script>
-<script src="../armazenamento.js?v=20261115t"></script>
-<script src="../camara/vendor/faceapi/face-api.js?v=20261115t"></script>
-<script src="../camara/rosto.js?v=20261115t"></script>
-<script src="ligacao.js?v=20261115t"></script>
-<script src="i18n.js?v=20261115t"></script>
-<script src="runtime.js?v=20261115t"></script>
+<script src="../dados.js?v=20261115u"></script>
+<script src="../../motor/regras.js?v=20261115u"></script>
+<script src="../../motor/motor.js?v=20261115u"></script>
+<script src="../../motor/modelo.js?v=20261115u"></script>
+<script src="../armazenamento.js?v=20261115u"></script>
+<script src="ligacao.js?v=20261115u"></script>
+<script src="i18n.js?v=20261115u"></script>
+<script src="runtime.js?v=20261115u"></script>
 </head>
 <body>
 <div id="palco"><div id="raiz"></div></div>
@@ -53,7 +54,7 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 <span style="margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--tx3); border: 1px solid var(--line2); border-radius: 999px; padding: 5px 12px">Deep Thinkers · NASA Space Apps 2026</span>
 </div>
 
-<section aria-labelledby="entrar-titulo" style="position: absolute; left: 624px; top: 92px; width: 530px; box-sizing: border-box; padding: 22px 26px; max-height: 718px; overflow-y: auto; border-radius: 30px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 14px">
+<section aria-labelledby="entrar-titulo" style="position: absolute; left: 624px; top: {{ topo }}px; width: 530px; box-sizing: border-box; padding: 26px 26px 22px; max-height: 718px; overflow-y: auto; border-radius: 30px; background: linear-gradient(180deg, var(--card), var(--card2)); border: 1px solid var(--line2); box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 6px">
 <h1 id="entrar-titulo" style="margin: 0; font-size: 30px; font-weight: 400; letter-spacing: -0.5px; color: var(--tx)">Pick your profile</h1>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; color: var(--tx2)">Each astronaut has their own profile and history, kept only on this device.</p>
@@ -65,93 +66,20 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </sc-for>
 </div>
 
-<div role="radiogroup" aria-label="Crew profiles" style="display: grid; grid-template-columns: {{ colunas }}; gap: {{ linhaGap }}px; max-height: 236px; overflow-y: auto; margin-right: -8px; padding-right: 8px">
+<ul aria-label="Crew profiles" style="list-style: none; margin: 0 -8px 0 0; padding: 0 8px 0 0; display: grid; grid-template-columns: {{ colunas }}; gap: {{ linhaGap }}px; max-height: 420px; overflow-y: auto">
 <sc-for list="{{ perfis }}" as="pf" hint-placeholder-count="3">
-<button type="button" role="radio" aria-checked="{{ pf.on }}" onClick="{{ pf.pick }}" style="display: flex; align-items: center; gap: 12px; height: {{ linhaAlt }}px; min-width: 0; box-sizing: border-box; padding: 0 14px 0 10px; border-radius: 18px; border: 1px solid {{ pf.borda }}; background: {{ pf.fundo }}; font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
-<span style="position: relative; flex: none; display: flex"><span aria-hidden="true" style="width: 38px; height: 38px; border-radius: 19px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ pf.ini }}</span><sc-if value="{{ pf.rosto }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="face registered" title="Face registered" style="position: absolute; right: -3px; bottom: -3px; width: 13px; height: 13px; box-sizing: border-box; border-radius: 7px; background: var(--ok); border: 2px solid var(--bg)"></span></sc-if></span>
+<li style="display: flex; min-width: 0">
+<button type="button" class="pf" onClick="{{ pf.abrir }}" style="flex-grow: 1; display: flex; align-items: center; gap: 12px; height: {{ linhaAlt }}px; min-width: 0; box-sizing: border-box; padding: 0 12px 0 10px; border-radius: 18px; border: 1px solid var(--line2); background: transparent; font-family: inherit; text-align: left; cursor: pointer; color: var(--tx)">
+<span aria-hidden="true" style="width: 38px; height: 38px; flex: none; border-radius: 19px; background: linear-gradient(135deg, #E6F1FA, #9DC2DE); color: #0D0C0A; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ pf.ini }}</span>
 <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 15.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.nome }}</span><span style="font-size: 12.5px; color: var(--tx3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ pf.papel }}</span></span>
-<span aria-hidden="true" style="width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 11px; border: 2px solid {{ pf.radioBorda }}; background: {{ pf.radioFundo }}; display: flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{ pf.radioPonto }}"></span></span>
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="flex: none; fill: none; stroke: var(--tx3); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M9 6l6 6-6 6"></path></svg>
 </button>
+</li>
 </sc-for>
-</div>
+</ul>
 
-<div aria-live="polite" style="min-height: 170px; display: flex; flex-direction: column; gap: 12px; padding-top: 2px; border-top: 1px solid var(--line2)">
-
-<sc-if value="{{ f.metodoDemo }}" hint-placeholder-val="{{ true }}">
-<span style="padding-top: 12px; font-size: 14px; font-weight: 600; color: var(--tx2)">Confirm {{ curto }}'s identity</span>
-<button type="button" onClick="{{ faceId }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 54px; border: 0; border-radius: 27px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">
-<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"></path><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 15.5a3.5 3.5 0 0 0 5 0"></path></svg>Sign in with Face ID</button>
-<button type="button" onClick="{{ senhaModo }}" style="display: flex; align-items: center; justify-content: center; gap: 10px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">
-<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>Use password</button>
-</sc-if>
-
-<sc-if value="{{ f.metodoEquipa }}" hint-placeholder-val="{{ false }}">
-<span style="padding-top: 12px; font-size: 14px; font-weight: 600; color: var(--tx2)">Confirm {{ curto }}'s identity</span>
-<div style="display: flex; gap: 10px">
-<button type="button" onClick="{{ faceId }}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; height: 50px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"></path><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 15.5a3.5 3.5 0 0 0 5 0"></path></svg>Sign in with face</button>
-<button type="button" onClick="{{ semRosto }}" style="flex: 1; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Sign in without camera</button>
-</div>
-<div style="display: flex; align-items: center; gap: 10px">
-<label for="dia" title="0 = pre-flight registration, on Earth" style="font-size: 13px; font-weight: 600; color: var(--tx2)">Mission day <span style="font-weight: 500; color: var(--tx3)">(0 = pre-flight)</span></label>
-<input id="dia" type="number" min="0" max="999" inputmode="numeric" value="{{ dia }}" onChange="{{ onDia }}" style="width: 84px; height: 44px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 14px; padding: 0 12px; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--tx); background: var(--input)">
-<span style="flex-grow: 1"></span>
-<sc-if value="{{ podeRemover }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ remover }}" style="height: 44px; padding: 0 12px; border: 0; border-radius: 22px; background: transparent; color: var(--bad-tx); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ removerTxt }}</button></sc-if>
-<sc-if value="{{ semRostoReg }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ gerirRosto }}" style="height: 44px; padding: 0 14px; border: 0; border-radius: 22px; background: transparent; color: var(--acc-text); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{ gerirRostoTxt }}</button></sc-if>
-</div>
-</sc-if>
-
-<sc-if value="{{ f.consent }}" hint-placeholder-val="{{ false }}">
-<span style="padding-top: 12px; font-size: 14px; font-weight: 700; color: var(--tx)">Register {{ curto }}'s face on this device?</span>
-<span style="font-size: 13px; line-height: 1.45; color: var(--tx2)">The camera analyses a few frames and stores only a numeric descriptor (128 numbers) on this device. No photo is ever stored or sent. You can delete it at any time. Only the person themselves should accept.</span>
-<div style="display: flex; gap: 10px">
-<button type="button" onClick="{{ voltar }}" style="padding: 0 22px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
-<button type="button" onClick="{{ registar }}" style="flex-grow: 1; height: 50px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">I agree · register my face</button>
-</div>
-</sc-if>
-
-<sc-if value="{{ f.falhou }}" hint-placeholder-val="{{ false }}">
-<span style="padding-top: 12px; font-size: 14px; font-weight: 700; color: var(--bad-tx)">Could not confirm by face</span>
-<span style="font-size: 13px; line-height: 1.45; color: var(--tx2)">{{ erro }}</span>
-<div style="display: flex; gap: 10px">
-<button type="button" onClick="{{ voltar }}" style="padding: 0 18px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Back</button>
-<button type="button" onClick="{{ faceId }}" style="padding: 0 18px; height: 50px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Try again</button>
-<button type="button" onClick="{{ semRosto }}" style="flex-grow: 1; height: 50px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 30px var(--cta-glow)">Sign in without camera</button>
-</div>
-</sc-if>
-
-<sc-if value="{{ f.face }}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 14px">
-<span aria-hidden="true" style="position: relative; overflow: hidden; width: 96px; height: 96px; border-radius: 48px; border: 2px solid var(--acc-line); background: var(--acc-soft); box-shadow: 0 0 40px var(--acc-glow); display: flex; align-items: center; justify-content: center">
-<span data-fixo="rosto" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 1"></span>
-<svg width="40" height="40" viewBox="0 0 24 24" style="fill: none; stroke: var(--acc-text); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"></path><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 15.5a3.5 3.5 0 0 0 5 0"></path></svg>
-</span>
-<span style="font-size: 16px; font-weight: 600; color: var(--tx)">{{ faceTxt }}</span>
-<span style="font-size: 13px; color: var(--tx3)">Look at the screen, without sunglasses.</span>
-<button type="button" onClick="{{ voltar }}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 22px; background: transparent; color: var(--tx2); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Cancel</button>
-</div>
-</sc-if>
-
-<sc-if value="{{ f.senha }}" hint-placeholder-val="{{ false }}">
-<label for="senha" style="padding-top: 12px; font-size: 14px; font-weight: 600; color: var(--tx2)">{{ curto }}'s password</label>
-<input id="senha" type="password" autocomplete="current-password" value="{{ senha }}" onChange="{{ onSenha }}" style="height: 52px; box-sizing: border-box; border: 1px solid var(--line); border-radius: 16px; padding: 0 18px; font-family: inherit; font-size: 18px; letter-spacing: 3px; color: var(--tx); background: var(--input)">
-<span style="min-height: 18px; font-size: 13px; color: var(--bad-tx)">{{ erro }}</span>
-<div style="display: flex; gap: 10px">
-<button type="button" onClick="{{ voltar }}" style="height: 50px; padding: 0 22px; border: 1px solid var(--line); border-radius: 25px; background: transparent; color: var(--tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Back</button>
-<button type="button" onClick="{{ entrar }}" style="flex-grow: 1; height: 50px; border: 0; border-radius: 25px; background: var(--cta); color: var(--cta-tx); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Sign in</button>
-</div>
-</sc-if>
-
-<sc-if value="{{ f.ok }}" hint-placeholder-val="{{ false }}">
-<div style="display: flex; align-items: center; gap: 14px; padding-top: 14px">
-<span aria-hidden="true" style="width: 48px; height: 48px; flex: none; border-radius: 24px; background: var(--ok-soft); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" style="fill: none; stroke: var(--ok-tx); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"><path d="M6 12.5l4 4 8-9"></path></svg></span>
-<span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 700; color: var(--ok-tx)">Identity confirmed</span><span style="font-size: 15px; color: var(--tx2)">{{ okTxt }}</span></span>
-</div>
-<a href="{{ destino }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 54px; border-radius: 27px; background: var(--acc); border: 1px solid var(--acc-line); color: var(--acc-tx); font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 30px var(--acc-glow)">Continue</a>
-</sc-if>
-</div>
-
-<div style="display: flex; gap: 10px; align-items: flex-start">
-<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="flex: none; margin-top: 2px; fill: none; stroke: var(--tx3); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+<div style="display: flex; gap: 10px; align-items: flex-start; padding-top: 14px; border-top: 1px solid var(--line2)">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" style="flex: none; margin-top: 2px; fill: none; stroke: var(--tx3); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
 <span style="font-size: 13px; line-height: 1.45; color: var(--tx3)">{{ rodape }}</span>
 </div>
 </section>
@@ -159,36 +87,27 @@ body{display:flex;align-items:center;justify-content:center;background:#050506}
 </div>
 </template>
 <script>
-// Entrada: perfis reais da equipa (guardados neste aparelho, com reconhecimento do rosto opcional)
-// e os três astronautas fictícios da demonstração. Ver ligacao.js e ../camara/rosto.js.
+// Escolher o perfil: um toque abre-o. Não há autenticação (nem palavra-passe, nem rosto).
+// Equipa = perfis reais guardados neste aparelho; Demo = os três astronautas fictícios. Ver ligacao.js.
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { tema: 'escuro', grupo: 'equipa', sel: 'B', selEq: null, dia: '0', fase: 'metodo', senha: '', erro: '', faceTxt: '', okTxt: '' };
+    this.state = { tema: 'escuro', grupo: 'equipa', ultimo: null };
   }
   temBack() { return !!(window.Visao && window.Visao.temBackend()); }
   componentDidMount() {
     const upd = {};
+    let p = null;
     try {
       const t = window.localStorage.getItem('visao-tema');
-      const p = window.localStorage.getItem('visao-perfil');
+      p = window.localStorage.getItem('visao-perfil');
       if (t === 'claro' || t === 'escuro') upd.tema = t;
-      if (p === 'A' || p === 'B' || p === 'C') upd.sel = p;
     } catch (e) {}
-    if (this.temBack()) {
-      const r = window.Visao.real();
-      const lista = window.Armazem.perfis();
-      upd.selEq = r || (lista[0] && lista[0].id) || null;
-      if (upd.selEq) upd.dia = String(window.Visao.diaSugerido(upd.selEq));
-      if (!r && upd.sel && (function () { try { return window.localStorage.getItem('visao-perfil'); } catch (e) { return null; } })()) upd.grupo = 'demo';
-      if (window.Rosto) {
-        window.Rosto.definirPasta('../camara/vendor/faceapi/');
-        // Prepara o reconhecimento logo ao abrir (sem ligar a câmara), para a entrada pelo rosto ser rápida.
-        if (this.camaraPossivel() && window.Rosto.registados().length) setTimeout(() => window.Rosto.preparar(), 300);
-      }
-    } else {
-      upd.grupo = 'demo';
-    }
+    const demo = p === 'A' || p === 'B' || p === 'C';
+    const r = this.temBack() ? window.Visao.real() : null;
+    // Abre no separador do último perfil usado (a íris do lado esquerdo é a dele).
+    upd.ultimo = r || (demo ? p : null);
+    if (!this.temBack() || (!r && demo)) upd.grupo = 'demo';
     this.setState(upd);
     this.ouvir = (ev) => {
       if (ev && ev.key === 'visao-tema' && (ev.newValue === 'claro' || ev.newValue === 'escuro')) this.setState({ tema: ev.newValue });
@@ -196,114 +115,44 @@ class Component extends DCLogic {
     try { window.addEventListener('storage', this.ouvir); } catch (e) {}
   }
   componentWillUnmount() {
-    clearTimeout(this.timer);
     try { window.removeEventListener('storage', this.ouvir); } catch (e) {}
   }
-  // Vídeo fora do ecrã desenhado (o ecrã é redesenhado a cada mudança de estado). Nada é gravado.
-  video() {
-    if (!this._video) {
-      const v = document.createElement('video');
-      v.muted = true; v.setAttribute('playsinline', '');
-      v.className = 'fixo';
-      document.body.appendChild(v);
-      this._video = v;
-      window.DC_FIXOS = window.DC_FIXOS || {}; window.DC_FIXOS.rosto = v;   // aparece no círculo data-fixo="rosto"
-    }
-    return this._video;
+  // Perfil real: o dia de missão é automático (0 = pré-voo na 1.ª vez; depois, uma semana após o último teste).
+  // 1.ª vez: pré-registo (dia 0, na Terra) antes de qualquer teste.
+  abrirEquipa(id) {
+    const eu = window.Visao.entrar(id);
+    if (!eu) return;
+    window.location.href = window.Visao.registoDe(eu) ? 'Hoje.html' : 'Registo.html';
   }
-  camaraPossivel() {
-    return !!(window.Rosto && window.faceapi && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.location.protocol !== 'file:');
-  }
-  confirmar(como) {
-    const s = this.state;
-    if (s.grupo === 'equipa') {
-      const d = parseInt(s.dia, 10);
-      const id = window.Visao.entrar(s.selEq, d >= 0 ? d : undefined, como === 'rosto' ? 'rosto' : 'lista');
-      const nome = window.Visao.nomeDe(id).split(' ')[0];
-      // Primeira vez: pré-registo (dia 0, na Terra) antes de qualquer teste.
-      const novo = !window.Visao.registoDe(id);
-      const dTxt = window.Visao.diaTxt(window.Visao.eu().dia);
-      this.setState({ fase: 'ok', senha: '', erro: '', destino: novo ? 'Registo.html' : 'Hoje.html',
-        okTxt: (como === 'rosto' ? 'Face recognised. ' : '') + 'Hi, ' + nome + '. ' + (novo ? 'First time: pre-flight registration.' : (dTxt === 'Pre-flight' ? 'Pre-flight (on Earth).' : 'Mission ' + dTxt.toLowerCase() + '.')) });
-      // Entrada pelo rosto: segue logo, sem mais toques.
-      if (como === 'rosto') { clearTimeout(this.timer); this.timer = setTimeout(() => { if (this.state.fase === 'ok') window.location.href = novo ? 'Registo.html' : 'Hoje.html'; }, 700); }
-      return;
-    }
-    if (window.Visao) { window.Visao.sair(); window.Visao.guardarIris(s.sel, window.Visao.irisDe(s.sel)); }
-    this.setState({ fase: 'ok', senha: '', erro: '', okTxt: 'Welcome back, ' + ({ A: 'Marta', B: 'Daniel', C: 'Sofia' })[s.sel] + '.' });
-    try { window.localStorage.setItem('visao-perfil', s.sel); } catch (e) {}
-  }
-  falhar(msg) { this.setState({ fase: 'falhou', erro: msg }); }
-  entrarPeloRosto() {
-    const id = this.state.selEq;
-    if (!this.camaraPossivel()) {
-      this.falhar('The camera only works when the app is opened with the abrir_app file (address http://localhost:8000) and the browser allows it. You can sign in without the camera.');
-      return;
-    }
-    if (window.Rosto.registados().indexOf(id) === -1) { this.setState({ fase: 'consent' }); return; }
-    const vez = this.vez = (this.vez || 0) + 1;
-    this.video();
-    this.setState({ fase: 'face', faceTxt: 'Checking the face of ' + window.Visao.nomeDe(id) + '…' });
-    window.Rosto.identificar(this.video()).then((r) => {
-      if (vez !== this.vez || this.state.fase !== 'face') return;
-      if (r.ok && r.id === id) this.confirmar('rosto');
-      else if (r.ok) this.falhar('This face is registered to ' + window.Visao.nomeDe(r.id) + ', not ' + window.Visao.nomeDe(id) + '. Pick your own profile from the list.');
-      else this.falhar(r.mensagem || 'Face not recognised.');
-    });
-  }
-  registarRosto() {
-    const id = this.state.selEq;
-    const vez = this.vez = (this.vez || 0) + 1;
-    this.video();
-    this.setState({ fase: 'face', faceTxt: 'Registering the face of ' + window.Visao.nomeDe(id) + '…' });
-    window.Rosto.registar(this.video(), id).then((r) => {
-      if (vez !== this.vez || this.state.fase !== 'face') return;
-      if (r.ok) this.confirmar('rosto'); else this.falhar(r.mensagem || 'Could not register the face.');
-    });
+  abrirDemo(id) {
+    if (window.Visao) { window.Visao.sair(); window.Visao.guardarIris(id, window.Visao.irisDe(id)); }
+    try { window.localStorage.setItem('visao-perfil', id); } catch (e) {}
+    window.location.href = 'Hoje.html';
   }
   renderVals() {
     const s = this.state;
     const equipa = s.grupo === 'equipa' && this.temBack();
     const demo = [
-      { id: 'A', nome: 'Marta Silveira', curto: 'Marta', ini: 'MS', papel: 'Flight engineer · Day 60' },
-      { id: 'B', nome: 'Daniel Cossa', curto: 'Daniel', ini: 'DC', papel: 'Mission specialist · Day 90' },
-      { id: 'C', nome: 'Sofia Lindqvist', curto: 'Sofia', ini: 'SL', papel: 'Commander · Day 84' }
+      { id: 'A', nome: 'Marta Silveira', ini: 'MS', papel: 'Flight engineer · Day 60' },
+      { id: 'B', nome: 'Daniel Cossa', ini: 'DC', papel: 'Mission specialist · Day 90' },
+      { id: 'C', nome: 'Sofia Lindqvist', ini: 'SL', papel: 'Commander · Day 84' }
     ];
-    let rostos = [];
-    try { rostos = Object.keys(JSON.parse(window.localStorage.getItem('dt_rostos')) || {}); } catch (e) {}
     const reais = this.temBack() ? window.Armazem.perfis().slice(0, 8).map((p) => ({
-      id: p.id, nome: window.Visao.nomeDe(p.id), curto: window.Visao.nomeDe(p.id).split(' ')[0], ini: window.Visao.iniciais(p.id),
-      rosto: rostos.indexOf(p.id) !== -1,
+      id: p.id, nome: window.Visao.nomeDe(p.id), ini: window.Visao.iniciais(p.id),
       // privacidade: na lista não aparecem resultados nem número de testes de outras pessoas
       papel: window.Visao.registoDe(p.id) ? 'Registered' : 'Not registered'
     })) : [];
     const lista = equipa ? reais : demo;
-    const selId = equipa ? s.selEq : s.sel;
-    const atual = lista.find((x) => x.id === selId) || lista[0] || demo[1];
-    const perfis = lista.map((x) => {
-      const on = x.id === atual.id;
-      return {
-        nome: x.nome, ini: x.ini, papel: x.papel, on: on, rosto: !!x.rosto,
-        fundo: on ? 'var(--acc-soft)' : 'transparent',
-        borda: on ? 'var(--acc-line)' : 'var(--line2)',
-        radioBorda: on ? 'var(--acc-text)' : 'var(--line)',
-        radioFundo: 'transparent',
-        radioPonto: on ? 'var(--acc-text)' : 'transparent',
-        pick: () => {
-          clearTimeout(this.timer); this.vez = (this.vez || 0) + 1;
-          if (equipa) this.setState({ selEq: x.id, dia: String(window.Visao.diaSugerido(x.id)), fase: 'metodo', senha: '', erro: '' });
-          else this.setState({ sel: x.id, fase: 'metodo', senha: '', erro: '' });
-        }
-      };
-    });
+    const perfis = lista.map((x) => ({
+      nome: x.nome, ini: x.ini, papel: x.papel,
+      abrir: () => { if (equipa) this.abrirEquipa(x.id); else this.abrirDemo(x.id); }
+    }));
     const grupos = (this.temBack() ? [['equipa', 'Team · real data'], ['demo', 'Demo · fictional']] : [['demo', 'Demo · fictional']]).map((g) => ({
       t: g[1], on: s.grupo === g[0],
       bg: s.grupo === g[0] ? 'var(--acc)' : 'transparent', fg: s.grupo === g[0] ? 'var(--acc-tx)' : 'var(--tx2)',
-      pick: () => { clearTimeout(this.timer); this.vez = (this.vez || 0) + 1; this.setState({ grupo: g[0], fase: 'metodo', senha: '', erro: '' }); }
+      pick: () => this.setState({ grupo: g[0] })
     }));
-    const temRosto = equipa && rostos.indexOf(atual.id) !== -1;
-    // A íris (imagem e cor do fundo) muda logo que se escolhe o perfil.
-    const iris = window.Visao ? window.Visao.irisDe(atual.id) : 'original';
+    const iris = window.Visao && s.ultimo ? window.Visao.irisDe(s.ultimo) : 'original';
     const claro = s.tema === 'claro';
     return {
       temaClasse: claro ? 'tema-claro' : 'tema-escuro',
@@ -316,56 +165,15 @@ class Component extends DCLogic {
         try { window.localStorage.setItem('visao-tema', n); } catch (e) {}
       },
       grupos: grupos,
-      irisFundo: iris,
       irisImg: 'assets/' + (iris === 'original' ? 'iris_glow' : 'iris_' + iris) + '.webp',
+      topo: equipa ? 150 : 170,
       colunas: equipa ? '1fr 1fr' : '1fr',
-      linhaAlt: equipa ? 52 : 64,
-      linhaGap: equipa ? 8 : 10,
+      linhaAlt: equipa ? 56 : 68,
+      linhaGap: 10,
       perfis: perfis,
-      curto: atual.curto,
-      f: { metodoDemo: s.fase === 'metodo' && !equipa, metodoEquipa: s.fase === 'metodo' && equipa, consent: s.fase === 'consent', falhou: s.fase === 'falhou',
-        face: s.fase === 'face', senha: s.fase === 'senha', ok: s.fase === 'ok' },
-      faceTxt: s.faceTxt || 'Checking the face of ' + atual.curto + '…',
-      okTxt: s.okTxt, destino: s.destino || 'Hoje.html',
       rodape: equipa
-        ? 'Tests are stored on this device only. Face is optional: only a numeric descriptor is kept, never photos. Green dot = face registered.'
-        : 'Health data only opens with each astronaut\'s identity. No crew member sees your profile without your permission. Fictional profiles for the demo.',
-      faceId: () => {
-        if (equipa) { this.entrarPeloRosto(); return; }
-        this.setState({ fase: 'face', faceTxt: '' });
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => this.confirmar(), 1500);
-      },
-      semRosto: () => this.confirmar('lista'),
-      registar: () => this.registarRosto(),
-      dia: s.dia,
-      onDia: (e) => this.setState({ dia: e.target.value }),
-      gerirRostoTxt: 'Register my face',
-      semRostoReg: equipa && !temRosto,
-      // Perfis de fora da equipa (criados por engano) podem ser removidos: 1.º toque pede confirmação.
-      podeRemover: equipa && this.temBack() && window.Armazem.EQUIPA.indexOf(atual.id) === -1,
-      removerTxt: s.confirmarRemover === atual.id ? 'Tap again to remove ' + atual.curto : 'Remove profile',
-      remover: () => {
-        if (this.state.confirmarRemover !== atual.id) { this.setState({ confirmarRemover: atual.id }); return; }
-        window.Visao.removerPerfil(atual.id);
-        const resto = window.Armazem.perfis();
-        this.setState({ confirmarRemover: null, selEq: resto.length ? resto[0].id : null, fase: 'metodo' });
-      },
-      gerirRosto: () => {
-        if (temRosto) { if (window.Rosto) window.Rosto.apagar(atual.id); this.setState({ erro: '' }); return; }
-        if (!this.camaraPossivel()) { this.falhar('The camera only works when the app is opened with the abrir_app file (address http://localhost:8000) and the browser allows it.'); return; }
-        window.Rosto.preparar();
-        this.setState({ fase: 'consent' });
-      },
-      senhaModo: () => this.setState({ fase: 'senha', senha: '', erro: '' }),
-      voltar: () => { clearTimeout(this.timer); this.vez = (this.vez || 0) + 1; this.setState({ fase: 'metodo', senha: '', erro: '' }); },
-      senha: s.senha,
-      erro: s.erro,
-      onSenha: (e) => this.setState({ senha: e.target.value, erro: '' }),
-      entrar: () => {
-        if ((this.state.senha || '').length >= 4) { this.confirmar(); }
-        else { this.setState({ erro: 'The password has at least 4 characters.' }); }
-      }
+        ? 'Tap your name to open your profile. The first time, you start with the pre-flight registration, on Earth.'
+        : 'Tap a profile to open it. Fictional astronauts with simulated data, for the demo.'
     };
   }
 }

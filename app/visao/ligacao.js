@@ -4,7 +4,7 @@
 // Os ecrãs continuam a desenhar-se como antes. Este ficheiro só lhes dá
 // DADOS VERDADEIROS quando quem entrou é um perfil real (a equipa):
 //
-//   ecrã (Main, Hoje, TesteRapido, ...)  ->  window.Visao  ->  Armazem / Motor / Modelo / Distancia / Rosto
+//   ecrã (Main, Hoje, TesteRapido, ...)  ->  window.Visao  ->  Armazem / Motor / Modelo / Distancia
 //
 // Dois tipos de sessão:
 //   - DEMONSTRAÇÃO: os 3 astronautas fictícios do Marllon (A, B, C). Nada é guardado.
@@ -48,15 +48,17 @@
   function irisDe(id) { return ler("visao-iris-" + id) || IRIS_DEMO[id] || "original"; }
   function guardarIris(id, iris) { if (id) escrever("visao-iris-" + id, iris); escrever("visao-iris", iris); }
 
-  function entrar(id, dia, como) {
+  // Abrir um perfil real: sem autenticação (escolhe-se na lista e entra-se).
+  function entrar(id, dia) {
     id = g.Armazem.criarPerfil(id);
     if (!id) return null;
     escrever("visao-real", id);
     escrever("visao-iris", irisDe(id));
-    escrever("visao-entrada", como === "rosto" ? "rosto" : "lista");
     escrever("visao-dia-" + id, dia >= 0 ? dia : diaSugerido(id));
     return id;
   }
+  // A entrada pelo rosto foi retirada: apagam-se uma vez os descritores de rosto guardados por versões anteriores.
+  if (!ler("visao-sem-rosto")) { escrever("dt_rostos", null); escrever("visao-entrada", null); escrever("visao-sem-rosto", "1"); }
   // Pré-registo (dia 0, na Terra, antes do lançamento): ficha da missão e dos olhos, guardada uma vez.
   function registoDe(id) {
     id = id || real(); if (!id) return null;
@@ -431,14 +433,12 @@
     var me = eu(); if (!me) return null;
     var regs = rapidos(me.id), base = baseDe(regs), u = regs[regs.length - 1];
     var av = u ? avaliarRegisto(base, u) : null;
-    var rosto = g.Rosto ? g.Rosto.registados().indexOf(me.id) !== -1 : (function () { try { return !!(JSON.parse(ler("dt_rostos")) || {})[me.id]; } catch (e) { return false; } })();
     var COR = { verde: "Green · routine", amarelo: "Orange · review", vermelho: "Red · priority" };
     var dist = regs.filter(function (r) { return r.distancia_cm; }).map(function (r) { return r.distancia_cm; });
     return {
       nome: me.nome, curto: me.curto, ini: me.ini, papel: "Deep Thinkers team", dia: me.dia,
-      entrada: ler("visao-entrada") === "rosto" ? "rosto" : "lista",
       grupos: [
-        { titulo: "SESSION", linhas: [["Profile", me.id], ["Mission day", diaTxt(me.dia)], ["Face registered", rosto ? "Yes · numeric descriptor only" : "No"], ["Data", "Stored on this device only"]] },
+        { titulo: "SESSION", linhas: [["Profile", me.id], ["Mission day", diaTxt(me.dia)], ["Data", "Stored on this device only"], ["Reports", "Sent automatically to Earth"]] },
         { titulo: "QUICK TESTS", linhas: [["Tests saved", String(regs.length)], ["Baseline", base ? diaTxt(base.dia) + " · LE " + acTxt(base, "oe") + " · RE " + acTxt(base, "od") : "To do"],
           ["Last test", u ? diaTxt(u.dia) + " · LE " + acTxt(u, "oe") + " · RE " + acTxt(u, "od") : "–"], ["Amsler grid", u ? amTxt(u) : "–"]] },
         { titulo: "STATUS", linhas: [["Traffic light", av ? COR[av.cor] : "No tests"], ["Average distance", dist.length ? Math.round(dist.reduce(function (a, b) { return a + b; }, 0) / dist.length) + " cm" : "Not measured"],
@@ -559,7 +559,7 @@
     return r;
   }
 
-  // Remove um perfil que não é da equipa: testes, rosto e preferências (os da equipa ficam sempre).
+  // Remove um perfil que não é da equipa: testes e preferências (os da equipa ficam sempre).
   function removerPerfil(id) {
     if (!temBackend()) return false;
     if (!id || g.Armazem.EQUIPA.indexOf(g.Armazem.normalizarId(id)) !== -1) return false;
@@ -571,7 +571,6 @@
       var rs = JSON.parse(ler("dt_registos")) || [];
       escrever("dt_registos", JSON.stringify(rs.filter(function (r) { return r.astronauta_id !== id; })));
     } catch (e) { }
-    try { var r = JSON.parse(ler("dt_rostos")) || {}; delete r[id]; g.localStorage.setItem("dt_rostos", JSON.stringify(r)); } catch (e) { }
     escrever("visao-iris-" + id, null); escrever("visao-dia-" + id, null); escrever("visao-registo-" + id, null); escrever("visao-vistos-" + id, null); escrever("visao-envios-" + id, null);
     if (ler("visao-real") === id) escrever("visao-real", null);
     return true;

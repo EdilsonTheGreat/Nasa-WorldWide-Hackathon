@@ -1214,7 +1214,19 @@
 "Report sent automatically to Earth.": "Relatório enviado automaticamente para a Terra.",
 "Look only at the black dot. Tap or drag over the squares where you see": "Olha só para o ponto preto. Toca ou arrasta o dedo pelos quadrados onde vires",
 "Tap or drag over the squares where you saw something different. If you saw nothing, tap All looks straight, or say “all straight”.": "Toca ou arrasta o dedo pelos quadrados onde viste algo diferente. Se não viste nada, toca em Vejo tudo direito, ou diz «tudo direito».",
-"Tap or drag over the squares where you saw something different.": "Toca ou arrasta o dedo pelos quadrados onde viste algo diferente."
+"Tap or drag over the squares where you saw something different.": "Toca ou arrasta o dedo pelos quadrados onde viste algo diferente.",
+"Tap a profile to open it. Fictional astronauts with simulated data, for the demo.": "Toca num perfil para o abrir. Astronautas fictícios com dados simulados, para a demonstração.",
+"Your tests stay on this device only. Each profile shows only its own history.": "Os teus testes ficam só neste aparelho. Cada perfil mostra só o seu próprio histórico.",
+"Each profile shows only its own data and history. Only the medical team can change the official data.": "Cada perfil mostra só os seus próprios dados e histórico. Só a equipa médica pode alterar os dados oficiais.",
+"Remove this profile": "Remover este perfil",
+"Tap again to remove this profile": "Toca de novo para remover este perfil",
+"Reports": "Relatórios",
+"Sent automatically to Earth": "Envio automático à Terra",
+"1 · Pick your profile": "1 · Escolher o perfil",
+"Tap a profile to open it. No sign-in.": "Toca num perfil para o abrir. Sem autenticação.",
+". Works without internet. For the camera (distance), open the app with the file": ". Funciona sem internet. Para a câmara (distância), abre a app com o ficheiro",
+"‹ Profiles": "‹ Perfis",
+"Tap your name to open your profile. The first time, you start with the pre-flight registration, on Earth.": "Toca no teu nome para abrir o teu perfil. Na primeira vez, começas pelo pré-registo, na Terra."
 };
   var REGRAS = (function () {
   var MES = { Jan: "jan", Feb: "fev", Mar: "mar", Apr: "abr", May: "mai", Jun: "jun", Jul: "jul", Aug: "ago", Sep: "set", Oct: "out", Nov: "nov", Dec: "dez" };

@@ -2,12 +2,12 @@
 
 Os 8 ecrãs do Marllon (`Main`, `Hoje`, `TesteRapido`, `Tendencia`, `SANS`, `Alerta`, `Perfil`, `OCT`) com o backend ligado.
 Abrir com `abrir_app.command` (Mac) ou `abrir_app.bat` (Windows): começa em `Main.html`, em `http://localhost:8000`.
-Com duplo clique no ficheiro tudo funciona, **menos a câmara** (distância e entrada pelo rosto).
+Com duplo clique no ficheiro tudo funciona, **menos a câmara** (distância).
 
 ## Como está ligado
 
 ```
-ecrã (.html)  ->  window.Visao (ligacao.js)  ->  Armazem, Motor, Modelo, Distancia, Rosto
+ecrã (.html)  ->  window.Visao (ligacao.js)  ->  Armazem, Motor, Modelo, Distancia
 ```
 
 Cada ecrã carrega, por esta ordem: `../dados.js`, `../../motor/regras.js`, `../../motor/motor.js`, `../../motor/modelo.js`,
@@ -27,7 +27,7 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 
 | Ecrã | Sessão real | Demonstração |
 |---|---|---|
-| `Main` | Lista de perfis (`Armazem.perfis`), dia de missão, entrada pelo rosto (`Rosto.identificar`), registo do rosto com consentimento (`Rosto.registar`), ou "Entrar sem câmara" | Face ID e palavra-passe simulados (como antes) |
+| `Main` | Lista de perfis (`Armazem.perfis`): um toque abre o perfil (`Visao.entrar`), sem autenticação; dia de missão automático | Um toque abre a persona |
 | `TesteRapido` | Compara com a **base** (1.º teste), guarda o teste (`Visao.guardarTeste`), cor decidida por `Motor.corAmsler` e `Motor.corAcuidade` olho a olho, avisos do `Modelo` | Lógica de exemplo do Marllon |
 | `TesteRapido` (os dois) | Distância medida pela câmara em directo (`Distancia`): 35 a 45 cm na acuidade, 28 a 38 cm na grelha | igual |
 | `Hoje` | Último teste, estado por olho, recomendação (`Visao.resumoHoje`) | Exemplo |
@@ -71,10 +71,6 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
   O `<video>` é um só: fica registado em `window.DC_FIXOS.camara` e o `runtime.js` encaixa-o onde o ecrã tiver
   `<div data-fixo="camara">` (o ecrã é redesenhado a cada mudança, por isso o vídeo não pode viver dentro do modelo).
   Nada é gravado: a imagem só é mostrada e usada para medir a distância.
-- **Entrada pelo rosto mais rápida** (`../camara/rosto.js`): os modelos são carregados e «aquecidos» ao abrir o `Main`
-  (`Rosto.preparar()`, sem ligar a câmara); modelos e câmara arrancam ao mesmo tempo; a análise usa imagens mais pequenas (224);
-  basta uma imagem com boa semelhança (distância ≤ 0,46) para entrar; depois de reconhecer, segue sozinho para o `Hoje`.
-  O círculo do `Main` mostra a câmara enquanto verifica (`data-fixo="rosto"`).
 
 ## Inglês, voz e perfis (14 Nov, noite)
 
@@ -98,8 +94,8 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 ## Regras
 
 - Sem internet: a fonte Manrope está em `assets/fonte/` (licença OFL). Nada de `<link>` para fora.
-- Rosto: só com o acordo da própria pessoa; guarda-se apenas o descritor numérico (`dt_rostos`), nunca fotografias; a entrada à mão existe sempre.
-- "Repor a demonstração" (em `index.html`) apaga só as chaves `visao-*`. Os testes reais e os rostos ficam.
+- Sem autenticação: não há palavra-passe nem reconhecimento do rosto. Escolhe-se o perfil e entra-se.
+- "Repor a demonstração" (em `index.html`) apaga só as chaves `visao-*`. Os testes reais ficam.
 
 ## Voz gravada (14 Nov)
 - As frases faladas no teste tocam os MP3 de `audio/` (lista em `audio/frases.md`), via `Voz.falarClip(clips, texto)`.
@@ -179,3 +175,12 @@ Em cada ecrã, a regra é sempre a mesma: `const R = Visao.algo(); usar R se exi
 ## 15 Nov (noite): grelha de Amsler por arrasto
 - Tocar num quadrado marca/desmarca; **arrastar** (rato ou dedo) pinta todos os quadrados por onde passa. O 1.º quadrado decide: se estava vazio o arrasto marca, se estava marcado apaga.
 - Feito com eventos de ponteiro no documento (`ligarArrasto` em TesteRapido.html), porque o ecrã é redesenhado a cada quadrado. A grelha tem `touch-action: none`, para o dedo não fazer scroll. O teclado (Tab + Enter) continua a funcionar.
+
+## 15 Nov (noite): sem autenticação no "Pick your profile"
+- O desafio não pode ter autenticação: saíram a entrada pelo rosto, a palavra-passe, o registo do rosto e o "Entrar sem câmara".
+- `Main`: um toque no perfil abre-o. Equipa → `Visao.entrar(id)` e vai para o `Registo` (1.ª vez) ou para o `Hoje`; Demo → `Hoje` com a persona.
+- Dia de missão automático nos perfis reais: 0 (pré-voo) na 1.ª vez; depois, uma semana após o último teste (`Visao.diaSugerido`).
+- `Perfil`: "Switch profile" volta ao `Main` (saiu a folha com Face ID / palavra-passe e o "Sign out"); saiu "Delete my face".
+  Perfis fora da equipa (criados por engano) removem-se em Perfil › Privacy ("Remove this profile", 2 toques).
+- `ligacao.js` apaga uma vez os descritores de rosto guardados antes (`dt_rostos`) e a chave `visao-entrada`.
+- `app/camara/teste_visao.html` (ecrã de teste do backend, fora da app) não foi mexido.

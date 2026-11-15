@@ -57,6 +57,8 @@ Distancia.calibrar(40);  Distancia.parar();
 ```
 
 ## 5b. Entrar com a cara (`Rosto`)
+> **Fora da app.** O desafio não pode ter autenticação: `app/visao/` já não usa `Rosto` (escolhe-se o perfil e entra-se). Fica só no ecrã de teste `camara/teste_visao.html`.
+
 ```js
 Rosto.definirPasta("camara/vendor/faceapi/");
 Rosto.identificar(videoEl).then(r => { if (r.ok) /* entrar no perfil r.id */; else /* mostrar r.mensagem e a lista */ });

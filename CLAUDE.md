@@ -20,7 +20,7 @@ Ciclo: **teste → comparação → semáforo → acção**.
 | `simulador/` | Lukanga | `simulador.py` (Python 3, numpy, matplotlib). Gera `dados/*` e `app/dados.js` |
 | `dados/` | gerado | **Não editar à mão.** Correr `python3 simulador/simulador.py` |
 | `motor/` | Edilson | `motor.js` (regras do semáforo), `regras.js` (limites e textos), `testes.js` + `teste.html` (9 testes) |
-| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`), entrada pela cara (`rosto.js`) e teste completo; bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
+| `app/` | Marllon (+ Chandy no design) | `index.html`, ecrãs, CSS. `app/dados.js` é gerado pelo simulador. `app/camara/` = distância ao ecrã (`distancia.js`), entrada pela cara (`rosto.js`, só no ecrã de teste: a app em `app/visao/` não tem autenticação) e teste completo; bibliotecas offline em `vendor/` (não editar). **`app/visao/` = a interface do Marllon já ligada ao backend por `ligacao.js` (ler `app/visao/README.md` antes de mexer); é o que `abrir_app` abre** |
 | `docs/` | todos | Especificações. `docs/EDILSON.md` = motor; `docs/MARLLON.md` = como a UI chama o backend (`Armazem`, `Motor`, `Modelo`, `Distancia`) |
 
 ## Contrato de dados (mudar só depois de avisar a equipa toda)
